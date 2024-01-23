@@ -1,5 +1,6 @@
 package org.forum.web.forum.repository;
 
+import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
