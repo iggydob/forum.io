@@ -24,8 +24,19 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public List<Post> getAll() {
-        return null;
-        //todo kogato napravim filter
+        try(Session session = sessionFactory.openSession()){
+            Query<Post>query = session.createQuery("from Post", Post.class);
+            return query.list();
+        }
+    }
+
+    @Override
+    public List<Post> getRecent() {
+        try(Session session = sessionFactory.openSession()){
+            Query<Post>query = session.createQuery("from Post order by creationDate desc", Post.class);
+            query.setMaxResults(10);
+            return query.list();
+        }
     }
 
     @Override

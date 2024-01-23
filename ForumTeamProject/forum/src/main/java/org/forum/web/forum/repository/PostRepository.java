@@ -8,6 +8,7 @@ import java.util.List;
 public interface PostRepository {
 
     List<Post>getAll();
+    List<Post>getRecent();
     Post getById(int id);
     Post getByTitle(String title);
     void create(Post post);
