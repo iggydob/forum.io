@@ -20,7 +20,7 @@ public class PostServiceImpl implements PoseService {
 
     @Override
     public List<Post> getAll() {
-        if ()
+        return null;
     }
 
     @Override
