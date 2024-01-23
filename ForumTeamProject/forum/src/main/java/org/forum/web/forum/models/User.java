@@ -3,6 +3,7 @@ package org.forum.web.forum.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -39,6 +40,9 @@ public class User {
     @JsonIgnore
     @Column(name = "phone_number")
     private String phoneNumber;
+
+//    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+//    private List<Post> likedPosts;
 
     public User() {
     }
@@ -114,6 +118,14 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+//    public List<Post> getLikedPosts() {
+//        return likedPosts;
+//    }
+
+//    public void setLikedPosts(List<Post> likedPosts) {
+//        this.likedPosts = likedPosts;
+//    }
 
     @Override
     public boolean equals(Object o) {

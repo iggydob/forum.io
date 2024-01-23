@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface UserRepository {
 
-    List<User> get();
-    User get(int id);
+    List<User> getAll();
+    User getById(int id);
 
-    User get (String username);
+    User getByUsername(String username);
 
     void update(User user);
 }

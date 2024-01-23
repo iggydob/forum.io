@@ -32,8 +32,8 @@ public class Post {
     private Timestamp creationDate;
 //    @OneToMany(mappedBy = "post_id", cascade = CascadeType.ALL)
 //    private List<Comment> comments;
-    @ManyToMany(mappedBy = "likedPosts",fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST})
-    private Set<User> likedByUser;
+//    @ManyToMany(mappedBy = "likedPosts",fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST})
+//    private Set<User> likedByUser;
 
     public Post() {
     }
@@ -86,19 +86,19 @@ public class Post {
 //        this.comments = comments;
 //    }
 
-    public Set<User> getLikedByUser() {
-        if (likedByUser == null){
-            return new HashSet<>();
-        }
-        return likedByUser;
-    }
+//    public Set<User> getLikedByUser() {
+//        if (likedByUser == null){
+//            return new HashSet<>();
+//        }
+//        return likedByUser;
+//    }
 
-    public void setNewLike(User userLike) {
-        if (likedByUser == null || likedByUser.isEmpty()){
-            this.likedByUser = new HashSet<>();
-        }
-        likedByUser.add(userLike);
-    }
+//    public void setNewLike(User userLike) {
+//        if (likedByUser == null || likedByUser.isEmpty()){
+//            this.likedByUser = new HashSet<>();
+//        }
+//        likedByUser.add(userLike);
+//    }
 
     @Override
     public boolean equals(Object object) {

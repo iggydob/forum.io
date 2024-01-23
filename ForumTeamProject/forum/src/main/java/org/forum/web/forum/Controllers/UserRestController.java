@@ -5,6 +5,7 @@ import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ public class UserRestController {
     private final UserService service;
     private final AuthenticationHelper authenticationHelper;
 
+    @Autowired
     public UserRestController(UserService service, AuthenticationHelper authenticationHelper) {
         this.service = service;
         this.authenticationHelper = authenticationHelper;
@@ -31,7 +33,7 @@ public class UserRestController {
             if (!user.isAdmin()) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ERROR_MESSAGE);
             }
-            return service.get();
+            return service.getAll();
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
@@ -42,13 +44,15 @@ public class UserRestController {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             checkAccessPermissions(id, user);
-            return service.get(id);
+            return service.getById(id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
+
 
     private static void checkAccessPermissions(int targetUserId, User executingUser) {
         if (!executingUser.isAdmin() && executingUser.getUserId() != targetUserId) {
