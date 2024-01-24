@@ -7,11 +7,10 @@ import org.forum.web.forum.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.InputMismatchException;
 import java.util.List;
 
 @Service
-public class PostServiceImpl implements PoseService {
+public class PostServiceImpl implements PostService {
 
     private static final String AUTHORIZATION_ERROR = "You are not authorized!";
     private final PostRepository postRepository;
@@ -35,13 +34,6 @@ public class PostServiceImpl implements PoseService {
     @Override
     public void create(Post post, User user) {
         checkIfBanned(user);
-        try {
-            if (post.getTitle().isEmpty() || post.getContent().isEmpty()) {
-                throw new InputMismatchException("You can't create post without Title and Content");
-            }
-        } catch (InputMismatchException e) {
-            throw new RuntimeException(e.getMessage());
-        }
         post.setCreator(user);
         postRepository.create(post);
 

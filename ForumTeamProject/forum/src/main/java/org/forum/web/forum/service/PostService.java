@@ -5,7 +5,7 @@ import org.forum.web.forum.models.User;
 
 import java.util.List;
 
-public interface PoseService {
+public interface PostService {
     List<Post>getAll();
     Post getById(int id);
 
