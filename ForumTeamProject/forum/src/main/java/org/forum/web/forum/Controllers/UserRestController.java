@@ -27,7 +27,7 @@ public class UserRestController {
     }
 
     @GetMapping
-    public List<User> get(@RequestHeader HttpHeaders headers) {
+    public List<User> getAll(@RequestHeader HttpHeaders headers) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             if (!user.isAdmin()) {
@@ -40,7 +40,7 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}")
-    public User get(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public User getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             checkAccessPermissions(id, user);
@@ -52,7 +52,10 @@ public class UserRestController {
         }
     }
 
-
+    @GetMapping("/{id}")
+    public User update(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        Use
+    }
 
     private static void checkAccessPermissions(int targetUserId, User executingUser) {
         if (!executingUser.isAdmin() && executingUser.getUserId() != targetUserId) {
