@@ -52,10 +52,10 @@ public class UserRestController {
         }
     }
 
-    @GetMapping("/{id}")
-    public User update(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-        Use
-    }
+//    @GetMapping("/{id}")
+//    public User update(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+//        Use
+//    }
 
     private static void checkAccessPermissions(int targetUserId, User executingUser) {
         if (!executingUser.isAdmin() && executingUser.getUserId() != targetUserId) {
