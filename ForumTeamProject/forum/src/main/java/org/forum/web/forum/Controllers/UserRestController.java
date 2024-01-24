@@ -4,6 +4,7 @@ import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.User;
+import org.forum.web.forum.models.UserFilterOptions;
 import org.forum.web.forum.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +27,7 @@ public class UserRestController {
         this.authenticationHelper = authenticationHelper;
     }
 
-    @GetMapping
+    @GetMapping("/search")
     public List<User> getAll(@RequestHeader HttpHeaders headers) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
@@ -52,10 +53,26 @@ public class UserRestController {
         }
     }
 
-//    @GetMapping("/{id}")
-//    public User update(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-//        Use
-//    }
+    @GetMapping
+    public List<User> getFiltered(
+//            @RequestHeader HttpHeaders headers,
+            @RequestHeader(required = false) String firstName,
+            @RequestHeader(required = false) String lastName,
+            @RequestHeader(required = false) String username,
+            @RequestHeader(required = false) String email,
+            @RequestHeader(required = false) String sortBy,
+            @RequestHeader(required = false) String orderBy,
+            @RequestHeader(required = false) String sortOrder) {
+        UserFilterOptions userFilterOptions = new UserFilterOptions(
+                firstName,
+                lastName,
+                username,
+                email,
+                sortBy,
+                orderBy,
+                sortOrder);
+        return service.getFiltered(userFilterOptions);
+    }
 
     private static void checkAccessPermissions(int targetUserId, User executingUser) {
         if (!executingUser.isAdmin() && executingUser.getUserId() != targetUserId) {

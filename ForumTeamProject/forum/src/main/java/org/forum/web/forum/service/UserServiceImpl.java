@@ -1,6 +1,7 @@
 package org.forum.web.forum.service;
 
 import org.forum.web.forum.models.User;
+import org.forum.web.forum.models.UserFilterOptions;
 import org.forum.web.forum.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public List<User> getFiltered(UserFilterOptions userFilterOptions) {
+        return userRepository.getFiltered(userFilterOptions);
     }
 
     @Override

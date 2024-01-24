@@ -3,20 +3,35 @@ package org.forum.web.forum.models;
 import java.util.Optional;
 
 public class UserFilterOptions {
-    private final Optional<String> name;
+    private final Optional<String> firstName;
+    private final Optional<String> lastName;
     private final Optional<String> username;
     private final Optional<String> email;
+    private final Optional<String> sortBy;
+    private final Optional<String> orderBy;
+    private final Optional<String> sortOrder;
 
-    public UserFilterOptions(String name,
+    public UserFilterOptions(String firstName,
+                             String lastName,
                              String username,
-                             String email) {
-        this.name = Optional.ofNullable(name);
+                             String email,
+                             String sortBy,
+                             String orderBy,
+                             String sortOrder) {
+        this.firstName = Optional.ofNullable(firstName);
+        this.lastName = Optional.ofNullable(lastName);
         this.username = Optional.ofNullable(username);
         this.email = Optional.ofNullable(email);
+        this.sortBy = Optional.ofNullable(sortBy);
+        this.orderBy = Optional.ofNullable(orderBy);
+        this.sortOrder = Optional.ofNullable(sortOrder);
     }
 
-    public Optional<String> getName() {
-        return name;
+    public Optional<String> getFirstName() {
+        return firstName;
+    }
+    public Optional<String> getLastName() {
+        return lastName;
     }
 
     public Optional<String> getUsername() {
@@ -27,4 +42,15 @@ public class UserFilterOptions {
         return email;
     }
 
+    public Optional<String> getSortBy() {
+        return sortBy;
+    }
+
+    public Optional<String> getOrderBy() {
+        return orderBy;
+    }
+
+    public Optional<String> getSortOrder() {
+        return sortOrder;
+    }
 }
