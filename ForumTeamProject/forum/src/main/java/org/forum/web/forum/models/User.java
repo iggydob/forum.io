@@ -38,9 +38,9 @@ public class User {
     @Column(name = "is_banned")
     private boolean isBanned;
 
-    @JsonIgnore
-    @Column(name = "phone_number")
-    private String phoneNumber;
+//    @JsonIgnore
+//    @Column(name = "phone_number")
+//    private String phoneNumber;
 
 //    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
 //    private List<Post> likedPosts;
@@ -88,9 +88,9 @@ public class User {
         return isBanned;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+//    public String getPhoneNumber() {
+//        return phoneNumber;
+//    }
 
     public void setUserId(int userId) {
         this.userId = userId;
@@ -124,9 +124,9 @@ public class User {
         isBanned = banned;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+//    public void setPhoneNumber(String phoneNumber) {
+//        this.phoneNumber = phoneNumber;
+//    }
 
 //    public List<Post> getLikedPosts() {
 //        return likedPosts;
