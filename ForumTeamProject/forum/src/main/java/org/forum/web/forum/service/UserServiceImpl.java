@@ -1,5 +1,6 @@
 package org.forum.web.forum.service;
 
+import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityDuplicateException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.User;
@@ -13,6 +14,7 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final String AUTHORIZATION_ERROR_MSG = "Access denied. You are not allowed to perform this action.";
     private final UserRepository userRepository;
 
     @Autowired
@@ -49,6 +51,24 @@ public class UserServiceImpl implements UserService {
         user.setBanned(false);
 
         userRepository.create(user);
+    }
+
+    @Override
+    public void deleteById(int id, User user) {
+        checkAdminRole(user);
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByUsername(String username, User user) {
+        checkAdminRole(user);
+        userRepository.deleteByUsername(username);
+    }
+
+    private void checkAdminRole(User user) {
+        if (!user.isAdmin()) {
+            throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
+        }
     }
 
     @Override

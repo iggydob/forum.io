@@ -56,6 +56,30 @@ public class UserRestController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            service.deleteById(id, user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{username}")
+    public void deleteByUsername(@RequestHeader HttpHeaders headers, @PathVariable String username) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            service.deleteByUsername(username, user);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
 //    @GetMapping("/search")
 //    public List<User> getAll(@RequestHeader HttpHeaders headers) {
 //        try {

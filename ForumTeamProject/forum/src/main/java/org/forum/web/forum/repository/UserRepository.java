@@ -8,7 +8,9 @@ import java.util.List;
 public interface UserRepository {
     void create(User user);
 
-    List<User> getFiltered(UserFilterOptions userfilterOptions);
+    void deleteById(int id);
+
+    void deleteByUsername(String username);
 
     List<User> getAll();
 
@@ -19,4 +21,6 @@ public interface UserRepository {
     User getByEmail(String email);
 
     void update(User user);
+
+    List<User> getFiltered(UserFilterOptions userfilterOptions);
 }
