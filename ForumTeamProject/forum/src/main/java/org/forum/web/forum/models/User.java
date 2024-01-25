@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -43,6 +44,14 @@ public class User {
 
 //    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
 //    private List<Post> likedPosts;
+
+
+    //work!!!!
+    @ManyToMany( fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST })
+    @JoinTable(name = "liked_posts",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id"))
+    private Set<Post> likedPosts;
 
     public User() {
     }
