@@ -27,7 +27,7 @@ public class Post {
     private String content;
     @Column(name = "creation_date")
     private Timestamp creationDate;
-//    @OneToMany(mappedBy = "post_id", cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "comment_id", cascade = CascadeType.ALL)
 //    private List<Comment> comments;
     @ManyToMany(mappedBy = "likedPosts",fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private Set<User> likedByUser;

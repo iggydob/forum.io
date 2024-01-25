@@ -8,6 +8,7 @@ import org.forum.web.forum.helpers.PostMapper;
 import org.forum.web.forum.models.Dtos.PostDto;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
+import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.service.PostService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,9 +30,17 @@ public class PostRestController {
         this.postMapper = postMapper;
     }
 
+//    @GetMapping
+//    public List<Post> getAll() {
+//        return service.getAll();
+//    }
     @GetMapping
-    public List<Post> getAll() {
-        return service.getAll();
+    public List<Post>getAllFiltered(@RequestParam(required = false) String title,
+                                    @RequestParam(required = false) String author,
+                                    @RequestParam(required = false)String sortBy,
+                                    @RequestParam(required = false)String sortOrder){
+        PostFilterOptions postFilterOptions = new PostFilterOptions(title,author,sortBy,sortOrder);
+        return service.getFiltered(postFilterOptions);
     }
 
     @GetMapping("/{id}")
