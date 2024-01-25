@@ -27,8 +27,8 @@ public class Post {
     private String content;
     @Column(name = "creation_date")
     private Timestamp creationDate;
-//    @OneToMany(mappedBy = "comment_id", cascade = CascadeType.ALL)
-//    private List<Comment> comments;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comments;
     @ManyToMany(mappedBy = "likedPosts",fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private Set<User> likedByUser;
 
@@ -75,13 +75,13 @@ public class Post {
         this.creationDate = creationDate;
     }
 
-//    public List<Comment> getComments() {
-//        return comments;
-//    }
-//
-//    public void setComments(List<Comment> comments) {
-//        this.comments = comments;
-//    }
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public Set<User> getLikedByUser() {
         if (likedByUser == null){

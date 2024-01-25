@@ -33,6 +33,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getMostRecent() {
+        return postRepository.getRecent();
+    }
+
+    @Override
+    public List<Post> getMostCommented() {
+        return postRepository.getMostCommented();
+    }
+
+    @Override
     public Post getById(int id) {
         return postRepository.getById(id);
     }

@@ -72,6 +72,34 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
+    public List<Post> getMostCommented() {
+        //todo ne raboti!! Opravi me
+        try (Session session = sessionFactory.openSession()) {
+            Query<Post[]> query = session.createQuery(
+                    "SELECT p.id, p.title, COUNT(c.id) " +
+                            "FROM Post p " +
+                            "LEFT JOIN p.comments c " +
+                            "GROUP BY p.id, p.title " +
+                            "ORDER BY COUNT(c.id) DESC",
+                    Post[].class);
+            query.setMaxResults(10);
+            List<Post[]> results = query.list();
+
+            List<Post> newList = new ArrayList<>();
+            for (Object[] result:results) {
+                Post post = new Post();
+                post.setId((Integer) result[0]);
+                post.setTitle((String) result[1]);
+                post.setContent((String) result[2]);
+                post.setCreator((User) result[3]);
+                newList.add(post);
+            }
+            return newList;
+        }
+
+    }
+
+    @Override
     public Post getById(int id) {
         try (Session session = sessionFactory.openSession()) {
             Post post = session.get(Post.class, id);

@@ -11,6 +11,7 @@ public interface PostRepository {
     List<Post>getAll();
     List<Post> getFiltered(PostFilterOptions postFilterOptions);
     List<Post>getRecent();
+    List<Post>getMostCommented();
     Post getById(int id);
     Post getByTitle(String title);
     void create(Post post);

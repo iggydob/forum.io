@@ -30,16 +30,31 @@ public class PostRestController {
         this.postMapper = postMapper;
     }
 
-//    @GetMapping
+    //todo think of which get method u will need to use???
+    //    @GetMapping
 //    public List<Post> getAll() {
 //        return service.getAll();
 //    }
-    @GetMapping
-    public List<Post>getAllFiltered(@RequestParam(required = false) String title,
-                                    @RequestParam(required = false) String author,
-                                    @RequestParam(required = false)String sortBy,
-                                    @RequestParam(required = false)String sortOrder){
-        PostFilterOptions postFilterOptions = new PostFilterOptions(title,author,sortBy,sortOrder);
+    @GetMapping("/recent")
+    public List<Post>getMostRecent(){
+        return service.getMostRecent();
+    }
+    @GetMapping("/commented")
+    public List<Post>getMostCommented(){
+        return service.getMostCommented();
+    }
+    //todo check endpoint
+    @GetMapping("/search")
+    public List<Post> getAllFiltered(@RequestParam(required = false) String title,
+                                     @RequestParam(required = false) String author,
+                                     @RequestParam(required = false) String sortBy,
+                                     @RequestParam(required = false) String sortOrder,@RequestHeader HttpHeaders headers) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+        }catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
+        }
+        PostFilterOptions postFilterOptions = new PostFilterOptions(title, author, sortBy, sortOrder);
         return service.getFiltered(postFilterOptions);
     }
 
