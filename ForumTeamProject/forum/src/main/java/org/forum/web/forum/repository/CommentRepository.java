@@ -11,7 +11,7 @@ public interface CommentRepository {
     void create(Comment comment);
     void update(Comment comment);
     void delete(int id);
-    List<Comment> getAll(Post post);
+    List<Comment> getAll();
     Comment getById(int id);
 
 
