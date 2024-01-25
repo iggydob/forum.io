@@ -110,7 +110,7 @@ create table users_phone_numbers
         primary key,
     user_id                int not null,
     phone_number_id        int not null,
-    constraint users_phone_numbers_phone_numers_phone_number_id_fk
+    constraint users_phone_numbers_phone_numbers_phone_number_id_fk
         foreign key (phone_number_id) references phone_numers (phone_number_id),
     constraint users_phone_numbers_users_user_id_fk
         foreign key (user_id) references users (user_id)

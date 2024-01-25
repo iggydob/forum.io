@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -38,7 +39,13 @@ public class User {
     @Column(name = "is_banned")
     private boolean isBanned;
 
-//    @JsonIgnore
+@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+@JoinTable(name = "phone_numbers",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "phone_number_id"))
+private PhoneNumber phoneNumber;
+
+
 //    @Column(name = "phone_number")
 //    private String phoneNumber;
 
@@ -47,7 +54,7 @@ public class User {
 
 
     //work!!!!
-    @ManyToMany( fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST })
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinTable(name = "liked_posts",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "post_id"))
