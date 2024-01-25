@@ -1,7 +1,5 @@
 package org.forum.web.forum.models.Dtos;
 
-import jakarta.validation.constraints.Size;
-
 import java.sql.Timestamp;
 
 public class CommentDTO {

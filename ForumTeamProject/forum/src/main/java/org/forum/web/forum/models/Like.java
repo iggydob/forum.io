@@ -8,22 +8,24 @@ public class Like {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "liked_comments_pk")
+    @Column(name = "liked_comments_id")
     private int id;
 
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    private int userId;
+    private User user;
 
+    @ManyToOne
     @JoinColumn(name = "comment_id")
-    private int commentId;
+    private Comment comment;
     @Column(name = "isDeleted")
     private boolean isDeleted;
     public Like() {
     }
 
-    public Like(int userId, int commentId) {
-        this.userId = userId;
-        this.commentId = commentId;
+    public Like(User user, Comment comment) {
+        this.user = user;
+        this.comment = comment;
     }
 
     public int getId() {
@@ -34,20 +36,20 @@ public class Like {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public int getCommentId() {
-        return commentId;
+    public Comment getComment() {
+        return comment;
     }
 
-    public void setCommentId(int commentId) {
-        this.commentId = commentId;
+    public void setComment(Comment comment) {
+        this.comment = comment;
     }
 
     public boolean isDeleted() {

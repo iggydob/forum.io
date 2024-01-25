@@ -1,9 +1,7 @@
 package org.forum.web.forum.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -39,10 +37,13 @@ public class Comment {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "liked_comments",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id")
+            joinColumns = @JoinColumn(name = "comment_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<Like> likedList;
+
+//    @ManyToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private Set<Like> likedList;
 
     public Comment() {
     }

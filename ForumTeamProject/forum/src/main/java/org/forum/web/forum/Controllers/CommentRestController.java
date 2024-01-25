@@ -1,15 +1,11 @@
 package org.forum.web.forum.Controllers;
 
-import jakarta.validation.Valid;
 import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityDuplicateException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.helpers.CommentMapper;
 import org.forum.web.forum.models.Comment;
-import org.forum.web.forum.models.Dtos.CommentDTO;
-import org.forum.web.forum.models.Dtos.PostDto;
-import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +25,7 @@ public class CommentRestController {
 
     private final CommentMapper commentMapper;
 
-    @Autowired
+
     public CommentRestController(CommentService service, AuthenticationHelper authenticationHelper, CommentMapper commentMapper) {
         this.service = service;
         this.authenticationHelper = authenticationHelper;
@@ -95,31 +91,31 @@ public class CommentRestController {
 //        }
 //    }
 
-    @PostMapping("/likes/{id}")
-    public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable int id){
-        try {
-            User user = authenticationHelper.tryGetUser(headers);
-            service.likeComment(id, user);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (EntityDuplicateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-    }
+//    @PostMapping("/likes/{id}")
+//    public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable int id){
+//        try {
+//            User user = authenticationHelper.tryGetUser(headers);
+//            service.likeComment(id, user);
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        } catch (EntityDuplicateException e) {
+//            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+//        } catch (AuthorizationException e) {
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+//        }
+//    }
 
-    @DeleteMapping("/likes/{id}")
-    public void dislikeComment(@RequestHeader HttpHeaders headers, @PathVariable int id){
-        try {
-            User user = authenticationHelper.tryGetUser(headers);
-            service.dislikeComment(id, user);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (EntityDuplicateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-    }
+//    @DeleteMapping("/likes/{id}")
+//    public void dislikeComment(@RequestHeader HttpHeaders headers, @PathVariable int id){
+//        try {
+//            User user = authenticationHelper.tryGetUser(headers);
+//            service.dislikeComment(id, user);
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        } catch (EntityDuplicateException e) {
+//            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+//        } catch (AuthorizationException e) {
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+//        }
+//    }
 }

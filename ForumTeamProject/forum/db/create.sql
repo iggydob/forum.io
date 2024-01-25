@@ -1,4 +1,4 @@
-create table phone_numers
+create table phone_numbers
 (
     phone_number_id int auto_increment
         primary key,
@@ -44,12 +44,11 @@ create table comments
 (
     comment_id    int auto_increment
         primary key,
-    created_by_id int       null,
-    content       text      not null,
-    post_id       int       null,
-    creation_date timestamp not null,
-    `like`        int       not null,
-    dislike       int       not null,
+    created_by_id int        null,
+    content       text       not null,
+    post_id       int        null,
+    creation_date timestamp  not null,
+    isDeleted     tinyint(1) not null,
     constraint comments_posts_post_id_fk
         foreign key (post_id) references posts (post_id),
     constraint comments_users_user_id_fk
@@ -65,6 +64,19 @@ create table disliked_posts
     constraint disliked_posts_posts_post_id_fk
         foreign key (post_id) references posts (post_id),
     constraint disliked_posts_users_user_id_fk
+        foreign key (user_id) references users (user_id)
+);
+
+create table liked_comments
+(
+    user_id           int        not null,
+    comment_id        int        not null,
+    liked_comments_id int auto_increment
+        primary key,
+    isDeleted         tinyint(1) not null,
+    constraint comment_id
+        foreign key (comment_id) references comments (comment_id),
+    constraint user_id
         foreign key (user_id) references users (user_id)
 );
 
@@ -111,7 +123,7 @@ create table users_phone_numbers
     user_id                int not null,
     phone_number_id        int not null,
     constraint users_phone_numbers_phone_numers_phone_number_id_fk
-        foreign key (phone_number_id) references phone_numers (phone_number_id),
+        foreign key (phone_number_id) references phone_numbers (phone_number_id),
     constraint users_phone_numbers_users_user_id_fk
         foreign key (user_id) references users (user_id)
 );
