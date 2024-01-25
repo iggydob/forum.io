@@ -33,9 +33,10 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @JsonIgnore
     @Column(name = "is_admin")
     private boolean isAdmin;
-
+    @JsonIgnore
     @Column(name = "is_banned")
     private boolean isBanned;
 

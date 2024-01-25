@@ -24,6 +24,15 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public void create(User user) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.persist(user);
+            session.getTransaction().commit();
+        }
+    }
+
+    @Override
     public List<User> getFiltered(UserFilterOptions userFilterOptions) {
         try (Session session = sessionFactory.openSession()) {
             List<String> filters = new ArrayList<>();
@@ -124,10 +133,23 @@ public class UserRepositoryImpl implements UserRepository {
             query.setParameter("username", username);
 
             List<User> result = query.list();
-            if (result.size() == 0) {
+            if (result.isEmpty()) {
                 throw new EntityNotFoundException("User", "username", username);
             }
+            return result.get(0);
+        }
+    }
 
+    @Override
+    public User getByEmail(String email) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<User> query = session.createQuery("FROM User WHERE email =:email", User.class);
+            query.setParameter("email", email);
+
+            List<User> result = query.list();
+            if (result.isEmpty()) {
+                throw new EntityNotFoundException("User", "e-mail", email);
+            }
             return result.get(0);
         }
     }

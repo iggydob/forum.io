@@ -9,6 +9,7 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String username;
+    private String password;
     private String email;
 
     public UserDto() {
@@ -32,6 +33,12 @@ public class UserDto {
         return username;
     }
 
+    @NotNull (message = "Password can't be an empty field.")
+    @Size(min = 8, max = 32, message = "Password should be at least 8 symbols.")
+    public String getPassword(){
+        return password;
+    }
+
     @NotNull(message = "E-mail can't be an empty field.")
     @Email(message = "E-mail should be valid.")
     public String getEmail() {
@@ -48,6 +55,10 @@ public class UserDto {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setEmail(String email) {

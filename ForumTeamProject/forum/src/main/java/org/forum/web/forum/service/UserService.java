@@ -6,6 +6,7 @@ import org.forum.web.forum.models.UserFilterOptions;
 import java.util.List;
 
 public interface UserService {
+    void create(User user);
 
     List<User> getFiltered(UserFilterOptions userFilterOptions);
 

@@ -1,5 +1,7 @@
 package org.forum.web.forum.service;
 
+import org.forum.web.forum.exceptions.EntityDuplicateException;
+import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.UserFilterOptions;
 import org.forum.web.forum.repository.UserRepository;
@@ -16,6 +18,37 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public void create(User user) {
+        boolean duplicateExists = true;
+        try {
+            userRepository.getByUsername(user.getUsername());
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "username", user.getUsername());
+        }
+
+        duplicateExists = true;
+
+        try {
+            userRepository.getByEmail(user.getEmail());
+        } catch (EntityNotFoundException e) {
+            duplicateExists = false;
+        }
+
+        if (duplicateExists) {
+            throw new EntityDuplicateException("User", "e-mail", user.getEmail());
+        }
+
+        user.setAdmin(false);
+        user.setBanned(false);
+
+        userRepository.create(user);
     }
 
     @Override
