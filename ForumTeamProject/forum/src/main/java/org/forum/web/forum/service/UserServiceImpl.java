@@ -53,17 +53,17 @@ public class UserServiceImpl implements UserService {
         userRepository.create(user);
     }
 
-    @Override
-    public void deleteById(int id, User user) {
-        checkAdminRole(user);
-        userRepository.deleteById(id);
-    }
-
-    @Override
-    public void deleteByUsername(String username, User user) {
-        checkAdminRole(user);
-        userRepository.deleteByUsername(username);
-    }
+//    @Override
+//    public void deleteById(int id, User user) {
+//        checkAdminRole(user);
+//        userRepository.deleteById(id);
+//    }
+//
+//    @Override
+//    public void deleteByUsername(String username, User user) {
+//        checkAdminRole(user);
+//        userRepository.deleteByUsername(username);
+//    }
 
     private void checkAdminRole(User user) {
         if (!user.isAdmin()) {

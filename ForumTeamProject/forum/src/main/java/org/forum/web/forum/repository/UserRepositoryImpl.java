@@ -32,25 +32,25 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    @Override
-    public void deleteById(int id) {
-        User userToDelete = getById(id);
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.persist(userToDelete);
-            session.getTransaction().commit();
-        }
-    }
-
-    @Override
-    public void deleteByUsername(String username) {
-        User userToDelete = getByUsername(username);
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.persist(userToDelete);
-            session.getTransaction().commit();
-        }
-    }
+//    @Override
+//    public void deleteById(int id) {
+//        User userToDelete = getById(id);
+//        try (Session session = sessionFactory.openSession()) {
+//            session.beginTransaction();
+//            session.persist(userToDelete);
+//            session.getTransaction().commit();
+//        }
+//    }
+//
+//    @Override
+//    public void deleteByUsername(String username) {
+//        User userToDelete = getByUsername(username);
+//        try (Session session = sessionFactory.openSession()) {
+//            session.beginTransaction();
+//            session.persist(userToDelete);
+//            session.getTransaction().commit();
+//        }
+//    }
 
 
     @Override
@@ -116,13 +116,13 @@ public class UserRepositoryImpl implements UserRepository {
             Map<String, Object> params = new HashMap<>();
 
             userFilterOptions.getFirstName().ifPresent(value -> {
-                filters.add("first_name like :first_name");
-                params.put("first_name", String.format("%%%s%%", value));
+                filters.add("firstName like :firstName");
+                params.put("firstName", String.format("%%%s%%", value));
             });
 
             userFilterOptions.getLastName().ifPresent(value -> {
-                filters.add("last_name like :last_name");
-                params.put("last_name", String.format("%%%s%%", value));
+                filters.add("lastName like :lastName");
+                params.put("lastName", String.format("%%%s%%", value));
             });
 
             userFilterOptions.getUsername().ifPresent(value -> {
@@ -158,11 +158,11 @@ public class UserRepositoryImpl implements UserRepository {
         String orderBy = "";
 
         switch (userFilterOptions.getSortBy().get()) {
-            case "first_name":
-                orderBy = "first_name";
+            case "firstName":
+                orderBy = "firstName";
                 break;
-            case "last_name":
-                orderBy = "last_name";
+            case "lastName":
+                orderBy = "lastName";
                 break;
             case "username":
                 orderBy = "username";
@@ -174,11 +174,11 @@ public class UserRepositoryImpl implements UserRepository {
                 return "";
         }
 
-        orderBy = String.format(" order by %s", orderBy);
+        orderBy = String.format(" order by %s ", orderBy);
 
         if (userFilterOptions.getSortOrder().isPresent()
                 && userFilterOptions.getSortOrder().get().equalsIgnoreCase("desc")) {
-            orderBy = String.format("%s desc", orderBy);
+            orderBy = String.format(" %s desc ", orderBy);
         }
 
         return orderBy;

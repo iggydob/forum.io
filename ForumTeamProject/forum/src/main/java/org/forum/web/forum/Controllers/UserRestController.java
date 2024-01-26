@@ -8,6 +8,7 @@ import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.helpers.UserMapper;
 import org.forum.web.forum.models.Dtos.UserDto;
 import org.forum.web.forum.models.User;
+import org.forum.web.forum.models.UserFilterOptions;
 import org.forum.web.forum.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -56,38 +57,25 @@ public class UserRestController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-        try {
-            User user = authenticationHelper.tryGetUser(headers);
-            service.deleteById(id, user);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-    }
-
-    @DeleteMapping("/{username}")
-    public void deleteByUsername(@RequestHeader HttpHeaders headers, @PathVariable String username) {
-        try {
-            User user = authenticationHelper.tryGetUser(headers);
-            service.deleteByUsername(username, user);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-    }
-
-//    @GetMapping("/search")
-//    public List<User> getAll(@RequestHeader HttpHeaders headers) {
+//    @DeleteMapping("/{id}")
+//    public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id) {
 //        try {
 //            User user = authenticationHelper.tryGetUser(headers);
-//            if (!user.isAdmin()) {
-//                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ERROR_MESSAGE);
-//            }
-//            return service.getAll();
+//            service.deleteById(id, user);
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        } catch (AuthorizationException e) {
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+//        }
+//    }
+
+//    @DeleteMapping("/{username}")
+//    public void deleteByUsername(@RequestHeader HttpHeaders headers, @PathVariable String username) {
+//        try {
+//            User user = authenticationHelper.tryGetUser(headers);
+//            service.deleteByUsername(username, user);
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 //        } catch (AuthorizationException e) {
 //            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
 //        }
@@ -106,32 +94,33 @@ public class UserRestController {
         }
     }
 
-//    @GetMapping
-//    public List<User> getFiltered(
-////            @RequestHeader HttpHeaders headers,
-//            @RequestHeader(required = false) String firstName,
-//            @RequestHeader(required = false) String lastName,
-//            @RequestHeader(required = false) String username,
-//            @RequestHeader(required = false) String email,
-//            @RequestHeader(required = false) String sortBy,
-//            @RequestHeader(required = false) String orderBy,
-//            @RequestHeader(required = false) String sortOrder) {
-//        UserFilterOptions userFilterOptions = new UserFilterOptions(
-//                firstName,
-//                lastName,
-//                username,
-//                email,
-//                sortBy,
-//                orderBy,
-//                sortOrder);
-//        return service.getFiltered(userFilterOptions);
-//    }
+    @GetMapping("/search")
+    public List<User> getFiltered(@RequestParam(required = false) String firstName,
+                                  @RequestParam(required = false) String lastName,
+                                  @RequestParam(required = false) String username,
+                                  @RequestParam(required = false) String email,
+                                  @RequestParam(required = false) String sortBy,
+                                  @RequestParam(required = false) String sortOrder,
+                                  @RequestHeader HttpHeaders headers) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+
+        UserFilterOptions userFilterOptions = new UserFilterOptions(
+                firstName,
+                lastName,
+                username,
+                email,
+                sortBy,
+                sortOrder);
+        return service.getFiltered(userFilterOptions);
+    }
 
     private static void checkAccessPermissions(int targetUserId, User executingUser) {
         if (!executingUser.isAdmin() && executingUser.getUserId() != targetUserId) {
             throw new AuthorizationException(ERROR_MESSAGE);
         }
     }
-
-
 }
