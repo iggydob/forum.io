@@ -47,7 +47,9 @@ public class UserRestController {
     }
 
     @PostMapping
-    public User create(@Valid @RequestBody UserDto userDto) {
+    public User create(
+            @Valid
+            @RequestBody UserDto userDto) {
         try {
             User user = userMapper.fromDto(userDto);
             service.create(user);
@@ -82,10 +84,12 @@ public class UserRestController {
 //    }
 
     @GetMapping("/{id}")
-    public User getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public User getById(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            checkAccessPermissions(id, user);
+            checkAdminRole(user);
             return service.getById(id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -95,13 +99,14 @@ public class UserRestController {
     }
 
     @GetMapping("/search")
-    public List<User> getFiltered(@RequestParam(required = false) String firstName,
-                                  @RequestParam(required = false) String lastName,
-                                  @RequestParam(required = false) String username,
-                                  @RequestParam(required = false) String email,
-                                  @RequestParam(required = false) String sortBy,
-                                  @RequestParam(required = false) String sortOrder,
-                                  @RequestHeader HttpHeaders headers) {
+    public List<User> getFiltered(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortOrder,
+            @RequestHeader HttpHeaders headers) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
         } catch (AuthorizationException e) {
@@ -116,6 +121,29 @@ public class UserRestController {
                 sortBy,
                 sortOrder);
         return service.getFiltered(userFilterOptions);
+    }
+
+    @PutMapping("/{id}")
+    public void banUser(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable int id,
+            @Valid
+            @RequestBody UserDto userDto) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            checkAdminRole(user);
+            service.banUser(id, userDto.getBannedStatus());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    private static void checkAdminRole(User executingUser) {
+        if (!executingUser.isAdmin()) {
+            throw new AuthorizationException(ERROR_MESSAGE);
+        }
     }
 
     private static void checkAccessPermissions(int targetUserId, User executingUser) {

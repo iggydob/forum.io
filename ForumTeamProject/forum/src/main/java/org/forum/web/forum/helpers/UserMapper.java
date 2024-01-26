@@ -22,4 +22,10 @@ public class UserMapper {
         user.setEmail(userDto.getEmail());
         return user;
     }
+
+    public User banStatusFromDto(UserDto userDto) {
+        User user = new User();
+        user.setBanned(userDto.getBannedStatus());
+        return user;
+    }
 }

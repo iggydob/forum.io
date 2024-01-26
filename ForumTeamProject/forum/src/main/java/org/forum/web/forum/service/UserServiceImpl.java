@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.getFiltered(userFilterOptions);
     }
 
+
     @Override
     public List<User> getAll() {
         return userRepository.getAll();
@@ -89,5 +90,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByUsername(String username) {
         return userRepository.getByUsername(username);
+    }
+
+    @Override
+    public void banUser(int id, boolean banStatus) {
+        User user = userRepository.getById(id);
+
+//        if (user.isBanned() == banStatus) {
+//            throw new EntityDuplicateException("User status already set to " + (banStatus ? "banned" : "unbanned"));
+//        }
+
+        user.setBanned(banStatus);
+        userRepository.update(user);
     }
 }
