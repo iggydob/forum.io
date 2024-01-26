@@ -92,7 +92,6 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    //todo test this
     public List<Post> getMostCommented() {
         try (Session session = sessionFactory.openSession()) {
             Query<Post> query = session.createQuery("""
@@ -102,7 +101,7 @@ public class PostRepositoryImpl implements PostRepository {
                             GROUP BY p
                             ORDER BY COUNT(c.id) DESC
                             """, Post.class)
-                    .setMaxResults(10); // Limit the result to 10
+                    .setMaxResults(10);
 
             return query.list();
         }
@@ -117,6 +116,15 @@ public class PostRepositoryImpl implements PostRepository {
                 throw new EntityNotFoundException("Post", id);
             }
             return post;
+        }
+    }
+
+    @Override
+    //moje bi shte mi trqbva vuv FE.
+    public long getPostCount() {
+        try(Session session = sessionFactory.openSession()){
+            Query<Long>query = session.createQuery("select COUNT (p) from Post p",Long.class);
+            return query.uniqueResult();
         }
     }
 

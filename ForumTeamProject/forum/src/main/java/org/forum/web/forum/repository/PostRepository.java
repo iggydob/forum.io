@@ -13,6 +13,7 @@ public interface PostRepository {
     List<Post>getRecent();
     List<Post>getMostCommented();
     Post getById(int id);
+    long getPostCount();
     Post getByTitle(String title);
     void create(Post post);
     void update(Post post);
