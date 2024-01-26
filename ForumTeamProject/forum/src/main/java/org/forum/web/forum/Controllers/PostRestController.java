@@ -29,12 +29,37 @@ public class PostRestController {
         this.authenticationHelper = authenticationHelper;
         this.postMapper = postMapper;
     }
-
-    //todo think of which get method u will need to use???
-    //    @GetMapping
-//    public List<Post> getAll() {
-//        return service.getAll();
-//    }
+    @GetMapping
+    public List<Post> getAllFiltered(@RequestParam(required = false) String title,
+                                     @RequestParam(required = false) String author,
+                                     @RequestParam(required = false) String sortBy,
+                                     @RequestParam(required = false) String sortOrder,
+                                     @RequestHeader HttpHeaders headers) {
+        try {
+            authenticationHelper.tryGetUser(headers);
+            PostFilterOptions postFilterOptions = new PostFilterOptions(title, author, sortBy, sortOrder);
+            return service.getFiltered(postFilterOptions);
+        }catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
+        }
+    }
+    @GetMapping("/user/{id}")
+public List<Post>getBtUserId(
+        @RequestParam(required = false)String title,
+        @RequestParam(required = false)String sortBy,
+        @RequestParam(required = false)String sortOrder,
+        @PathVariable int id,
+        @RequestHeader HttpHeaders headers){
+        try {
+            PostFilterOptions filterOptions = new PostFilterOptions(title,null,sortBy,sortOrder);
+            authenticationHelper.tryGetUser(headers);
+            return service.getByUserId(filterOptions,id);
+        }catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
+        }
+    }
     @GetMapping("/recent")
     public List<Post>getMostRecent(){
         return service.getMostRecent();
@@ -42,20 +67,6 @@ public class PostRestController {
     @GetMapping("/commented")
     public List<Post>getMostCommented(){
         return service.getMostCommented();
-    }
-    //todo check endpoint
-    @GetMapping("/search")
-    public List<Post> getAllFiltered(@RequestParam(required = false) String title,
-                                     @RequestParam(required = false) String author,
-                                     @RequestParam(required = false) String sortBy,
-                                     @RequestParam(required = false) String sortOrder,@RequestHeader HttpHeaders headers) {
-        try {
-            User user = authenticationHelper.tryGetUser(headers);
-        }catch (AuthorizationException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
-        }
-        PostFilterOptions postFilterOptions = new PostFilterOptions(title, author, sortBy, sortOrder);
-        return service.getFiltered(postFilterOptions);
     }
 
     @GetMapping("/{id}")

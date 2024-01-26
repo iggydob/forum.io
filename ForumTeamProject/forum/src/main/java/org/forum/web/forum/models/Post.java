@@ -1,5 +1,6 @@
 package org.forum.web.forum.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -27,6 +28,7 @@ public class Post {
     private String content;
     @Column(name = "creation_date")
     private Timestamp creationDate;
+    @JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
     @ManyToMany(mappedBy = "likedPosts",fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
