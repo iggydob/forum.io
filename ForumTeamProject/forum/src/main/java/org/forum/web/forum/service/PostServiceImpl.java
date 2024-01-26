@@ -8,6 +8,8 @@ import org.forum.web.forum.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,7 +25,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getByUserId(PostFilterOptions postFilterOptions, int id) {
-        return postRepository.getByUserId(postFilterOptions,id);
+        return postRepository.getByUserId(postFilterOptions, id);
     }
 
     @Override
@@ -50,6 +52,7 @@ public class PostServiceImpl implements PostService {
     public void create(Post post, User user) {
         checkIfBanned(user);
         post.setCreator(user);
+        post.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         postRepository.create(post);
 
     }
