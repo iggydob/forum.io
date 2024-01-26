@@ -21,10 +21,9 @@ public class PostServiceImpl implements PostService {
         this.postRepository = postRepository;
     }
 
-
     @Override
-    public List<Post> getAll() {
-        return postRepository.getAll();
+    public List<Post> getByUserId(PostFilterOptions postFilterOptions, int id) {
+        return postRepository.getByUserId(postFilterOptions,id);
     }
 
     @Override

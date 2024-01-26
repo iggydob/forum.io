@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PostRepository {
 
-    List<Post>getAll();
+    List<Post>getByUserId(PostFilterOptions postFilterOptions,int id);
     List<Post> getFiltered(PostFilterOptions postFilterOptions);
     List<Post>getRecent();
     List<Post>getMostCommented();

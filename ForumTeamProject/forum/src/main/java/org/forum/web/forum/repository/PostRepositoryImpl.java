@@ -19,16 +19,36 @@ import java.util.Map;
 public class PostRepositoryImpl implements PostRepository {
 
     private final SessionFactory sessionFactory;
+    private final UserRepository userRepository;
 
     @Autowired
-    public PostRepositoryImpl(SessionFactory sessionFactory) {
+    public PostRepositoryImpl(SessionFactory sessionFactory, UserRepository userRepository) {
         this.sessionFactory = sessionFactory;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public List<Post> getAll() {
+    public List<Post> getByUserId(PostFilterOptions filterOptions, int id) {
         try (Session session = sessionFactory.openSession()) {
-            Query<Post> query = session.createQuery("from Post", Post.class);
+            User user = userRepository.getById(id);
+            List<String> filters = new ArrayList<>();
+            Map<String, Object> params = new HashMap<>();
+
+            filterOptions.getTitle().ifPresent(value -> {
+                filters.add("title like :title");
+                params.put("title", String.format("%%%s%%", value));
+            });
+            StringBuilder queryString = new StringBuilder("from Post where creator = :creator");
+            if (!filters.isEmpty()) {
+                queryString
+                        .append(" and ")
+                        .append(String.join(" and ", filters));
+            }
+            queryString.append(generatedOrderBy(filterOptions));
+
+            Query<Post> query = session.createQuery(queryString.toString(), Post.class);
+            query.setParameter("creator", user);
+            query.setProperties(params);
             return query.list();
         }
     }
@@ -72,32 +92,22 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
+    //todo test this
     public List<Post> getMostCommented() {
-        //todo ne raboti!! Opravi me
         try (Session session = sessionFactory.openSession()) {
-            Query<Post[]> query = session.createQuery(
-                    "SELECT p.id, p.title, COUNT(c.id) " +
-                            "FROM Post p " +
-                            "LEFT JOIN p.comments c " +
-                            "GROUP BY p.id, p.title " +
-                            "ORDER BY COUNT(c.id) DESC",
-                    Post[].class);
-            query.setMaxResults(10);
-            List<Post[]> results = query.list();
+            Query<Post> query = session.createQuery("""
+                            SELECT p
+                            FROM Post p
+                            LEFT JOIN Comment c ON p.id = c.post.id
+                            GROUP BY p
+                            ORDER BY COUNT(c.id) DESC
+                            """, Post.class)
+                    .setMaxResults(10); // Limit the result to 10
 
-            List<Post> newList = new ArrayList<>();
-            for (Object[] result:results) {
-                Post post = new Post();
-                post.setId((Integer) result[0]);
-                post.setTitle((String) result[1]);
-                post.setContent((String) result[2]);
-                post.setCreator((User) result[3]);
-                newList.add(post);
-            }
-            return newList;
+            return query.list();
         }
-
     }
+
 
     @Override
     public Post getById(int id) {
