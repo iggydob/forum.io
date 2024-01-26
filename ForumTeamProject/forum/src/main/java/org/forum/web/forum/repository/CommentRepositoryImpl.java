@@ -2,10 +2,9 @@ package org.forum.web.forum.repository;
 
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.Comment;
-import org.forum.web.forum.models.Post;
-import org.forum.web.forum.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -51,8 +50,11 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public List<Comment> getAll(Post post) {
-        return null;
+    public List<Comment> getAll() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Comment> query = session.createQuery("from Comment ", Comment.class);
+            return query.list();
+        }
     }
 
     @Override

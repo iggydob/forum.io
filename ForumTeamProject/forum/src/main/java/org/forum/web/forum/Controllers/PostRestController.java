@@ -8,6 +8,7 @@ import org.forum.web.forum.helpers.PostMapper;
 import org.forum.web.forum.models.Dtos.PostDto;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
+import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.service.PostService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,9 +30,32 @@ public class PostRestController {
         this.postMapper = postMapper;
     }
 
-    @GetMapping
-    public List<Post> getAll() {
-        return service.getAll();
+    //todo think of which get method u will need to use???
+    //    @GetMapping
+//    public List<Post> getAll() {
+//        return service.getAll();
+//    }
+    @GetMapping("/recent")
+    public List<Post>getMostRecent(){
+        return service.getMostRecent();
+    }
+    @GetMapping("/commented")
+    public List<Post>getMostCommented(){
+        return service.getMostCommented();
+    }
+    //todo check endpoint
+    @GetMapping("/search")
+    public List<Post> getAllFiltered(@RequestParam(required = false) String title,
+                                     @RequestParam(required = false) String author,
+                                     @RequestParam(required = false) String sortBy,
+                                     @RequestParam(required = false) String sortOrder,@RequestHeader HttpHeaders headers) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+        }catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
+        }
+        PostFilterOptions postFilterOptions = new PostFilterOptions(title, author, sortBy, sortOrder);
+        return service.getFiltered(postFilterOptions);
     }
 
     @GetMapping("/{id}")
