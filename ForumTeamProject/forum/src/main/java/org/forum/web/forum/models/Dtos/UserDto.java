@@ -46,7 +46,7 @@ public class UserDto {
         return email;
     }
 
-    @NotNull(message = "Banned status field cannot be an empty field.")
+//    @NotNull(message = "Banned status field cannot be an empty field.")
     public boolean getBannedStatus() {
         return isBanned;
     }

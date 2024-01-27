@@ -131,8 +131,9 @@ public class UserRestController {
             @RequestBody UserDto userDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
+            User userDetails = userMapper.banStatusFromDto(userDto);
             checkAdminRole(user);
-            service.banUser(id, userDto.getBannedStatus());
+            service.banUser(id, userDetails);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
