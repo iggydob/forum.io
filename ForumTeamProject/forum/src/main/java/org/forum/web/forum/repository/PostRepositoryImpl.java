@@ -1,6 +1,7 @@
 package org.forum.web.forum.repository;
 
 import org.forum.web.forum.exceptions.EntityNotFoundException;
+import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
@@ -78,6 +79,16 @@ public class PostRepositoryImpl implements PostRepository {
             Query<Post> query = session.createQuery(queryString.toString(), Post.class);
             query.setProperties(params);
 
+            return query.list();
+        }
+    }
+
+    @Override
+    public List<LikePost> getLikedPost(int postId) {
+        try(Session session = sessionFactory.openSession()){
+            Post post =getById(postId);
+            Query<LikePost> query =session.createQuery("Select l from LikePost l where l.post = :post", LikePost.class);
+            query.setParameter("post",post);
             return query.list();
         }
     }

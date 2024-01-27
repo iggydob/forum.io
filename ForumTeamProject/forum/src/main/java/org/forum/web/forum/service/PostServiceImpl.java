@@ -1,6 +1,8 @@
 package org.forum.web.forum.service;
 
 import org.forum.web.forum.exceptions.AuthorizationException;
+import org.forum.web.forum.exceptions.EntityNotFoundException;
+import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
@@ -17,10 +19,12 @@ public class PostServiceImpl implements PostService {
 
     private static final String AUTHORIZATION_ERROR = "You are not authorized!";
     private final PostRepository postRepository;
+    private final LikePostService likePostService;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository, LikePostService likePostService) {
         this.postRepository = postRepository;
+        this.likePostService = likePostService;
     }
 
     @Override
@@ -46,6 +50,17 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post getById(int id) {
         return postRepository.getById(id);
+    }
+
+    @Override
+    public void likePost(int id, User user) {
+        Post post = postRepository.getById(id);
+        try {
+            LikePost likePost = likePostService.get(post, user);
+            likePostService.delete(likePost);
+        } catch (EntityNotFoundException e) {
+            likePostService.create(post, user);
+        }
     }
 
     @Override
