@@ -1,6 +1,8 @@
 package org.forum.web.forum.service;
 
 import org.forum.web.forum.exceptions.AuthorizationException;
+import org.forum.web.forum.exceptions.EntityNotFoundException;
+import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
@@ -8,6 +10,8 @@ import org.forum.web.forum.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -15,15 +19,17 @@ public class PostServiceImpl implements PostService {
 
     private static final String AUTHORIZATION_ERROR = "You are not authorized!";
     private final PostRepository postRepository;
+    private final LikePostService likePostService;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository, LikePostService likePostService) {
         this.postRepository = postRepository;
+        this.likePostService = likePostService;
     }
 
     @Override
     public List<Post> getByUserId(PostFilterOptions postFilterOptions, int id) {
-        return postRepository.getByUserId(postFilterOptions,id);
+        return postRepository.getByUserId(postFilterOptions, id);
     }
 
     @Override
@@ -47,9 +53,21 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public void likePost(int id, User user) {
+        Post post = postRepository.getById(id);
+        try {
+            LikePost likePost = likePostService.get(post, user);
+            likePostService.delete(likePost);
+        } catch (EntityNotFoundException e) {
+            likePostService.create(post, user);
+        }
+    }
+
+    @Override
     public void create(Post post, User user) {
         checkIfBanned(user);
         post.setCreator(user);
+        post.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         postRepository.create(post);
 
     }

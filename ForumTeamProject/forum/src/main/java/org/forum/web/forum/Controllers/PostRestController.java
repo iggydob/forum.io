@@ -9,6 +9,7 @@ import org.forum.web.forum.models.Dtos.PostDto;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
+import org.forum.web.forum.repository.PostRepository;
 import org.forum.web.forum.service.PostService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,51 +22,63 @@ import java.util.List;
 @RequestMapping("/api/posts")
 public class PostRestController {
     private final PostService service;
+    private final PostRepository repository;
     private final AuthenticationHelper authenticationHelper;
     private final PostMapper postMapper;
 
-    public PostRestController(PostService service, AuthenticationHelper authenticationHelper, PostMapper postMapper) {
+    public PostRestController(PostService service, PostRepository repository, AuthenticationHelper authenticationHelper, PostMapper postMapper) {
         this.service = service;
+        this.repository = repository;
         this.authenticationHelper = authenticationHelper;
         this.postMapper = postMapper;
     }
+
     @GetMapping
-    public List<Post> getAllFiltered(@RequestParam(required = false) String title,
-                                     @RequestParam(required = false) String author,
-                                     @RequestParam(required = false) String sortBy,
-                                     @RequestParam(required = false) String sortOrder,
-                                     @RequestHeader HttpHeaders headers) {
+    public List<Post> getAllFiltered(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortOrder,
+            @RequestHeader HttpHeaders headers) {
         try {
             authenticationHelper.tryGetUser(headers);
             PostFilterOptions postFilterOptions = new PostFilterOptions(title, author, sortBy, sortOrder);
             return service.getFiltered(postFilterOptions);
-        }catch (AuthorizationException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
-        }
-    }
-    @GetMapping("/user/{id}")
-public List<Post>getBtUserId(
-        @RequestParam(required = false)String title,
-        @RequestParam(required = false)String sortBy,
-        @RequestParam(required = false)String sortOrder,
-        @PathVariable int id,
-        @RequestHeader HttpHeaders headers){
-        try {
-            PostFilterOptions filterOptions = new PostFilterOptions(title,null,sortBy,sortOrder);
-            authenticationHelper.tryGetUser(headers);
-            return service.getByUserId(filterOptions,id);
-        }catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }catch (EntityNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage());
         }
     }
+
+    @GetMapping("/user/{id}")
+    public List<Post> getBtUserId(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortOrder,
+            @PathVariable int id,
+            @RequestHeader HttpHeaders headers) {
+        try {
+            PostFilterOptions filterOptions = new PostFilterOptions(title, null, sortBy, sortOrder);
+            authenticationHelper.tryGetUser(headers);
+            return service.getByUserId(filterOptions, id);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @GetMapping("/count")
+    public long getCount() {
+        return repository.getPostCount();
+    }
+
     @GetMapping("/recent")
-    public List<Post>getMostRecent(){
+    public List<Post> getMostRecent() {
         return service.getMostRecent();
     }
+
     @GetMapping("/commented")
-    public List<Post>getMostCommented(){
+    public List<Post> getMostCommented() {
         return service.getMostCommented();
     }
 
@@ -75,6 +88,19 @@ public List<Post>getBtUserId(
             return service.getById(id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public void LikePost(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            service.likePost(id, user);
+
+        }catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
         }
     }
 
