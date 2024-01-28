@@ -13,20 +13,34 @@ public class UserMapper {
         this.userService = userService;
     }
 
-    public User fromDto(UserDto userDto) {
+    public User dtoUserCreate(UserDto userDto) {
         User user = new User();
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
+        return user;
+    }
+
+    public User dtoUserUpdate(UserDto userDto) {
+        User user = new User();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setPassword(userDto.getPassword());
+        user.setEmail(userDto.getEmail());
+        return user;
+    }
+
+    public User dtoUserBanStatus(UserDto userDto) {
+        User user = new User();
         user.setBanStatus(userDto.getBanStatus());
         return user;
     }
 
-    public User banStatusFromDto(UserDto userDto) {
+    public User dtoUserAdminStatus(UserDto userDto) {
         User user = new User();
-        user.setBanStatus(userDto.getBanStatus());
+        user.setAdminStatus(userDto.getAdminStatus());
         return user;
     }
 }

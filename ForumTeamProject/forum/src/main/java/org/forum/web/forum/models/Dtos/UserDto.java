@@ -12,6 +12,8 @@ public class UserDto {
     private String email;
     private boolean banStatus;
 
+    private boolean adminStatus;
+
     public UserDto() {
     }
 
@@ -50,6 +52,10 @@ public class UserDto {
         return banStatus;
     }
 
+    public boolean getAdminStatus() {
+        return adminStatus;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -72,5 +78,9 @@ public class UserDto {
 
     public void setBanStatus(boolean banStatus) {
         this.banStatus = banStatus;
+    }
+
+    public void setAdminStatus(boolean adminStatus) {
+        this.adminStatus = adminStatus;
     }
 }

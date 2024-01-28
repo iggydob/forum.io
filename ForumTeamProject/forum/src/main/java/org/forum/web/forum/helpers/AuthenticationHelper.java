@@ -63,7 +63,7 @@ public class AuthenticationHelper {
         }
     }
     public void checkIfBanned(User user) {
-        if (user.isBanned()) {
+        if (user.getBanStatus()) {
             throw new AuthorizationException("This user is banned!");
         }
     }
@@ -74,7 +74,7 @@ public class AuthenticationHelper {
     }
 
     public void checkAdmin(User user) {
-        if (!user.isAdmin()) {
+        if (!user.getAdminStatus()) {
             throw new AuthorizationException(AUTHORIZATION_ERROR);
         }
     }

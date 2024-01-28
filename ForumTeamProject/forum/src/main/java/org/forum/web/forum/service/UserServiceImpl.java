@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
             throw new EntityDuplicateException("User", "e-mail", user.getEmail());
         }
 
-        user.setAdmin(false);
+        user.setAdminStatus(false);
         user.setBanStatus(false);
 
         userRepository.create(user);
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
 //    }
 
     private void checkAdminRole(User user) {
-        if (!user.isAdmin()) {
+        if (!user.getAdminStatus()) {
             throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
         }
     }
@@ -75,7 +75,6 @@ public class UserServiceImpl implements UserService {
     public List<User> getFiltered(UserFilterOptions userFilterOptions) {
         return userRepository.getFiltered(userFilterOptions);
     }
-
 
     @Override
     public List<User> getAll() {
@@ -93,9 +92,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void banUser(int id, User userDetails) {
+    public void changeBanStatus(int id, User userDetails) {
         User userToUpdate = userRepository.getById(id);
         userToUpdate.setBanStatus(userDetails.getBanStatus());
+        userRepository.update(userToUpdate);
+    }
+
+    @Override
+    public void changeAdminStatus(int id, User userDetails) {
+        User userToUpdate = userRepository.getById(id);
+
+
+
+        userRepository.update(userToUpdate);
+    }
+
+    @Override
+    public void update(int id) {
+        User userToUpdate = userRepository.getById(id);
+//        userToUpdate.setBanStatus(userDetails.getBanStatus());
         userRepository.update(userToUpdate);
     }
 }

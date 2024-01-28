@@ -33,9 +33,9 @@ public class User {
 
     @JsonIgnore
     @Column(name = "is_admin")
-    private boolean isAdmin;
-//    @JsonIgnore
-    @Column(name   = "is_banned")
+    private boolean adminStatus;
+    @JsonIgnore
+    @Column(name = "is_banned")
     private boolean banStatus;
 
 //    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -86,8 +86,8 @@ public class User {
         return email;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
+    public boolean getAdminStatus() {
+        return adminStatus;
     }
 
     public boolean getBanStatus() {
@@ -122,12 +122,12 @@ public class User {
         this.email = email;
     }
 
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
+    public void setAdminStatus(boolean adminStatus) {
+        this.adminStatus = adminStatus;
     }
 
-    public void setBanStatus(boolean banned) {
-        banStatus = banned;
+    public void setBanStatus(boolean banStatus) {
+        this.banStatus = banStatus;
     }
 
 //    public void setPhoneNumber(String phoneNumber) {

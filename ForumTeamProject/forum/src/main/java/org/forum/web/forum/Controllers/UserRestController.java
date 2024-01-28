@@ -37,7 +37,7 @@ public class UserRestController {
     public List<User> getAll(@RequestHeader HttpHeaders headers) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            if (!user.isAdmin()) {
+            if (!user.getAdminStatus()) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ERROR_MESSAGE);
             }
             return service.getAll();
@@ -51,7 +51,7 @@ public class UserRestController {
             @Valid
             @RequestBody UserDto userDto) {
         try {
-            User user = userMapper.fromDto(userDto);
+            User user = userMapper.dtoUserCreate(userDto);
             service.create(user);
             return user;
         } catch (EntityDuplicateException e) {
@@ -124,16 +124,51 @@ public class UserRestController {
     }
 
     @PutMapping("/{id}")
-    public void banUser(
+    public void update(
+            @PathVariable int id,
+            @RequestHeader HttpHeaders headers,
+//            @RequestParam(required = false) boolean adminStatus,
+//            @RequestParam(required = false) boolean banStatus) {
+//        try {
+//            User user = authenticationHelper.tryGetUser(headers);
+//            checkAdminRole(user);
+////            service.banUser(id, userDetails);
+//        } catch (AuthorizationException e) {
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+//        }
+//    }
+
+
+    @PutMapping("/{id}/banStatus")
+    // TODO: Should I create two separate methods /{userId}/banUser and /{userId}/adminStatus
+    public void changeBanStatus(
             @RequestHeader HttpHeaders headers,
             @PathVariable int id,
             @Valid
             @RequestBody UserDto userDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            User userDetails = userMapper.banStatusFromDto(userDto);
+            User userDetails = userMapper.dtoUserBanStatus(userDto);
             checkAdminRole(user);
-            service.banUser(id, userDetails);
+            service.changeBanStatus(id, userDetails);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/adminStatus")
+    public void changeAdminStatus(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable int id,
+            @Valid
+            @RequestBody UserDto userDto) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            User userDetails = userMapper.dtoUserAdminStatus(userDto);
+            checkAdminRole(user);
+            service.changeAdminStatus(id, userDetails);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
@@ -142,13 +177,13 @@ public class UserRestController {
     }
 
     private static void checkAdminRole(User executingUser) {
-        if (!executingUser.isAdmin()) {
+        if (!executingUser.getAdminStatus()) {
             throw new AuthorizationException(ERROR_MESSAGE);
         }
     }
 
     private static void checkAccessPermissions(int targetUserId, User executingUser) {
-        if (!executingUser.isAdmin() && executingUser.getUserId() != targetUserId) {
+        if (!executingUser.getAdminStatus() && executingUser.getUserId() != targetUserId) {
             throw new AuthorizationException(ERROR_MESSAGE);
         }
     }

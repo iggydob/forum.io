@@ -18,7 +18,11 @@ public interface UserService {
 
     User getByUsername(String username);
 
-    public void banUser(int id, User userDetails);
+    public void changeBanStatus(int id, User userDetails);
+
+    public void changeAdminStatus(int id, User userDetails);
+
+    public void update(int id, User userDetails);
 
     List<User> getFiltered(UserFilterOptions userFilterOptions);
 }
