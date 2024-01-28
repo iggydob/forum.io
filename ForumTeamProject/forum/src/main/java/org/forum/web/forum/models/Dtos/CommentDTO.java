@@ -1,11 +1,15 @@
 package org.forum.web.forum.models.Dtos;
 
+import jakarta.validation.constraints.Positive;
+
 import java.sql.Timestamp;
 
 public class CommentDTO {
 
     private String content;
     private Timestamp creationDate;
+//    @Positive(message = "PostId should be positive")
+//    private int postID;
 
     public CommentDTO() {
     }
@@ -19,10 +23,18 @@ public class CommentDTO {
     }
 
     public Timestamp getCreationDate() {
-        return this.creationDate = Timestamp.valueOf(creationDate.toLocalDateTime());
+        return creationDate;
     }
 
     public void setCreationDate(Timestamp creationDate) {
-        this.creationDate = creationDate;
+        this.creationDate = Timestamp.valueOf(creationDate.toLocalDateTime());
     }
+//
+//    public int getPostID() {
+//        return postID;
+//    }
+//
+//    public void setPostID(int postID) {
+//        this.postID = postID;
+//    }
 }

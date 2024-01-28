@@ -10,6 +10,8 @@ import org.forum.web.forum.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,25 +29,22 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void create(Post post, User user, Comment comment) {
-        comment.setPost(post);
+    public void create(User user, Comment comment) {
         comment.setCreator(user);
+        comment.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         repository.create(comment);
     }
 
     @Override
-    public void update(Post post, User user, Comment comment) {
+    public void update(User user, Comment comment) {
         authorization(user, comment);
         repository.update(comment);
     }
-
-
-
-
     @Override
-    public void delete(User user, Comment comment) {
+    public void delete(User user, int id) {
+        Comment comment = repository.getById(id);
         authorization(user, comment);
-        repository.delete(comment.getId());
+        repository.delete(id);
     }
 
     @Override
@@ -58,36 +57,36 @@ public class CommentServiceImpl implements CommentService{
         return repository.getAll();
     }
 
-//    @Override
-//    public void likeComment(int commentID, User user) {
-//        Comment likeComment = repository.getById(commentID);
-//
-//        for (Like like : likeComment.getLikedList()){
-//            if (like.getUserId() == user.getUserId() && !like.isDeleted()){
-//                throw new EntityDuplicateException(DUPLICATE_LIKE_COMMENT_ERROR_MESSAGE);
-//            }
-//        }
-//        likeComment.getLikedList().add(new Like(user.getUserId(), commentID));
-//        repository.update(likeComment);
-//    }
+    @Override
+    public void likeComment(int commentID, User user) {
+        Comment likeComment = repository.getById(commentID);
 
-//    @Override
-//    public void dislikeComment(int commentID, User user) {
-//        Comment commentToDislike = repository.getById(commentID);
-//
-//        if (commentToDislike.getLikedList().isEmpty()){
-//            throw new AuthorizationException(DISSLIKE_COMMENT_ERROR_MESSAGE);
-//        }
-//        for (Like like : commentToDislike.getLikedList()){
-//            if (like.getUserId() == user.getUserId() && !like.isDeleted()){
-//                like.setDeleted(true);
-//                repository.update(commentToDislike);
-//            }
-//        }
-//        throw new AuthorizationException(DISSLIKE_COMMENT_ERROR_MESSAGE);
-//    }
+        for (Like like : likeComment.getLikedList()){
+            if (like.getUser() == user && !like.isDeleted()){
+                throw new EntityDuplicateException(DUPLICATE_LIKE_COMMENT_ERROR_MESSAGE);
+            }
+        }
+        likeComment.getLikedList().add(new Like(user, likeComment));
+        repository.update(likeComment);
+    }
+
+    @Override
+    public void dislikeComment(int commentID, User user) {
+        Comment commentToDislike = repository.getById(commentID);
+
+        if (commentToDislike.getLikedList().isEmpty()){
+            throw new AuthorizationException(DISSLIKE_COMMENT_ERROR_MESSAGE);
+        }
+        for (Like like : commentToDislike.getLikedList()){
+            if (like.getUser().getUserId() == user.getUserId() && !like.isDeleted()){
+                like.setDeleted(true);
+                repository.update(commentToDislike);
+            }
+        }
+        throw new AuthorizationException(DISSLIKE_COMMENT_ERROR_MESSAGE);
+    }
     private static void authorization(User user, Comment comment) {
-        if (comment.getCreator().getUserId() != user.getUserId() && !user.isAdmin()){
+        if (comment.getCreator() != user && !user.isAdmin()){
             throw new AuthorizationException(MODIFY_COMMENT_ERROR_MESSAGE);
         }
     }
