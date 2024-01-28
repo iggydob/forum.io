@@ -13,6 +13,7 @@ public class AuthenticationHelper {
 
     private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private static final String INVALID_AUTHENTICATION_ERROR = "Invalid user or password.";
+    private static final String AUTHORIZATION_ERROR = "Access denied! You are not allowed to perform this action!";
 
     private final UserService userService;
 
@@ -59,6 +60,22 @@ public class AuthenticationHelper {
             return user;
         } catch (EntityNotFoundException e) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
+        }
+    }
+    public void checkIfBanned(User user) {
+        if (user.isBanned()) {
+            throw new AuthorizationException("This user is banned!");
+        }
+    }
+    public void checkAuthor(User user, User userToCheck) {
+        if (userToCheck.getUserId() != user.getUserId()) {
+            throw new AuthorizationException(AUTHORIZATION_ERROR);
+        }
+    }
+
+    public void checkAdmin(User user) {
+        if (!user.isAdmin()) {
+            throw new AuthorizationException(AUTHORIZATION_ERROR);
         }
     }
 }
