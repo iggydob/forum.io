@@ -89,7 +89,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private void checkIfBanned(User user) {
-        if (user.isBanned()) {
+        if (user.getBanStatus()) {
             throw new AuthorizationException("This user is banned!");
         }
     }

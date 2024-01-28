@@ -1,7 +1,6 @@
 package org.forum.web.forum.models.Dtos;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class UserDto {
@@ -11,7 +10,7 @@ public class UserDto {
     private String username;
     private String password;
     private String email;
-    private boolean isBanned;
+    private boolean banStatus;
 
     public UserDto() {
     }
@@ -46,9 +45,9 @@ public class UserDto {
         return email;
     }
 
-//    @NotNull(message = "Banned status field cannot be an empty field.")
-    public boolean getBannedStatus() {
-        return isBanned;
+//    @NotNull(message = "Ban status field cannot be an empty field.")
+    public boolean getBanStatus() {
+        return banStatus;
     }
 
     public void setFirstName(String firstName) {
@@ -71,7 +70,7 @@ public class UserDto {
         this.email = email;
     }
 
-    public void setBanStatus(Boolean banStatus) {
-        this.isBanned = isBanned;
+    public void setBanStatus(boolean banStatus) {
+        this.banStatus = banStatus;
     }
 }

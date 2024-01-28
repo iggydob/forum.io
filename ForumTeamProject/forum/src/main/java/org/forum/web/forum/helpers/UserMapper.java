@@ -20,13 +20,13 @@ public class UserMapper {
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
-        user.setBanned(userDto.getBannedStatus());
+        user.setBanStatus(userDto.getBanStatus());
         return user;
     }
 
     public User banStatusFromDto(UserDto userDto) {
         User user = new User();
-        user.setBanned(userDto.getBannedStatus());
+        user.setBanStatus(userDto.getBanStatus());
         return user;
     }
 }

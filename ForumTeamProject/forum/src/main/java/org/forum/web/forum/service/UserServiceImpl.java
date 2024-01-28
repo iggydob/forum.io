@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setAdmin(false);
-        user.setBanned(false);
+        user.setBanStatus(false);
 
         userRepository.create(user);
     }
@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void banUser(int id, User userDetails) {
         User userToUpdate = userRepository.getById(id);
-        userToUpdate.setBanned(userDetails.isBanned());
+        userToUpdate.setBanStatus(userDetails.getBanStatus());
         userRepository.update(userToUpdate);
     }
 }

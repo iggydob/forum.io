@@ -3,8 +3,6 @@ package org.forum.web.forum.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -36,9 +34,9 @@ public class User {
     @JsonIgnore
     @Column(name = "is_admin")
     private boolean isAdmin;
-    @JsonIgnore
-    @Column(name = "is_banned")
-    private boolean isBanned;
+//    @JsonIgnore
+    @Column(name   = "is_banned")
+    private boolean banStatus;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "phone_numbers",
@@ -92,8 +90,8 @@ public class User {
         return isAdmin;
     }
 
-    public boolean isBanned() {
-        return isBanned;
+    public boolean getBanStatus() {
+        return banStatus;
     }
 
 //    public String getPhoneNumber() {
@@ -128,8 +126,8 @@ public class User {
         isAdmin = admin;
     }
 
-    public void setBanned(boolean banned) {
-        isBanned = banned;
+    public void setBanStatus(boolean banned) {
+        banStatus = banned;
     }
 
 //    public void setPhoneNumber(String phoneNumber) {
