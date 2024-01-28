@@ -1,5 +1,7 @@
 package org.forum.web.forum.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -13,12 +15,14 @@ public class Like {
     @Column(name = "liked_comments_id")
     private int id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "comment_id")
+    @JsonIgnoreProperties("likedList")
     private Comment comment;
     @Column(name = "isDeleted")
     private boolean isDeleted;
