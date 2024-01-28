@@ -10,14 +10,15 @@ import org.springframework.stereotype.Component;
 public class CommentMapper {
 
     private final PostService postService;
-
-    public CommentMapper(PostService postService) {
+    private final CommentService commentService;
+    public CommentMapper(PostService postService, CommentService commentService) {
         this.postService = postService;
+        this.commentService = commentService;
     }
 
-    public Comment fromDto(int id, int postID, CommentDTO commentDTO) {
-        Comment comment = fromDto(postID, commentDTO);
-        comment.setId(id);
+    public Comment fromDto(CommentDTO commentDTO, int id) {
+        Comment comment = commentService.getById(id);
+        comment.setContent(commentDTO.getContent());
         return comment;
     }
 

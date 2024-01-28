@@ -2,6 +2,7 @@ package org.forum.web.forum.repository;
 
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.Comment;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -60,10 +61,15 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public Comment getById(int id) {
         try (Session session = sessionFactory.openSession()) {
-            Comment comment = session.get(Comment.class, id);
+            Comment comment = session.createQuery(
+                            "SELECT c FROM Comment c LEFT JOIN FETCH c.likedList WHERE c.id = :id", Comment.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
+
             if (comment == null) {
                 throw new EntityNotFoundException("Comment", id);
             }
+
             return comment;
         }
     }

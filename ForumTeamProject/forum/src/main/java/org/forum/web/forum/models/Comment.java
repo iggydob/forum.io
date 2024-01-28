@@ -1,11 +1,16 @@
 package org.forum.web.forum.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "comments")
@@ -34,13 +39,24 @@ public class Comment {
 //    @Column(name = "isDeleted")
 //    private boolean isDeleted;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "liked_comments",
-            joinColumns = @JoinColumn(name = "comment_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<Like> likedList;
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "liked_comments",
+//            joinColumns = @JoinColumn(name = "comment_id"),
+//            inverseJoinColumns = @JoinColumn(name = "user_id")
+//    )
+//    private Set<Like> likedList;
+//    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Like> likedList;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<Like> likedList = new HashSet<>();
+
+
+
+
+
 
 //    @ManyToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    private Set<Like> likedList;
@@ -63,8 +79,6 @@ public class Comment {
     public void setLikedList(Set<Like> likedList) {
         this.likedList = likedList;
     }
-
-
 
     public int getId() {
         return id;
