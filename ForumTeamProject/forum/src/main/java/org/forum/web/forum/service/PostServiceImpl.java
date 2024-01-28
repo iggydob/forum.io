@@ -61,6 +61,7 @@ public class PostServiceImpl implements PostService {
         try {
             authenticationHelper.checkIfBanned(user);
             LikePost likePost = likePostService.get(post, user);
+            post.setNewLike(user);
             likePostService.delete(likePost);
         } catch (EntityNotFoundException e) {
             likePostService.create(post, user);

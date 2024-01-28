@@ -1,11 +1,16 @@
 package org.forum.web.forum.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "posts")
@@ -25,11 +30,30 @@ public class Post {
     private String content;
     @Column(name = "creation_date")
     private Timestamp creationDate;
-//    @JsonIgnore
-//    @ManyToMany(mappedBy = "likedPosts", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-//    private Set<User> likedByUser;
+    //Comment @JsonBackReference
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private List<Comment> comments;
+    @ManyToMany(mappedBy = "likedPosts", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private Set<User> likedByUser;
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "posts_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags;
 
     public Post() {
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 
     public int getId() {
@@ -72,19 +96,27 @@ public class Post {
         this.creationDate = creationDate;
     }
 
-//    public Set<User> getLikedByUser() {
-//        if (likedByUser == null) {
-//            return new HashSet<>();
-//        }
-//        return likedByUser;
+//    public List<Comment> getComments() {
+//        return comments;
 //    }
 //
-//    public void setNewLike(User userLike) {
-//        if (likedByUser == null || likedByUser.isEmpty()) {
-//            this.likedByUser = new HashSet<>();
-//        }
-//        likedByUser.add(userLike);
+//    public void setComments(List<Comment> comments) {
+//        this.comments = comments;
 //    }
+
+    public Set<User> getLikedByUser() {
+        if (likedByUser == null) {
+            return new HashSet<>();
+        }
+        return likedByUser;
+    }
+
+    public void setNewLike(User userLike) {
+        if (likedByUser == null || likedByUser.isEmpty()) {
+            this.likedByUser = new HashSet<>();
+        }
+        likedByUser.add(userLike);
+    }
 
     @Override
     public boolean equals(Object object) {
