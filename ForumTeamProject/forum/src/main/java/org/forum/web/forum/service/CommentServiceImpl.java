@@ -2,11 +2,13 @@ package org.forum.web.forum.service;
 
 import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityDuplicateException;
+import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.Comment;
 import org.forum.web.forum.models.Like;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.repository.CommentRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +24,18 @@ public class CommentServiceImpl implements CommentService{
     private static final String DISSLIKE_COMMENT_ERROR_MESSAGE = "User has not liked this comment.";
 
     private final CommentRepository repository;
+    private final AuthenticationHelper authenticationHelper;
+
 
     @Autowired
-    public CommentServiceImpl(CommentRepository repository) {
+    public CommentServiceImpl(CommentRepository repository, AuthenticationHelper authenticationHelper) {
         this.repository = repository;
+        this.authenticationHelper = authenticationHelper;
     }
 
     @Override
     public void create(User user, Comment comment) {
+        authenticationHelper.checkIfBanned(user);
         comment.setCreator(user);
         comment.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         repository.create(comment);
@@ -37,13 +43,17 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public void update(User user, Comment comment) {
-        authorization(user, comment);
+        authenticationHelper.checkAdmin(user);
+        authenticationHelper.checkAuthor(comment.getCreator(), user);
+        authenticationHelper.checkIfBanned(user);
         repository.update(comment);
     }
     @Override
     public void delete(User user, int id) {
         Comment comment = repository.getById(id);
-        authorization(user, comment);
+        authenticationHelper.checkAdmin(user);
+        authenticationHelper.checkAuthor(comment.getCreator(), user);
+        authenticationHelper.checkIfBanned(user);
         repository.delete(id);
     }
 
@@ -61,8 +71,10 @@ public class CommentServiceImpl implements CommentService{
     public void likeComment(int commentID, User user) {
         Comment likeComment = repository.getById(commentID);
 
+        Hibernate.initialize(likeComment.getLikedList());
+
         for (Like like : likeComment.getLikedList()){
-            if (like.getUser() == user && !like.isDeleted()){
+            if (like.getUser().equals(user) && !like.isDeleted()){
                 throw new EntityDuplicateException(DUPLICATE_LIKE_COMMENT_ERROR_MESSAGE);
             }
         }
@@ -78,16 +90,20 @@ public class CommentServiceImpl implements CommentService{
             throw new AuthorizationException(DISSLIKE_COMMENT_ERROR_MESSAGE);
         }
         for (Like like : commentToDislike.getLikedList()){
-            if (like.getUser().getUserId() == user.getUserId() && !like.isDeleted()){
+            if (like.getUser().equals(user) && !like.isDeleted()){
                 like.setDeleted(true);
                 repository.update(commentToDislike);
+                return;
             }
         }
         throw new AuthorizationException(DISSLIKE_COMMENT_ERROR_MESSAGE);
     }
-    private static void authorization(User user, Comment comment) {
-        if (comment.getCreator() != user && !user.isAdmin()){
-            throw new AuthorizationException(MODIFY_COMMENT_ERROR_MESSAGE);
-        }
-    }
+
+//    public void deleteLike(User user, int id) {
+//        Comment comment = repository.getById(id);
+//
+//        authorization(user, comment);
+//        repository.delete(id);
+//    }
+
 }
