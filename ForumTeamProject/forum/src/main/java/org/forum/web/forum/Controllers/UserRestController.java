@@ -48,8 +48,7 @@ public class UserRestController {
 
     @PostMapping
     public User create(
-            @Valid
-            @RequestBody UserDto userDto) {
+            @Valid @RequestBody UserDto userDto) {
         try {
             User user = userMapper.dtoUserCreate(userDto);
             service.create(user);
@@ -123,25 +122,25 @@ public class UserRestController {
         return service.getFiltered(userFilterOptions);
     }
 
-//    @PutMapping("/{id}")
-//    public void update(
-//            @PathVariable int id,
-//            @RequestHeader HttpHeaders headers,
-//            @RequestParam(required = false) String firstName,
-//            @RequestParam(required = false) String lastName,
-//            @RequestParam(required = false) String email,
-//            @RequestBody UserDto userDto) {
-//        try {
-//            User user = authenticationHelper.tryGetUser(headers);
-//            User userDetails = userMapper.dtoUserUpdate(userDto);
-//            checkAccessPermissions(id, user);
-//            service.update(id, userDetails);
-//        } catch (AuthorizationException e) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-//        } catch (EntityNotFoundException e){
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        }
-//    }
+    @PutMapping("/{id}/user_details")
+    public void update(
+            @PathVariable int id,
+            @RequestHeader HttpHeaders headers,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String email,
+            @Valid @RequestBody UserDto userDto) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            User userDetails = userMapper.dtoUserUpdate(userDto);
+            checkAccessPermissions(id, user);
+            service.update(id, userDetails);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 
 
     @PutMapping("/{id}/ban_status")
@@ -149,8 +148,7 @@ public class UserRestController {
     public void changeBanStatus(
             @RequestHeader HttpHeaders headers,
             @PathVariable int id,
-            @Valid
-            @RequestBody UserDto userDto) {
+            @Valid @RequestBody UserDto userDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             User userDetails = userMapper.dtoUserBanStatus(userDto);
@@ -167,8 +165,7 @@ public class UserRestController {
     public void changeAdminStatus(
             @RequestHeader HttpHeaders headers,
             @PathVariable int id,
-            @Valid
-            @RequestBody UserDto userDto) {
+            @Valid @RequestBody UserDto userDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             User userDetails = userMapper.dtoUserAdminStatus(userDto);
@@ -185,8 +182,7 @@ public class UserRestController {
     public void changePassword(
             @RequestHeader HttpHeaders headers,
             @PathVariable int id,
-            @Valid
-            @RequestBody UserDto userDto) {
+            @Valid @RequestBody UserDto userDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             User userDetails = userMapper.dtoUserPassword(userDto);
