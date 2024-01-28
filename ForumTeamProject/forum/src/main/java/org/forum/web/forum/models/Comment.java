@@ -31,8 +31,8 @@ public class Comment {
     @Column(name = "creation_date")
     private Timestamp creationDate;
 
-    @Column(name = "isDeleted")
-    private boolean isDeleted;
+//    @Column(name = "isDeleted")
+//    private boolean isDeleted;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -48,13 +48,13 @@ public class Comment {
     public Comment() {
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
+//    public boolean isDeleted() {
+//        return isDeleted;
+//    }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
+//    public void setDeleted(boolean deleted) {
+//        isDeleted = deleted;
+//    }
 
     public Set<Like> getLikedList() {
         return likedList;
