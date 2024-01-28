@@ -85,10 +85,10 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public List<LikePost> getLikedPost(int postId) {
-        try(Session session = sessionFactory.openSession()){
-            Post post =getById(postId);
-            Query<LikePost> query =session.createQuery("Select l from LikePost l where l.post = :post", LikePost.class);
-            query.setParameter("post",post);
+        try (Session session = sessionFactory.openSession()) {
+            Post post = getById(postId);
+            Query<LikePost> query = session.createQuery("Select l from LikePost l where l.post = :post", LikePost.class);
+            query.setParameter("post", post);
             return query.list();
         }
     }
@@ -133,8 +133,8 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     //moje bi shte mi trqbva vuv FE.
     public long getPostCount() {
-        try(Session session = sessionFactory.openSession()){
-            Query<Long>query = session.createQuery("select COUNT (p) from Post p",Long.class);
+        try (Session session = sessionFactory.openSession()) {
+            Query<Long> query = session.createQuery("select COUNT (p) from Post p", Long.class);
             return query.uniqueResult();
         }
     }
@@ -181,6 +181,7 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
+    //todo double check this
     public List<User> getLikedBy(int postId) {
 
         try (Session session = sessionFactory.openSession()) {

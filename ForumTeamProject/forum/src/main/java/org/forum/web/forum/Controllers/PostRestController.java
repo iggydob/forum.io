@@ -50,7 +50,7 @@ public class PostRestController {
     }
 
     @GetMapping("/user/{id}")
-    public List<Post> getBtUserId(
+    public List<Post> getByUserId(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortOrder,
