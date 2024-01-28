@@ -40,11 +40,11 @@ public class User {
     @Column(name = "is_banned")
     private boolean isBanned;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "phone_numbers",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "phone_number_id"))
-    private PhoneNumber phoneNumber;
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinTable(name = "phone_numbers",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "phone_number_id"))
+//    private PhoneNumber phoneNumber;
 
 
 //    @Column(name = "phone_number")

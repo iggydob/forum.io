@@ -26,15 +26,15 @@ VALUES
     (10, 'New Interesting Post Title 11', 'This is a new interesting post. It has enough content to meet the minimum length requirement.', NOW(), 0, 0),
     (10, 'Another New Interesting Post 12', 'This is another new interesting post. It also has enough content to meet the minimum length requirement.', NOW(), 0, 0);
 
-INSERT INTO forum_system.comments (post_id, created_by_id, content, creation_date, `like`, dislike)
+INSERT INTO forum_system.comments (post_id, created_by_id, content, creation_date, isDeleted)
 VALUES
-(1, 2, 'This is a comment on the first post. It is long enough to meet the minimum length requirement.', NOW(), 0, 0),
-(2, 3, 'This is a comment on the second post. It is also long enough to meet the minimum length requirement.', NOW(), 0, 0),
-(3, 4, 'This is a comment on the third post. It is long enough to meet the minimum length requirement.', NOW(), 0, 0),
-(4, 5, 'This is a comment on the fourth post. It is long enough to meet the minimum length requirement.', NOW(), 0, 0),
-(5, 1, 'This is a comment on the fifth post. It is long enough to meet the minimum length requirement.', NOW(), 0, 0),
-(6, 3, 'This is a comment on the sixth post. It is long enough to meet the minimum length requirement.', NOW(), 0, 0),
-(7, 4, 'This is a comment on the seventh post. It is also long enough to meet the minimum length requirement.', NOW(), 0, 0),
-(8, 5, 'This is a comment on the eighth post. It is long enough to meet the minimum length requirement.', NOW(), 0, 0),
-(9, 1, 'This is a comment on the ninth post. It is long enough to meet the minimum length requirement.', NOW(), 0, 0),
-(10, 2, 'This is a comment on the tenth post. It is long enough to meet the minimum length requirement.', NOW(), 0, 0);
+(1, 2, 'This is a comment on the first post. It is long enough to meet the minimum length requirement.', NOW(), false),
+(2, 3, 'This is a comment on the second post. It is also long enough to meet the minimum length requirement.', NOW(), false),
+(3, 4, 'This is a comment on the third post. It is long enough to meet the minimum length requirement.', NOW(), false),
+(4, 5, 'This is a comment on the fourth post. It is long enough to meet the minimum length requirement.', NOW(), false),
+(5, 1, 'This is a comment on the fifth post. It is long enough to meet the minimum length requirement.', NOW(), false),
+(6, 3, 'This is a comment on the sixth post. It is long enough to meet the minimum length requirement.', NOW(), false),
+(7, 4, 'This is a comment on the seventh post. It is also long enough to meet the minimum length requirement.', NOW(), false),
+(8, 5, 'This is a comment on the eighth post. It is long enough to meet the minimum length requirement.', NOW(), false),
+(9, 1, 'This is a comment on the ninth post. It is long enough to meet the minimum length requirement.', NOW(), false),
+(10, 2, 'This is a comment on the tenth post. It is long enough to meet the minimum length requirement.', NOW(), false);

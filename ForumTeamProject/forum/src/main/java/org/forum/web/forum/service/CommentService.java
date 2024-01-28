@@ -9,18 +9,18 @@ import java.util.List;
 
 public interface CommentService {
 
-    void create(Post post, User user, Comment comment);
+    void create(User user, Comment comment);
 
-    void update(Post post, User user, Comment comment);
+    void update(User user, Comment comment);
 
-    void delete(User user, Comment comment);
+    void delete(User user, int id);
 
     Comment getById(int commentId);
 
     List<Comment> getAll();
 
-//    void likeComment(int commentID, User user);
+    void likeComment(int commentID, User user);
 
-//    void dislikeComment(int commentID, User user);
+    void dislikeComment(int commentID, User user);
 
 }

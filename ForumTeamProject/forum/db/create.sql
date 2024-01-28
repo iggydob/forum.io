@@ -34,8 +34,8 @@ create table posts
     title         varchar(64)   not null,
     content       varchar(8192) not null,
     creation_date timestamp     not null,
-    `like`        int           not null,
-    dislike       int           not null,
+    `like`        int           null,
+    dislike       int           null,
     constraint posts_users_user_id_fk
         foreign key (created_by_id) references users (user_id)
 );
