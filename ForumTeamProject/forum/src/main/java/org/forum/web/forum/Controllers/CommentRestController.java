@@ -36,10 +36,10 @@ public class CommentRestController {
     }
 
     @GetMapping
-    public List<Comment> get (@RequestHeader HttpHeaders headers){
+    public List<Comment> get(@RequestHeader HttpHeaders headers) {
         try {
             return service.getAll();
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -48,22 +48,25 @@ public class CommentRestController {
     public Comment get(@PathVariable int id, @RequestHeader HttpHeaders headers) {
         try {
             return service.getById(id);
-        }catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
     @PostMapping("/{postId}")
-    public Comment createComment(@RequestHeader HttpHeaders headers, @PathVariable int postId, @Valid @RequestBody CommentDTO commentDTO){
+    public Comment createComment(@RequestHeader HttpHeaders headers, @PathVariable int postId, @Valid @RequestBody CommentDTO commentDTO) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Comment comment = commentMapper.fromDto(postId, commentDTO);
             service.create(user, comment);
             return comment;
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+    // api/posts/idPost/Comments * /commID
 
     @PutMapping("/{postId}/{id}")
     public Comment updateComment(@RequestHeader HttpHeaders headers, @PathVariable int id, @PathVariable int postId, @Valid @RequestBody CommentDTO commentDTO) {
@@ -92,7 +95,7 @@ public class CommentRestController {
     }
 
     @PostMapping("/likes/{id}")
-    public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable int id){
+    public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             service.likeComment(id, user);
@@ -106,7 +109,7 @@ public class CommentRestController {
     }
 
     @DeleteMapping("/likes/{id}")
-    public void dislikeComment(@RequestHeader HttpHeaders headers, @PathVariable int id){
+    public void dislikeComment(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             service.dislikeComment(id, user);
