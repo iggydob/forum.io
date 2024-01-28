@@ -43,4 +43,10 @@ public class UserMapper {
         user.setAdminStatus(userDto.getAdminStatus());
         return user;
     }
+
+    public User dtoUserPassword(UserDto userDto) {
+        User user = new User();
+        user.setPassword(userDto.getPassword());
+        return user;
+    }
 }

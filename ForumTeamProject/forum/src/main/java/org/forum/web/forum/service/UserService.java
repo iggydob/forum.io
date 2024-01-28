@@ -22,7 +22,9 @@ public interface UserService {
 
     public void changeAdminStatus(int id, User userDetails);
 
-    public void update(int id, User userDetails);
+    public void changePassword(int id, User userDetails);
+
+//    public void update(int id, User userDetails);
 
     List<User> getFiltered(UserFilterOptions userFilterOptions);
 }

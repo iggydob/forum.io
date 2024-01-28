@@ -53,18 +53,6 @@ public class UserServiceImpl implements UserService {
         userRepository.create(user);
     }
 
-//    @Override
-//    public void deleteById(int id, User user) {
-//        checkAdminRole(user);
-//        userRepository.deleteById(id);
-//    }
-//
-//    @Override
-//    public void deleteByUsername(String username, User user) {
-//        checkAdminRole(user);
-//        userRepository.deleteByUsername(username);
-//    }
-
     private void checkAdminRole(User user) {
         if (!user.getAdminStatus()) {
             throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
@@ -101,16 +89,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changeAdminStatus(int id, User userDetails) {
         User userToUpdate = userRepository.getById(id);
-
-
-
+        userToUpdate.setAdminStatus(userDetails.getAdminStatus());
         userRepository.update(userToUpdate);
     }
 
     @Override
-    public void update(int id) {
+    public void changePassword(int id, User userDetails) {
         User userToUpdate = userRepository.getById(id);
-//        userToUpdate.setBanStatus(userDetails.getBanStatus());
+        userToUpdate.setPassword(userDetails.getPassword());
         userRepository.update(userToUpdate);
     }
+
+
+//    @Override
+//    public void update(int id, User userDetails) {
+//        User userToUpdate = userRepository.getById(id);
+//
+//        if (!userDetails.getFirstName().isBlank()) userToUpdate.setFirstName(userDetails.getFirstName());
+//        if (!userDetails.getLastName().isBlank()) userToUpdate.setLastName(userDetails.getLastName());
+//        if (!userDetails.getEmail().isBlank()) {
+//            userToUpdate.setEmail(userDetails.getEmail());
+//        }
+//        userRepository.update(userToUpdate);
+//    }
 }
