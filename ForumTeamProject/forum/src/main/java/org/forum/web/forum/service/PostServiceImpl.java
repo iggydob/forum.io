@@ -2,6 +2,7 @@ package org.forum.web.forum.service;
 
 import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
+import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
@@ -17,14 +18,16 @@ import java.util.List;
 @Service
 public class PostServiceImpl implements PostService {
 
-    private static final String AUTHORIZATION_ERROR = "You are not authorized!";
+
     private final PostRepository postRepository;
     private final LikePostService likePostService;
+    private final AuthenticationHelper authenticationHelper;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, LikePostService likePostService) {
+    public PostServiceImpl(PostRepository postRepository, LikePostService likePostService, AuthenticationHelper authenticationHelper) {
         this.postRepository = postRepository;
         this.likePostService = likePostService;
+        this.authenticationHelper = authenticationHelper;
     }
 
     @Override
@@ -56,6 +59,7 @@ public class PostServiceImpl implements PostService {
     public void likePost(int id, User user) {
         Post post = postRepository.getById(id);
         try {
+            authenticationHelper.checkIfBanned(user);
             LikePost likePost = likePostService.get(post, user);
             likePostService.delete(likePost);
         } catch (EntityNotFoundException e) {
@@ -65,7 +69,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void create(Post post, User user) {
-        checkIfBanned(user);
+        authenticationHelper.checkIfBanned(user);
         post.setCreator(user);
         post.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         postRepository.create(post);
@@ -74,35 +78,17 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void update(Post post, User user) {
-        checkIfBanned(user);
-        checkAuthor(post.getCreator(), user);
+        authenticationHelper.checkIfBanned(user);
+        authenticationHelper.checkAuthor(post.getCreator(), user);
         postRepository.update(post);
 
     }
 
     @Override
     public void delete(Post post, User user) {
-        checkAdmin(user);
-        checkAuthor(post.getCreator(), user);
-        checkIfBanned(user);
+        authenticationHelper.checkAdmin(user);
+        authenticationHelper.checkAuthor(post.getCreator(), user);
+        authenticationHelper.checkIfBanned(user);
         postRepository.delete(post);
-    }
-
-    private void checkIfBanned(User user) {
-        if (user.getBanStatus()) {
-            throw new AuthorizationException("This user is banned!");
-        }
-    }
-
-    private void checkAuthor(User user, User userToCheck) {
-        if (userToCheck.getUserId() != user.getUserId()) {
-            throw new AuthorizationException(AUTHORIZATION_ERROR);
-        }
-    }
-
-    private void checkAdmin(User user) {
-        if (!user.isAdmin()) {
-            throw new AuthorizationException(AUTHORIZATION_ERROR);
-        }
     }
 }
