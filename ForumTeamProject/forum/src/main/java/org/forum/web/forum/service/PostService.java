@@ -1,6 +1,7 @@
 package org.forum.web.forum.service;
 
 import org.forum.web.forum.models.Post;
+import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
 
@@ -16,6 +17,9 @@ public interface PostService {
     List<Post> getMostCommented();
 
     Post getById(int id);
+    void addTagToPost(User userWhoAdds, Post post, Tag tag);
+
+    void deleteTagFromPost(User userWhoDeletes, Post postFromWhichToDelete, Tag tag);
 
     void likePost(int id, User user);
 

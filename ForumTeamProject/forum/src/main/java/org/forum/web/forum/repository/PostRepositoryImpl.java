@@ -29,32 +29,6 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public List<Post> getByUserId(PostFilterOptions filterOptions, int id) {
-        try (Session session = sessionFactory.openSession()) {
-            User user = userRepository.getById(id);
-            List<String> filters = new ArrayList<>();
-            Map<String, Object> params = new HashMap<>();
-
-            filterOptions.getTitle().ifPresent(value -> {
-                filters.add("title like :title");
-                params.put("title", String.format("%%%s%%", value));
-            });
-            StringBuilder queryString = new StringBuilder("from Post where creator = :creator");
-            if (!filters.isEmpty()) {
-                queryString
-                        .append(" and ")
-                        .append(String.join(" and ", filters));
-            }
-            queryString.append(generatedOrderBy(filterOptions));
-
-            Query<Post> query = session.createQuery(queryString.toString(), Post.class);
-            query.setParameter("creator", user);
-            query.setProperties(params);
-            return query.list();
-        }
-    }
-
-    @Override
     public List<Post> getFiltered(PostFilterOptions postFilterOptions) {
         try (Session session = sessionFactory.openSession()) {
             List<String> filters = new ArrayList<>();
@@ -79,6 +53,32 @@ public class PostRepositoryImpl implements PostRepository {
             Query<Post> query = session.createQuery(queryString.toString(), Post.class);
             query.setProperties(params);
 
+            return query.list();
+        }
+    }
+
+    @Override
+    public List<Post> getByUserId(PostFilterOptions filterOptions, int id) {
+        try (Session session = sessionFactory.openSession()) {
+            User user = userRepository.getById(id);
+            List<String> filters = new ArrayList<>();
+            Map<String, Object> params = new HashMap<>();
+
+            filterOptions.getTitle().ifPresent(value -> {
+                filters.add("title like :title");
+                params.put("title", String.format("%%%s%%", value));
+            });
+            StringBuilder queryString = new StringBuilder("from Post where creator = :creator");
+            if (!filters.isEmpty()) {
+                queryString
+                        .append(" and ")
+                        .append(String.join(" and ", filters));
+            }
+            queryString.append(generatedOrderBy(filterOptions));
+
+            Query<Post> query = session.createQuery(queryString.toString(), Post.class);
+            query.setParameter("creator", user);
+            query.setProperties(params);
             return query.list();
         }
     }

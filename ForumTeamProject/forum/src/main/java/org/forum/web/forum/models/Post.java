@@ -36,7 +36,7 @@ public class Post {
 //    private List<Comment> comments;
     @ManyToMany(mappedBy = "likedPosts", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<User> likedByUser;
-    @JsonIgnore
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "posts_tags",

@@ -5,6 +5,7 @@ import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;
+import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.repository.PostRepository;
@@ -21,23 +22,25 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final LikePostService likePostService;
+    private final TagService tagService;
     private final AuthenticationHelper authenticationHelper;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, LikePostService likePostService, AuthenticationHelper authenticationHelper) {
+    public PostServiceImpl(PostRepository postRepository, LikePostService likePostService, TagService tagService, AuthenticationHelper authenticationHelper) {
         this.postRepository = postRepository;
         this.likePostService = likePostService;
+        this.tagService = tagService;
         this.authenticationHelper = authenticationHelper;
-    }
-
-    @Override
-    public List<Post> getByUserId(PostFilterOptions postFilterOptions, int id) {
-        return postRepository.getByUserId(postFilterOptions, id);
     }
 
     @Override
     public List<Post> getFiltered(PostFilterOptions postFilterOptions) {
         return postRepository.getFiltered(postFilterOptions);
+    }
+
+    @Override
+    public List<Post> getByUserId(PostFilterOptions postFilterOptions, int id) {
+        return postRepository.getByUserId(postFilterOptions, id);
     }
 
     @Override
@@ -56,6 +59,25 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public void addTagToPost(User userWhoAdds, Post post, Tag tag) {
+        authenticationHelper.checkIfBanned(userWhoAdds);
+        authenticationHelper.checkAuthor(userWhoAdds,post.getCreator());
+
+        Tag newTag = tagService.create(tag,userWhoAdds);
+        post.getTags().add(newTag);
+        postRepository.update(post);
+    }
+
+    @Override
+    public void deleteTagFromPost(User userWhoDeletes, Post postFromWhichToDelete, Tag tag) {
+        authenticationHelper.checkIfBanned(userWhoDeletes);
+        authenticationHelper.checkAuthor(userWhoDeletes,postFromWhichToDelete.getCreator());
+
+        postFromWhichToDelete.getTags().remove(tag);
+        postRepository.update(postFromWhichToDelete);
+    }
+
+    @Override
     public void likePost(int id, User user) {
         Post post = postRepository.getById(id);
         try {
@@ -67,6 +89,7 @@ public class PostServiceImpl implements PostService {
             likePostService.create(post, user);
         }
     }
+
 
     @Override
     public void create(Post post, User user) {

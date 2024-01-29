@@ -5,12 +5,16 @@ import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.helpers.PostMapper;
+import org.forum.web.forum.helpers.TagMapper;
 import org.forum.web.forum.models.Dtos.PostDto;
+import org.forum.web.forum.models.Dtos.TagDto;
 import org.forum.web.forum.models.Post;
+import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.repository.PostRepository;
 import org.forum.web.forum.service.PostService;
+import org.forum.web.forum.service.TagService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +29,16 @@ public class PostRestController {
     private final PostRepository repository;
     private final AuthenticationHelper authenticationHelper;
     private final PostMapper postMapper;
+    private final TagMapper tagMapper;
+    private final TagService tagService;
 
-    public PostRestController(PostService service, PostRepository repository, AuthenticationHelper authenticationHelper, PostMapper postMapper) {
+    public PostRestController(PostService service, PostRepository repository, AuthenticationHelper authenticationHelper, PostMapper postMapper, TagMapper tagMapper, TagService tagService) {
         this.service = service;
         this.repository = repository;
         this.authenticationHelper = authenticationHelper;
         this.postMapper = postMapper;
+        this.tagMapper = tagMapper;
+        this.tagService = tagService;
     }
 
     @GetMapping
@@ -100,6 +108,34 @@ public class PostRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{postId}/tags")
+    public void addTagToPost(@RequestHeader HttpHeaders headers, @PathVariable int postId, @Valid @RequestBody TagDto tagDto) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            Post post = repository.getById(postId);
+            Tag tag = tagMapper.fromDto(tagDto);
+            service.addTagToPost(user, post, tag);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{postId}/tags/{tagId}")
+    public void removeTagFromPost(@RequestHeader HttpHeaders headers, @PathVariable int postId, @PathVariable int tagId) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            Post post = repository.getById(postId);
+            Tag tag = tagService.getById(tagId);
+            service.deleteTagFromPost(user, post, tag);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
