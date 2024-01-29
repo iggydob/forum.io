@@ -43,7 +43,6 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public void update(User user, Comment comment) {
-        authenticationHelper.checkAdmin(user);
         authenticationHelper.checkAuthor(comment.getCreator(), user);
         authenticationHelper.checkIfBanned(user);
         repository.update(comment);

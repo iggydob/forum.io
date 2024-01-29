@@ -2,6 +2,8 @@ package org.forum.web.forum.helpers;
 
 import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
+import org.forum.web.forum.models.Comment;
+import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +71,16 @@ public class AuthenticationHelper {
     }
     public void checkAuthor(User user, User userToCheck) {
         if (userToCheck.getUserId() != user.getUserId()) {
+            throw new AuthorizationException(AUTHORIZATION_ERROR);
+        }
+    }
+    public void checkAuthor(User user, Post post){
+        if (user.getUserId() != post.getCreator().getUserId()){
+            throw new AuthorizationException(AUTHORIZATION_ERROR);
+        }
+    }
+    public void checkAuthor(User user, Comment comment){
+        if (user.getUserId() != comment.getCreator().getUserId()){
             throw new AuthorizationException(AUTHORIZATION_ERROR);
         }
     }

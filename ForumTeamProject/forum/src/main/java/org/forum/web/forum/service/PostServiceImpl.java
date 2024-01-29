@@ -61,9 +61,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public void addTagToPost(User userWhoAdds, Post post, Tag tag) {
         authenticationHelper.checkIfBanned(userWhoAdds);
-        authenticationHelper.checkAuthor(userWhoAdds,post.getCreator());
+        authenticationHelper.checkAuthor(userWhoAdds, post.getCreator());
 
-        Tag newTag = tagService.create(tag,userWhoAdds);
+        Tag newTag = tagService.create(tag, userWhoAdds);
         post.getTags().add(newTag);
         postRepository.update(post);
     }
@@ -71,7 +71,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deleteTagFromPost(User userWhoDeletes, Post postFromWhichToDelete, Tag tag) {
         authenticationHelper.checkIfBanned(userWhoDeletes);
-        authenticationHelper.checkAuthor(userWhoDeletes,postFromWhichToDelete.getCreator());
+        authenticationHelper.checkAuthor(userWhoDeletes, postFromWhichToDelete.getCreator());
 
         postFromWhichToDelete.getTags().remove(tag);
         postRepository.update(postFromWhichToDelete);
@@ -103,16 +103,19 @@ public class PostServiceImpl implements PostService {
     @Override
     public void update(Post post, User user) {
         authenticationHelper.checkIfBanned(user);
-        authenticationHelper.checkAuthor(post.getCreator(), user);
+        authenticationHelper.checkAuthor(user, post);
         postRepository.update(post);
 
     }
 
     @Override
     public void delete(Post post, User user) {
-        authenticationHelper.checkAdmin(user);
-        authenticationHelper.checkAuthor(post.getCreator(), user);
-        authenticationHelper.checkIfBanned(user);
-        postRepository.delete(post);
+        try {
+            authenticationHelper.checkAdmin(user);
+            postRepository.delete(post);
+        } catch (AuthorizationException e) {
+            authenticationHelper.checkAuthor(user, post);
+            postRepository.delete(post);
+        }
     }
 }
