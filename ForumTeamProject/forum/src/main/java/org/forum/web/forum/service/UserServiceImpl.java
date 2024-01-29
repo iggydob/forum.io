@@ -101,7 +101,6 @@ public class UserServiceImpl implements UserService {
         userRepository.update(userToUpdate);
     }
 
-
     @Override
     public void update(int id, User userDetails) {
         User userToUpdate = userRepository.getById(id);
@@ -111,6 +110,12 @@ public class UserServiceImpl implements UserService {
         if (!userDetails.getEmail().isBlank()) {
             userToUpdate.setEmail(userDetails.getEmail());
         }
+
+        // Additional check for admin details update
+        if(userDetails.getAdminStatus()){
+            userToUpdate.setEmail(userDetails.getPhoneNumber().getPhoneNumber());
+        }
+
         userRepository.update(userToUpdate);
     }
 }

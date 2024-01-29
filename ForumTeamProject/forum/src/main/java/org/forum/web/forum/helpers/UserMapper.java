@@ -32,6 +32,16 @@ public class UserMapper {
         return user;
     }
 
+    public User dtoAdminUpdate(UserDto userDto) {
+        User user = new User();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setPassword(userDto.getPassword());
+        user.setEmail(userDto.getEmail());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        return user;
+    }
+
     public User dtoUserBanStatus(UserDto userDto) {
         User user = new User();
         user.setBanStatus(userDto.getBanStatus());
