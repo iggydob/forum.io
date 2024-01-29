@@ -1,6 +1,7 @@
 package org.forum.web.forum.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
     @Id
@@ -38,19 +40,14 @@ public class User {
     @Column(name = "is_banned")
     private boolean banStatus;
 
-//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinTable(name = "phone_numbers",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "phone_number_id"))
-//    private PhoneNumber phoneNumber;
-
-
-//    @Column(name = "phone_number")
-//    private String phoneNumber;
+    @OneToOne (mappedBy = "user")
+    @JoinTable(name = "phone_numbers",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "phone_number_id"))
+    private PhoneNumber phoneNumber;
 
 //    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
 //    private List<Post> likedPosts;
-
 
     //work!!!!
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
@@ -60,6 +57,14 @@ public class User {
     private Set<Post> likedPosts;
 
     public User() {
+    }
+
+    public PhoneNumber getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public int getUserId() {

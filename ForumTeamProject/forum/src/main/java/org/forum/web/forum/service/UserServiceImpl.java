@@ -71,6 +71,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(int id) {
+        // TODO: add check here instead of in the controller
         return userRepository.getById(id);
     }
 

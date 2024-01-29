@@ -14,6 +14,13 @@ public class PhoneNumber {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @OneToOne
+    @JoinColumn (name = "user_id")
+    private User user;
+
+    public PhoneNumber() {
+    }
+
     public int getPhoneNumberId() {
         return phoneNumberId;
     }
