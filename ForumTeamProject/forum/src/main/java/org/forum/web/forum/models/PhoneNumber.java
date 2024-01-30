@@ -2,6 +2,8 @@ package org.forum.web.forum.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "phone_numbers")
@@ -13,11 +15,13 @@ public class PhoneNumber {
     @Column(name = "phone_number_id")
     private int phoneNumberId;
 
+    @Size(max = 15, message = "Trolololo!")
     @Column(name = "phone_number")
     private String phoneNumber;
 
     @OneToOne
-    @JoinColumn (name = "user_id")
+    @JsonIgnore
+    @JoinColumn(name = "user_id")
     private User user;
 
     public PhoneNumber() {

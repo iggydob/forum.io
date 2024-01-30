@@ -140,24 +140,54 @@ public class UserRestController {
         }
     }
 
-//    @PutMapping("/{id}/{command}")
-//    // TODO: Implement with a switch-statement
-//    public void changeBanStatus(
-//            @RequestHeader HttpHeaders headers,
-//            @PathVariable int id,
-//            @PathVariable String command
-//            @Valid @RequestBody UserDto userDto) {
-//        try {
-//            User user = authenticationHelper.tryGetUser(headers);
-//            User userDetails = userMapper.dtoUserBanStatus(userDto);
-////            checkAdminRole(user);
-//            service.changeBanStatus(id, userDetails);
-//        } catch (AuthorizationException e) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        }
-//    }
+    @PutMapping("/{id}/status")
+    public void changeUserStatus(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable int id,
+            @PathVariable String status,
+            @Valid @RequestBody UserDto userDto) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            checkAdminRole(user);
+
+            User userDetails = new User();
+
+            switch (status) {
+                case "ban":
+                    userDetails = userMapper.dtoUserBanStatus(userDto);
+                    service.changeBanStatus(id, userDetails);
+                    break;
+                case "promote":
+                    userDetails = userMapper.dtoUserAdminStatus(userDto);
+                    service.changeAdminStatus(id, userDetails);
+                    break;
+            }
+
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+
+    @PutMapping("/{id}/ban_status")
+    public void changeBanStatus(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable int id,
+            @Valid @RequestBody UserDto userDto) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            User userDetails = userMapper.dtoUserBanStatus(userDto);
+            checkAdminRole(user);
+            service.changeBanStatus(id, userDetails);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
 
     @PutMapping("/{id}/admin_status")
     public void changeAdminStatus(
@@ -167,7 +197,7 @@ public class UserRestController {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             User userDetails = userMapper.dtoUserAdminStatus(userDto);
-//            checkAdminRole(user);
+            checkAdminRole(user);
             service.changeAdminStatus(id, userDetails);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());

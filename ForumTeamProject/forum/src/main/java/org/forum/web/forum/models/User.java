@@ -2,6 +2,7 @@ package org.forum.web.forum.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -40,10 +41,11 @@ public class User {
     @Column(name = "is_banned")
     private boolean banStatus;
 
-    @OneToOne (mappedBy = "user")
-    @JoinTable(name = "phone_numbers",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "phone_number_id"))
+    @OneToOne(mappedBy = "user")
+    @JoinColumn(name = "phone_number_id")
+//    @JoinTable(name = "phone_numbers",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "phone_number_id"))
     private PhoneNumber phoneNumber;
 
 //    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)

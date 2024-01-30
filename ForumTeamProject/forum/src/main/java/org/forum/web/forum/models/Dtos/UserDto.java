@@ -42,7 +42,7 @@ public class UserDto {
         return password;
     }
 
-    @Size(max = 10, message = "Phone number should not exceed 10 symbols.")
+//    @Size(max = 10, message = "Phone number should not exceed 10 symbols.")
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
