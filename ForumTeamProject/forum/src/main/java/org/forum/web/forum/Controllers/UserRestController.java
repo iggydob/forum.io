@@ -99,40 +99,32 @@ public class UserRestController {
         return service.getFiltered(userFilterOptions);
     }
 
-    @PutMapping("/{id}/user_details")
+    @PutMapping("/{id}")
     public void update(
             @PathVariable int id,
+//            @PathVariable String userType,
             @RequestHeader HttpHeaders headers,
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
             @RequestParam(required = false) String email,
+            @RequestParam(required = false) String phoneNumber,
             @Valid @RequestBody UserDto userDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             User userDetails = userMapper.dtoUserUpdate(userDto);
+
+//            switch (userType) {
+//                case "user":
+//                    user = userMapper.dtoUserUpdate(userDto);
+//                    break;
+//                case "admin":
+//                    user = userMapper.dtoUserAdminStatus(userDto);
+//                    break;
+//            }
+
             checkAccessPermissions(id, user);
             service.update(id, userDetails);
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
 
-    @PutMapping("/{id}/admin_details")
-    public void update(
-            @PathVariable int id,
-            @RequestHeader HttpHeaders headers,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) PhoneNumber phoneNumber,
-            @Valid @RequestBody UserDto userDto) {
-        try {
-            User user = authenticationHelper.tryGetUser(headers);
-            User userDetails = userMapper.dtoUserUpdate(userDto);
-            checkAdminRole(user);
-            service.update(id, userDetails);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {

@@ -3,6 +3,7 @@ package org.forum.web.forum.service;
 import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityDuplicateException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
+import org.forum.web.forum.models.PhoneNumber;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.UserFilterOptions;
 import org.forum.web.forum.repository.UserRepository;
@@ -16,10 +17,12 @@ public class UserServiceImpl implements UserService {
 
     private static final String AUTHORIZATION_ERROR_MSG = "Access denied. You are not allowed to perform this action.";
     private final UserRepository userRepository;
+    private final PhoneNumberService phoneNumberService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PhoneNumberService phoneNumberService) {
         this.userRepository = userRepository;
+        this.phoneNumberService = phoneNumberService;
     }
 
     @Override
@@ -108,17 +111,26 @@ public class UserServiceImpl implements UserService {
         if (userDetails.getFirstName() != null) {
             userToUpdate.setFirstName(userDetails.getFirstName());
         }
+
         if (userDetails.getLastName() != null) {
             userToUpdate.setLastName(userDetails.getLastName());
         }
+
         if (userDetails.getEmail() != null) {
             userToUpdate.setEmail(userDetails.getEmail());
         }
+
+        if (userDetails.getAdminStatus()) {
+            if (userToUpdate.getPhoneNumber() != null) {
+                userToUpdate.setPhoneNumber(userDetails.getPhoneNumber());
+            } else {
+                PhoneNumber newPhoneNumber = new PhoneNumber();
+                newPhoneNumber.setPhoneNumber(userDetails.getPhoneNumber().getPhoneNumber());
+                phoneNumberService.create(newPhoneNumber);
+                userToUpdate.setPhoneNumber(newPhoneNumber);
+            }
+        }
+
         userRepository.update(userToUpdate);
     }
-
-    // Additional check for admin details update
-//        if(userDetails.getAdminStatus()){
-//            userToUpdate.setEmail(userDetails.getPhoneNumber().getPhoneNumber());
-//        }
 }
