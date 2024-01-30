@@ -185,7 +185,6 @@ public class UserRestController {
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
-
     }
 
     private static void checkAdminRole(User executingUser) {

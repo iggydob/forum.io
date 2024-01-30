@@ -105,17 +105,20 @@ public class UserServiceImpl implements UserService {
     public void update(int id, User userDetails) {
         User userToUpdate = userRepository.getById(id);
 
-        if (!userDetails.getFirstName().isBlank()) userToUpdate.setFirstName(userDetails.getFirstName());
-        if (!userDetails.getLastName().isBlank()) userToUpdate.setLastName(userDetails.getLastName());
-        if (!userDetails.getEmail().isBlank()) {
+        if (userDetails.getFirstName() != null) {
+            userToUpdate.setFirstName(userDetails.getFirstName());
+        }
+        if (userDetails.getLastName() != null) {
+            userToUpdate.setLastName(userDetails.getLastName());
+        }
+        if (userDetails.getEmail() != null) {
             userToUpdate.setEmail(userDetails.getEmail());
         }
-
-        // Additional check for admin details update
-        if(userDetails.getAdminStatus()){
-            userToUpdate.setEmail(userDetails.getPhoneNumber().getPhoneNumber());
-        }
-
         userRepository.update(userToUpdate);
     }
+
+    // Additional check for admin details update
+//        if(userDetails.getAdminStatus()){
+//            userToUpdate.setEmail(userDetails.getPhoneNumber().getPhoneNumber());
+//        }
 }

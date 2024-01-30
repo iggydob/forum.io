@@ -19,25 +19,25 @@ public class UserDto {
     }
 
     //    @NotNull(message = "First name can't be an empty field.")
-    @Size(min = 4, max = 32, message = "First name should be between 4 and 32 symbols.")
+//    @Size(min = 4, max = 32, message = "First name should be between 4 and 32 symbols.")
     public String getFirstName() {
         return firstName;
     }
 
     //    @NotNull(message = "Last name can't be an empty field.")
-    @Size(min = 4, max = 32, message = "Last name should be between 4 and 32 symbols.")
+//    @Size(min = 4, max = 32, message = "Last name should be between 4 and 32 symbols.")
     public String getLastName() {
         return lastName;
     }
 
     //    @NotNull(message = "Username can't be an empty field.")
-    @Size(min = 4, max = 32, message = "Username should be between 4 and 32 symbols.")
+//    @Size(min = 4, max = 32, message = "Username should be between 4 and 32 symbols.")
     public String getUsername() {
         return username;
     }
 
     //    @NotNull(message = "Password can't be an empty field.")
-    @Size(min = 8, max = 32, message = "Password should be at least 8 symbols.")
+//    @Size(min = 8, max = 32, message = "Password should be at least 8 symbols.")
     public String getPassword() {
         return password;
     }

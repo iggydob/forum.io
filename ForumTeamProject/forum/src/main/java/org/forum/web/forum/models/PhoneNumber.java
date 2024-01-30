@@ -2,7 +2,6 @@ package org.forum.web.forum.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -15,7 +14,7 @@ public class PhoneNumber {
     @Column(name = "phone_number_id")
     private int phoneNumberId;
 
-    @Size(max = 15, message = "Trolololo!")
+    @Size(max = 15, message = "Phone number cannot exceed 15 symbols.")
     @Column(name = "phone_number")
     private String phoneNumber;
 
