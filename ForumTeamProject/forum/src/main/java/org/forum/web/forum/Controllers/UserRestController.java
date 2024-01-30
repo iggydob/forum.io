@@ -170,42 +170,6 @@ public class UserRestController {
         }
     }
 
-
-//    @PutMapping("/{id}/ban_status")
-//    public void changeBanStatus(
-//            @RequestHeader HttpHeaders headers,
-//            @PathVariable int id,
-//            @Valid @RequestBody UserDto userDto) {
-//        try {
-//            User user = authenticationHelper.tryGetUser(headers);
-//            User userDetails = userMapper.dtoUserBanStatus(userDto);
-//            checkAdminRole(user);
-//            service.changeBanStatus(id, userDetails);
-//        } catch (AuthorizationException e) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        }
-//    }
-//
-//
-//    @PutMapping("/{id}/admin_status")
-//    public void changeAdminStatus(
-//            @RequestHeader HttpHeaders headers,
-//            @PathVariable int id,
-//            @Valid @RequestBody UserDto userDto) {
-//        try {
-//            User user = authenticationHelper.tryGetUser(headers);
-//            User userDetails = userMapper.dtoUserAdminStatus(userDto);
-//            checkAdminRole(user);
-//            service.changeAdminStatus(id, userDetails);
-//        } catch (AuthorizationException e) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        }
-//    }
-
     @PutMapping("/{id}/password_reset")
     public void changePassword(
             @RequestHeader HttpHeaders headers,
