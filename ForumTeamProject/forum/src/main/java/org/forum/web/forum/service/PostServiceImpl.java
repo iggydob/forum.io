@@ -2,13 +2,17 @@ package org.forum.web.forum.service;
 
 import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
+import org.forum.web.forum.exceptions.UnauthorizedOperationException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
-import org.forum.web.forum.repository.PostRepository;
+import org.forum.web.forum.repository.contracts.PostRepository;
+import org.forum.web.forum.service.contracts.LikePostService;
+import org.forum.web.forum.service.contracts.PostService;
+import org.forum.web.forum.service.contracts.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -80,6 +84,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void likePost(int id, User user) {
         Post post = postRepository.getById(id);
+
         try {
             authenticationHelper.checkIfBanned(user);
             LikePost likePost = likePostService.get(post, user);
@@ -113,7 +118,7 @@ public class PostServiceImpl implements PostService {
         try {
             authenticationHelper.checkAdmin(user);
             postRepository.delete(post);
-        } catch (AuthorizationException e) {
+        } catch (UnauthorizedOperationException e) {
             authenticationHelper.checkAuthor(user, post);
             postRepository.delete(post);
         }

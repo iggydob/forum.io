@@ -3,18 +3,19 @@ package org.forum.web.forum.Controllers;
 import jakarta.validation.Valid;
 import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
+import org.forum.web.forum.exceptions.UnauthorizedOperationException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
-import org.forum.web.forum.helpers.PostMapper;
-import org.forum.web.forum.helpers.TagMapper;
+import org.forum.web.forum.helpers.mappers.PostMapper;
+import org.forum.web.forum.helpers.mappers.TagMapper;
 import org.forum.web.forum.models.Dtos.PostDto;
 import org.forum.web.forum.models.Dtos.TagDto;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
-import org.forum.web.forum.repository.PostRepository;
-import org.forum.web.forum.service.PostService;
-import org.forum.web.forum.service.TagService;
+import org.forum.web.forum.repository.contracts.PostRepository;
+import org.forum.web.forum.service.contracts.PostService;
+import org.forum.web.forum.service.contracts.TagService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -68,7 +69,7 @@ public class PostRestController {
             PostFilterOptions filterOptions = new PostFilterOptions(title, null, sortBy, sortOrder);
             authenticationHelper.tryGetUser(headers);
             return service.getByUserId(filterOptions, id);
-        } catch (AuthorizationException e) {
+        } catch (AuthorizationException | UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -106,7 +107,7 @@ public class PostRestController {
             service.likePost(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (AuthorizationException e) {
+        } catch (AuthorizationException | UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
@@ -118,7 +119,7 @@ public class PostRestController {
             Post post = repository.getById(postId);
             Tag tag = tagMapper.fromDto(tagDto);
             service.addTagToPost(user, post, tag);
-        } catch (AuthorizationException e) {
+        } catch (AuthorizationException | UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -132,7 +133,7 @@ public class PostRestController {
             Post post = repository.getById(postId);
             Tag tag = tagService.getById(tagId);
             service.deleteTagFromPost(user, post, tag);
-        } catch (AuthorizationException e) {
+        } catch (AuthorizationException | UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -146,7 +147,7 @@ public class PostRestController {
             Post post = postMapper.fromDto(postDto);
             service.create(post, user);
             return post;
-        } catch (AuthorizationException e) {
+        } catch (AuthorizationException | UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
 
@@ -161,7 +162,7 @@ public class PostRestController {
             return post;
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (AuthorizationException e) {
+        } catch (AuthorizationException | UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
@@ -175,7 +176,7 @@ public class PostRestController {
             service.delete(post, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (AuthorizationException e) {
+        } catch (AuthorizationException | UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }

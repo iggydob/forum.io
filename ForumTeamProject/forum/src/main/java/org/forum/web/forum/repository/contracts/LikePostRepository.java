@@ -1,4 +1,4 @@
-package org.forum.web.forum.service;
+package org.forum.web.forum.repository.contracts;
 
 import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;
@@ -6,7 +6,8 @@ import org.forum.web.forum.models.User;
 
 import java.util.List;
 
-public interface LikePostService {
+public interface LikePostRepository {
+
     LikePost get(Post post, User user);
 
     List<LikePost> getByUserId(int id);
@@ -15,9 +16,9 @@ public interface LikePostService {
 
     LikePost getById(int id);
 
-    void create(Post post,User user);
+    void create(LikePost likePost);
 
-    void update(LikePost likePost,User user);
+    void update(LikePost likePost);
 
     void delete(LikePost likePost);
 }

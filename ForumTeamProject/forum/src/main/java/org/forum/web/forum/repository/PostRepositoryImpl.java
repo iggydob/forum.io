@@ -1,10 +1,13 @@
 package org.forum.web.forum.repository;
 
+import jakarta.transaction.Transactional;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
+import org.forum.web.forum.repository.contracts.PostRepository;
+import org.forum.web.forum.repository.contracts.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

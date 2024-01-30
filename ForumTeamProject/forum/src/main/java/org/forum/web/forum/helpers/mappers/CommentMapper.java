@@ -1,9 +1,9 @@
-package org.forum.web.forum.helpers;
+package org.forum.web.forum.helpers.mappers;
 
 import org.forum.web.forum.models.Comment;
 import org.forum.web.forum.models.Dtos.CommentDTO;
-import org.forum.web.forum.service.CommentService;
-import org.forum.web.forum.service.PostService;
+import org.forum.web.forum.service.contracts.CommentService;
+import org.forum.web.forum.service.contracts.PostService;
 import org.springframework.stereotype.Component;
 
 @Component

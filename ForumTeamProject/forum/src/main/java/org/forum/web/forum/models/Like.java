@@ -26,6 +26,7 @@ public class Like {
     private Comment comment;
     @Column(name = "isDeleted")
     private boolean isDeleted;
+
     public Like() {
     }
 

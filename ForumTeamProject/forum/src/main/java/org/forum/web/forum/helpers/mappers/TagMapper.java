@@ -1,8 +1,8 @@
-package org.forum.web.forum.helpers;
+package org.forum.web.forum.helpers.mappers;
 
 import org.forum.web.forum.models.Dtos.TagDto;
 import org.forum.web.forum.models.Tag;
-import org.forum.web.forum.service.TagService;
+import org.forum.web.forum.service.contracts.TagService;
 import org.springframework.stereotype.Component;
 
 @Component

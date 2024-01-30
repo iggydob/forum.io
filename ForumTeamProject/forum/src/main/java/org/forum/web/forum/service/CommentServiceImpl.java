@@ -5,9 +5,9 @@ import org.forum.web.forum.exceptions.EntityDuplicateException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.Comment;
 import org.forum.web.forum.models.Like;
-import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
-import org.forum.web.forum.repository.CommentRepository;
+import org.forum.web.forum.repository.contracts.CommentRepository;
+import org.forum.web.forum.service.contracts.CommentService;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
 
     private static final String MODIFY_COMMENT_ERROR_MESSAGE = "Only owner or admin can modify a comment.";
     private static final String DUPLICATE_LIKE_COMMENT_ERROR_MESSAGE = "User already liked this comment.";

@@ -2,6 +2,7 @@ package org.forum.web.forum.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "posts")
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +32,10 @@ public class Post {
     private String content;
     @Column(name = "creation_date")
     private Timestamp creationDate;
-    //Comment @JsonBackReference
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private List<Comment> comments;
+    @JsonIgnore
+    @JsonManagedReference
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Comment> comments;
     @ManyToMany(mappedBy = "likedPosts", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<User> likedByUser;
 
@@ -44,9 +46,19 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<Tag> tags;
+//    @Column(name = "isDeleted")
+//    private boolean isDeleted;
 
     public Post() {
     }
+
+//    public boolean isDeleted() {
+//        return isDeleted;
+//    }
+//
+//    public void setDeleted(boolean deleted) {
+//        isDeleted = deleted;
+//    }
 
     public Set<Tag> getTags() {
         return tags;
@@ -96,13 +108,13 @@ public class Post {
         this.creationDate = creationDate;
     }
 
-//    public List<Comment> getComments() {
-//        return comments;
-//    }
-//
-//    public void setComments(List<Comment> comments) {
-//        this.comments = comments;
-//    }
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public Set<User> getLikedByUser() {
         if (likedByUser == null) {

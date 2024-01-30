@@ -2,7 +2,8 @@ package org.forum.web.forum.repository;
 
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.User;
-import org.forum.web.forum.models.UserFilterOptions;
+import org.forum.web.forum.models.filters.UserFilterOptions;
+import org.forum.web.forum.repository.contracts.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

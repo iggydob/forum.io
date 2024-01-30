@@ -1,4 +1,4 @@
-package org.forum.web.forum.service;
+package org.forum.web.forum.service.contracts;
 
 import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;

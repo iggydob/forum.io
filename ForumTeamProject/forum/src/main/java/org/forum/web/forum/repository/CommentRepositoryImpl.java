@@ -2,7 +2,7 @@ package org.forum.web.forum.repository;
 
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.Comment;
-import org.hibernate.Hibernate;
+import org.forum.web.forum.repository.contracts.CommentRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
