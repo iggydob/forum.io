@@ -1,7 +1,8 @@
 package org.forum.web.forum.service;
 
 import org.forum.web.forum.models.PhoneNumber;
-import org.forum.web.forum.repository.PhoneNumberRepository;
+import org.forum.web.forum.repository.contracts.PhoneNumberRepository;
+import org.forum.web.forum.service.contracts.PhoneNumberService;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,6 +1,7 @@
 package org.forum.web.forum.repository;
 
 import org.forum.web.forum.models.PhoneNumber;
+import org.forum.web.forum.repository.contracts.PhoneNumberRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
