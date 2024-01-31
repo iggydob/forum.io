@@ -70,6 +70,15 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
+    public List<Comment> getPostComments(int postId) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Comment> query = session.createQuery("SELECT c FROM Comment c WHERE c.post.id = :postId", Comment.class)
+                    .setParameter("postId", postId);
+            return query.list();
+        }
+    }
+
+    @Override
     public Comment getById(int id) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();

@@ -53,6 +53,15 @@ public class CommentRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+    @GetMapping("/post/{postId}")
+    public List<Comment> getPostComments(@PathVariable int postId, @RequestHeader HttpHeaders headers) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            return service.getPostComments(postId);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 
     @PostMapping("/{postId}")
     public Comment createComment(@RequestHeader HttpHeaders headers, @PathVariable int postId, @Valid @RequestBody CommentDTO commentDTO) {
@@ -82,19 +91,6 @@ public class CommentRestController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
-//    @PutMapping("/{postId}/{id}")
-//    public Comment updateComment(@RequestHeader HttpHeaders headers, @PathVariable int id, @PathVariable int postId, @Valid @RequestBody CommentDTO commentDTO) {
-//        try {
-//            User user = authenticationHelper.tryGetUser(headers);
-//            Comment comment = commentMapper.fromDto(commentDTO, id);
-//            service.update(user, comment);
-//            return comment;
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        } catch (AuthorizationException e) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-//        }
-//    }
 
     @DeleteMapping("/{id}")
     public void deleteComment(@RequestHeader HttpHeaders headers, @PathVariable int id) {
@@ -107,20 +103,6 @@ public class CommentRestController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
-
-//    @PostMapping("/likes/{id}")
-//    public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-//        try {
-//            User user = authenticationHelper.tryGetUser(headers);
-//            service.likeComment(id, user);
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        } catch (EntityDuplicateException e) {
-//            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-//        } catch (AuthorizationException e) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-//        }
-//    }
 
     @PostMapping("/{reactionType}/{commentId}")
     public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable String reactionType, @PathVariable int commentId) {
@@ -147,34 +129,6 @@ public class CommentRestController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
-
-//    @PostMapping("/dislikes/{id}")
-//    public void dislikeComment(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-//        try {
-//            User user = authenticationHelper.tryGetUser(headers);
-//            service.dislikeComment(id, user);
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        } catch (EntityDuplicateException e) {
-//            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-//        } catch (AuthorizationException e) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-//        }
-//    }
-
-//    @DeleteMapping("/likes/{id}")
-//    public void deleteCommentLike(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-//        try {
-//            User user = authenticationHelper.tryGetUser(headers);
-//            service.dislikeComment(id, user);
-//        } catch (EntityNotFoundException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        } catch (EntityDuplicateException e) {
-//            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-//        } catch (AuthorizationException e) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-//        }
-//    }
 
 
 }

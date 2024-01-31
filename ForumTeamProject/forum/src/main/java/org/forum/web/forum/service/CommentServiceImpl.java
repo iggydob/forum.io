@@ -68,19 +68,35 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public List<Comment> getPostComments(int postId) {
+        return repository.getPostComments(postId);
+    }
+
+    @Override
     public void likeComment(int commentID, User user) {
         Comment likeComment = repository.getById(commentID);
+        boolean isFound = false;
 
         Hibernate.initialize(likeComment.getLikedList());
 
         for (Like like : likeComment.getLikedList()){
             if (like.getUser().equals(user) && !like.isDeleted() && like.isLiked()){
                 throw new EntityDuplicateException(DUPLICATE_LIKE_COMMENT_ERROR_MESSAGE);
+            } else if (like.getUser().equals(user)) {
+                if (like.isDeleted()){
+                    like.setDeleted(false);
+                }
+                like.setLiked(true);
+                isFound = true;
+                break;
             }
         }
-        Like newLike = new Like(user,likeComment);
-        newLike.setLiked(true);
-        likeComment.getLikedList().add(newLike);
+        if (!isFound) {
+            Like newLike = new Like(user, likeComment);
+            newLike.setLiked(true);
+            likeComment.getLikedList().add(newLike);
+        }
+
         repository.update(likeComment);
     }
 
@@ -94,11 +110,15 @@ public class CommentServiceImpl implements CommentService {
         Hibernate.initialize(commentToDislike.getLikedList());
 
         for (Like like : commentToDislike.getLikedList()){
-            if (like.getUser().equals(user) && !like.isDeleted() && like.isLiked()) {
-                isFound = true;
-                like.setLiked(false);
-            } else if (like.getUser().equals(user) && !like.isDeleted() && !like.isLiked()){
+             if (like.getUser().equals(user) && !like.isDeleted() && !like.isLiked()){
                 throw new EntityDuplicateException(DUPLICATE_DISLIKE_COMMENT_ERROR_MESSAGE);
+            } else if (like.getUser().equals(user)) {
+                 if (like.isDeleted()){
+                     like.setDeleted(false);
+                 }
+                 like.setLiked(false);
+                 isFound = true;
+                 break;
             }
         }
 
@@ -120,6 +140,7 @@ public class CommentServiceImpl implements CommentService {
              if (like.getUser().equals(user) && !like.isDeleted()) {
                 like.setDeleted(true);
                 isFound = true;
+                break;
             } else if (like.getUser().equals(user) && like.isDeleted()){
                 throw new EntityNotFoundException(DELETE_COMMENT_REACTION_ERROR_MESSAGE);
             }

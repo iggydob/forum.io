@@ -19,6 +19,8 @@ public interface CommentService {
 
     List<Comment> getAll();
 
+    List<Comment> getPostComments(int postId);
+
     void likeComment(int commentID, User user);
 
     void dislikeComment(int commentID, User user);
