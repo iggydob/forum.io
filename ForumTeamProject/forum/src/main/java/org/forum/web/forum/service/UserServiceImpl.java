@@ -120,15 +120,20 @@ public class UserServiceImpl implements UserService {
             userToUpdate.setEmail(userDetails.getEmail());
         }
 
-        if (userDetails.getAdminStatus()) {
-            if (userToUpdate.getPhoneNumber() != null) {
-                userToUpdate.setPhoneNumber(userDetails.getPhoneNumber());
-            } else {
-                PhoneNumber newPhoneNumber = new PhoneNumber();
-                newPhoneNumber.setPhoneNumber(userDetails.getPhoneNumber().getPhoneNumber());
-                phoneNumberService.create(newPhoneNumber);
-                userToUpdate.setPhoneNumber(newPhoneNumber);
+        if (userToUpdate.getAdminStatus()) {
+            if (userDetails.getPhoneNumber() != null) {
+
+                if (userToUpdate.getPhoneNumber() == null) {
+                    PhoneNumber newPhoneNumber = new PhoneNumber();
+                    newPhoneNumber.setPhoneNumber(userDetails.getPhoneNumber().getPhoneNumber());
+                    phoneNumberService.create(newPhoneNumber);
+                    userToUpdate.setPhoneNumber(newPhoneNumber);
+                } else {
+
+                    userToUpdate.setPhoneNumber(userDetails.getPhoneNumber());
+                }
             }
+
         }
 
         userRepository.update(userToUpdate);
