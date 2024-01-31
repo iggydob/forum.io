@@ -21,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api/comments")
 public class CommentRestController {
 
+    public static final String OPERATION_NOT_FOUND = "Operation not found!";
     private final CommentService service;
     private final AuthenticationHelper authenticationHelper;
 
@@ -107,11 +108,37 @@ public class CommentRestController {
         }
     }
 
-    @PostMapping("/likes/{id}")
-    public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+//    @PostMapping("/likes/{id}")
+//    public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+//        try {
+//            User user = authenticationHelper.tryGetUser(headers);
+//            service.likeComment(id, user);
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        } catch (EntityDuplicateException e) {
+//            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+//        } catch (AuthorizationException e) {
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+//        }
+//    }
+
+    @PostMapping("/{reactionType}/{commentId}")
+    public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable String reactionType, @PathVariable int commentId) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            service.likeComment(id, user);
+            switch (reactionType){
+                case "like":
+                    service.likeComment(commentId, user);
+                    return;
+                case "dislike":
+                    service.dislikeComment(commentId, user);
+                    return;
+                case "delete":
+                    service.deleteReaction(commentId,user);
+                    return;
+                default:
+                    throw new EntityNotFoundException(OPERATION_NOT_FOUND);
+            }
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
@@ -121,19 +148,19 @@ public class CommentRestController {
         }
     }
 
-    @PostMapping("/dislikes/{id}")
-    public void dislikeComment(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-        try {
-            User user = authenticationHelper.tryGetUser(headers);
-            service.dislikeComment(id, user);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (EntityDuplicateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-    }
+//    @PostMapping("/dislikes/{id}")
+//    public void dislikeComment(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+//        try {
+//            User user = authenticationHelper.tryGetUser(headers);
+//            service.dislikeComment(id, user);
+//        } catch (EntityNotFoundException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        } catch (EntityDuplicateException e) {
+//            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+//        } catch (AuthorizationException e) {
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+//        }
+//    }
 
 //    @DeleteMapping("/likes/{id}")
 //    public void deleteCommentLike(@RequestHeader HttpHeaders headers, @PathVariable int id) {

@@ -23,4 +23,6 @@ public interface CommentService {
 
     void dislikeComment(int commentID, User user);
 
+    void deleteReaction(int commentID, User user);
+
 }
