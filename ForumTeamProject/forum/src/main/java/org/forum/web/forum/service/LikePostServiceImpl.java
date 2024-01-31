@@ -3,7 +3,8 @@ package org.forum.web.forum.service;
 import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
-import org.forum.web.forum.repository.LikePostRepository;
+import org.forum.web.forum.repository.contracts.LikePostRepository;
+import org.forum.web.forum.service.contracts.LikePostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

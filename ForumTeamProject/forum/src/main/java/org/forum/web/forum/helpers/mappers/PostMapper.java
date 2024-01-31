@@ -1,8 +1,8 @@
-package org.forum.web.forum.helpers;
+package org.forum.web.forum.helpers.mappers;
 
 import org.forum.web.forum.models.Dtos.PostDto;
 import org.forum.web.forum.models.Post;
-import org.forum.web.forum.service.PostService;
+import org.forum.web.forum.service.contracts.PostService;
 import org.springframework.stereotype.Component;
 
 @Component

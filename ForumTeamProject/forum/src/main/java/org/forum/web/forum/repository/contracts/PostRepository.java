@@ -1,4 +1,4 @@
-package org.forum.web.forum.repository;
+package org.forum.web.forum.repository.contracts;
 
 import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;

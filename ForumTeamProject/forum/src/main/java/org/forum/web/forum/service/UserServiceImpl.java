@@ -5,8 +5,9 @@ import org.forum.web.forum.exceptions.EntityDuplicateException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.PhoneNumber;
 import org.forum.web.forum.models.User;
-import org.forum.web.forum.models.UserFilterOptions;
-import org.forum.web.forum.repository.UserRepository;
+import org.forum.web.forum.models.filters.UserFilterOptions;
+import org.forum.web.forum.repository.contracts.UserRepository;
+import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

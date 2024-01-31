@@ -1,8 +1,8 @@
-package org.forum.web.forum.helpers;
+package org.forum.web.forum.helpers.mappers;
 
 import org.forum.web.forum.models.Dtos.UserDto;
 import org.forum.web.forum.models.User;
-import org.forum.web.forum.service.UserService;
+import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.stereotype.Component;
 
 @Component

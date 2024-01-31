@@ -1,7 +1,7 @@
-package org.forum.web.forum.service;
+package org.forum.web.forum.service.contracts;
 
 import org.forum.web.forum.models.User;
-import org.forum.web.forum.models.UserFilterOptions;
+import org.forum.web.forum.models.filters.UserFilterOptions;
 
 import java.util.List;
 

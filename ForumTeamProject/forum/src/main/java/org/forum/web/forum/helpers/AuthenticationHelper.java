@@ -2,10 +2,11 @@ package org.forum.web.forum.helpers;
 
 import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
+import org.forum.web.forum.exceptions.UnauthorizedOperationException;
 import org.forum.web.forum.models.Comment;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
-import org.forum.web.forum.service.UserService;
+import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -66,28 +67,28 @@ public class AuthenticationHelper {
     }
     public void checkIfBanned(User user) {
         if (user.getBanStatus()) {
-            throw new AuthorizationException("This user is banned!");
+            throw new UnauthorizedOperationException("This user is banned!");
         }
     }
     public void checkAuthor(User user, User userToCheck) {
         if (userToCheck.getUserId() != user.getUserId()) {
-            throw new AuthorizationException(AUTHORIZATION_ERROR);
+            throw new UnauthorizedOperationException(AUTHORIZATION_ERROR);
         }
     }
     public void checkAuthor(User user, Post post){
         if (user.getUserId() != post.getCreator().getUserId()){
-            throw new AuthorizationException(AUTHORIZATION_ERROR);
+            throw new UnauthorizedOperationException(AUTHORIZATION_ERROR);
         }
     }
     public void checkAuthor(User user, Comment comment){
         if (user.getUserId() != comment.getCreator().getUserId()){
-            throw new AuthorizationException(AUTHORIZATION_ERROR);
+            throw new UnauthorizedOperationException(AUTHORIZATION_ERROR);
         }
     }
 
     public void checkAdmin(User user) {
         if (!user.getAdminStatus()) {
-            throw new AuthorizationException(AUTHORIZATION_ERROR);
+            throw new UnauthorizedOperationException(AUTHORIZATION_ERROR);
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.forum.web.forum.models;
+package org.forum.web.forum.models.filters;
 
 import java.util.Optional;
 

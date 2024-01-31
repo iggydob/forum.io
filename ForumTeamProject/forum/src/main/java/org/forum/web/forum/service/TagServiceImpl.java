@@ -3,7 +3,8 @@ package org.forum.web.forum.service;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;
-import org.forum.web.forum.repository.TagRepository;
+import org.forum.web.forum.repository.contracts.TagRepository;
+import org.forum.web.forum.service.contracts.TagService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

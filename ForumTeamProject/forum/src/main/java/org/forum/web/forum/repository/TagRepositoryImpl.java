@@ -2,6 +2,7 @@ package org.forum.web.forum.repository;
 
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.Tag;
+import org.forum.web.forum.repository.contracts.TagRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
