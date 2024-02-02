@@ -68,6 +68,16 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public long commentLikesCount(int id){
+        return repository.commentLikesCount(id);
+    }
+
+    @Override
+    public long commentDislikesCount(int id){
+        return repository.commentDislikesCount(id);
+    }
+
+    @Override
     public List<Comment> getPostComments(int postId) {
         return repository.getPostComments(postId);
     }

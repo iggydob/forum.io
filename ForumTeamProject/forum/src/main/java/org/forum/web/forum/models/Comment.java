@@ -39,22 +39,9 @@ public class Comment {
     @Column(name = "isDeleted")
     private boolean isDeleted;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "liked_comments",
-//            joinColumns = @JoinColumn(name = "comment_id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id")
-//    )
-//    private Set<Like> likedList;
-//    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Like> likedList;
-
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Like> likedList = new HashSet<>();
-
-//    @ManyToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private Set<Like> likedList;
 
     public Comment() {
     }

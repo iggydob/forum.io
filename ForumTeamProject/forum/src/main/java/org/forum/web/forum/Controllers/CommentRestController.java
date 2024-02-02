@@ -53,6 +53,24 @@ public class CommentRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+    @GetMapping("/count/{id}/{reactionType}")
+    public long getCommentLikeCount(@PathVariable int id, @PathVariable String reactionType) {
+        try {
+            switch (reactionType) {
+                case "likes":
+                    return service.commentLikesCount(id);
+                case "dislikes":
+                    return service.commentDislikesCount(id);
+                default:
+                    throw new EntityNotFoundException(OPERATION_NOT_FOUND);
+            }
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+
     @GetMapping("/post/{postId}")
     public List<Comment> getPostComments(@PathVariable int postId, @RequestHeader HttpHeaders headers) {
         try {
@@ -64,7 +82,8 @@ public class CommentRestController {
     }
 
     @PostMapping("/{postId}")
-    public Comment createComment(@RequestHeader HttpHeaders headers, @PathVariable int postId, @Valid @RequestBody CommentDTO commentDTO) {
+    public Comment createComment(@RequestHeader HttpHeaders headers, @PathVariable int postId,
+                                 @Valid @RequestBody CommentDTO commentDTO) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Comment comment = commentMapper.fromDto(postId, commentDTO);
@@ -72,14 +91,14 @@ public class CommentRestController {
             return comment;
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
-    // api/posts/idPost/Comments * /commID
 
     @PutMapping("/{id}")
-    public Comment updateComment(@RequestHeader HttpHeaders headers, @PathVariable int id, @Valid @RequestBody CommentDTO commentDTO) {
+    public Comment updateComment(@RequestHeader HttpHeaders headers, @PathVariable int id,
+                                 @Valid @RequestBody CommentDTO commentDTO) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Comment comment = commentMapper.fromDto(commentDTO, id);
@@ -105,10 +124,11 @@ public class CommentRestController {
     }
 
     @PostMapping("/{reactionType}/{commentId}")
-    public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable String reactionType, @PathVariable int commentId) {
+    public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable String reactionType,
+                            @PathVariable int commentId) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            switch (reactionType){
+            switch (reactionType) {
                 case "like":
                     service.likeComment(commentId, user);
                     return;
@@ -116,7 +136,7 @@ public class CommentRestController {
                     service.dislikeComment(commentId, user);
                     return;
                 case "delete":
-                    service.deleteReaction(commentId,user);
+                    service.deleteReaction(commentId, user);
                     return;
                 default:
                     throw new EntityNotFoundException(OPERATION_NOT_FOUND);

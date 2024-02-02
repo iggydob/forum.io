@@ -1,6 +1,5 @@
 package org.forum.web.forum.service.contracts;
 
-import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.Comment;
 
@@ -18,7 +17,8 @@ public interface CommentService {
     Comment getById(int commentId);
 
     List<Comment> getAll();
-
+    long commentLikesCount(int id);
+    long commentDislikesCount(int id);
     List<Comment> getPostComments(int postId);
 
     void likeComment(int commentID, User user);
