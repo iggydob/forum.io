@@ -7,4 +7,5 @@ public interface PhoneNumberService {
     void create(PhoneNumber phoneNumber);
 
     void update(PhoneNumber phoneNumber);
+    void delete(PhoneNumber phoneNumber);
 }

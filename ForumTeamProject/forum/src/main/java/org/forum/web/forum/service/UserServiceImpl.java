@@ -96,6 +96,13 @@ public class UserServiceImpl implements UserService {
     public void changeAdminStatus(int id, User userDetails) {
         User userToUpdate = userRepository.getById(id);
         userToUpdate.setAdminStatus(userDetails.getAdminStatus());
+
+        if (userToUpdate.getPhoneNumber() != null) {
+//            PhoneNumber phoneToDelete = userToUpdate.getPhoneNumber();
+//            userToUpdate.setEmail(null);
+            phoneNumberService.delete(userToUpdate.getPhoneNumber());
+        }
+
         userRepository.update(userToUpdate);
     }
 

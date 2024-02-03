@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "phone_numbers")
 public class PhoneNumber {
@@ -48,5 +50,18 @@ public class PhoneNumber {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PhoneNumber that = (PhoneNumber) o;
+        return phoneNumberId == that.phoneNumberId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(phoneNumberId);
     }
 }

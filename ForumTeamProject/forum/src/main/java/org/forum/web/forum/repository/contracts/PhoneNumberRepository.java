@@ -7,4 +7,6 @@ public interface PhoneNumberRepository {
     void create(PhoneNumber phoneNumber);
 
     void update(PhoneNumber phoneNumber);
+
+    void delete(PhoneNumber phoneNumber);
 }
