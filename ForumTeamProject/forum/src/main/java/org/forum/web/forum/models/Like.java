@@ -27,6 +27,9 @@ public class Like {
     @Column(name = "isDeleted")
     private boolean isDeleted;
 
+    @Column(name = "isLiked")
+    private boolean isLiked;
+
     public Like() {
     }
 
@@ -65,6 +68,14 @@ public class Like {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 
     @Override
