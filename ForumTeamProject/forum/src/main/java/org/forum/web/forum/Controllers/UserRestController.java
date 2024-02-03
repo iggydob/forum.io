@@ -112,16 +112,6 @@ public class UserRestController {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             User userDetails = userMapper.dtoUserUpdate(userDto);
-
-//            switch (userType) {
-//                case "user":
-//                    user = userMapper.dtoUserUpdate(userDto);
-//                    break;
-//                case "admin":
-//                    user = userMapper.dtoUserAdminStatus(userDto);
-//                    break;
-//            }
-
             checkAccessPermissions(id, user);
             service.update(id, userDetails);
 
@@ -129,6 +119,8 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 

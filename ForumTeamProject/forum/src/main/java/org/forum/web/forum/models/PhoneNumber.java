@@ -34,6 +34,10 @@ public class PhoneNumber {
         return phoneNumber;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public void setPhoneNumberId(int phoneNumberId) {
         this.phoneNumberId = phoneNumberId;
     }
@@ -42,4 +46,7 @@ public class PhoneNumber {
         this.phoneNumber = phoneNumber;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

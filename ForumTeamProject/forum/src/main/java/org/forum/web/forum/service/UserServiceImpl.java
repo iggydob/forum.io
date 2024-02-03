@@ -110,34 +110,61 @@ public class UserServiceImpl implements UserService {
     public void update(int id, User userDetails) {
         User userToUpdate = userRepository.getById(id);
 
+        updateFirstName(userDetails, userToUpdate);
+        updateLastName(userDetails, userToUpdate);
+        updateEmail(userDetails, userToUpdate);
+        updatePhoneNumber(userDetails, userToUpdate);
+
+        userRepository.update(userToUpdate);
+    }
+
+    private static void updateFirstName(User userDetails, User userToUpdate) {
         if (userDetails.getFirstName() != null) {
             userToUpdate.setFirstName(userDetails.getFirstName());
         }
+    }
 
+    private static void updateLastName(User userDetails, User userToUpdate) {
         if (userDetails.getLastName() != null) {
             userToUpdate.setLastName(userDetails.getLastName());
         }
+    }
 
+    private void updateEmail(User userDetails, User userToUpdate) {
         if (userDetails.getEmail() != null) {
-            userToUpdate.setEmail(userDetails.getEmail());
-        }
+            boolean duplicateExists = true;
 
-        if (userToUpdate.getAdminStatus()) {
-            if (userDetails.getPhoneNumber() != null) {
-
-                if (userToUpdate.getPhoneNumber() == null) {
-                    PhoneNumber newPhoneNumber = new PhoneNumber();
-                    newPhoneNumber.setPhoneNumber(userDetails.getPhoneNumber().getPhoneNumber());
-                    phoneNumberService.create(newPhoneNumber);
-                    userToUpdate.setPhoneNumber(newPhoneNumber);
-                } else {
-
-                    userToUpdate.setPhoneNumber(userDetails.getPhoneNumber());
-                }
+            try {
+                userRepository.getByEmail(userDetails.getEmail());
+            } catch (EntityNotFoundException e) {
+                duplicateExists = false;
             }
 
-        }
+            if (duplicateExists) {
+                throw new EntityDuplicateException("User", "e-mail", userDetails.getEmail());
+            }
 
-        userRepository.update(userToUpdate);
+            userToUpdate.setEmail(userDetails.getEmail());
+        }
+    }
+
+    private void updatePhoneNumber(User userDetails, User userToUpdate) {
+        if (userToUpdate.getAdminStatus()) {
+            if (userDetails.getPhoneNumber() != null) {
+                PhoneNumber phoneNumberToUpdate;
+
+                if (userToUpdate.getPhoneNumber() == null) {
+                    phoneNumberToUpdate = new PhoneNumber();
+                    phoneNumberToUpdate.setUser(userToUpdate);
+                    phoneNumberService.create(phoneNumberToUpdate);
+                } else {
+                    phoneNumberToUpdate = userToUpdate.getPhoneNumber();
+                }
+
+                phoneNumberToUpdate.setPhoneNumber(userDetails.getPhoneNumber().getPhoneNumber());
+                phoneNumberService.update(phoneNumberToUpdate);
+                userToUpdate.setPhoneNumber(phoneNumberToUpdate);
+            }
+        }
     }
 }

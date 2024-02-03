@@ -1,15 +1,15 @@
-INSERT INTO forum_system.users (first_name, last_name, username, password, email, is_admin, is_banned, phone_number)
+INSERT INTO forum_system.users (first_name, last_name, username, password, email, is_admin, is_banned)
 VALUES
-('John', 'Doe', 'johndoe', 'Password1', 'johndoe@example.com', 1, 0, '0123456789'),
-('Jane', 'Doe', 'janedoe', 'Password2', 'janedoe@example.com', 0, 0, NULL),
-('Alice', 'Smith', 'alicesmith', 'Password3', 'alicesmith@example.com', 0, 0, NULL),
-('Bobby', 'Johnson', 'bobjohnson', 'Password4', 'bobjohnson@example.com', 0, 0, NULL),
-('Charlie', 'Brown', 'charliebrown', 'Password5', 'charliebrown@example.com', 0, 0, NULL),
-('David', 'Williams', 'davidwilliams', 'Password6', 'davidwilliams@example.com', 0, 0, NULL),
-('Even', 'Jones', 'evejones', 'Password7', 'evejones@example.com', 0, 0, NULL),
-('Frank', 'Miller', 'frankmiller', 'Password8', 'frankmiller@example.com', 0, 0, NULL),
-('Grace', 'Davis', 'gracedavis', 'Password9', 'gracedavis@example.com', 0, 1, NULL),
-('Harry', 'Wilson', 'harrywilson', 'Password10', 'harrywilson@example.com', 0, 1, NULL);
+('John', 'Doe', 'johndoe', 'Password1', 'johndoe@example.com', 1, 0),
+('Jane', 'Doe', 'janedoe', 'Password2', 'janedoe@example.com', 0, 0),
+('Alice', 'Smith', 'alicesmith', 'Password', 'alicesmith@example.com', 0, 0),
+('Bobby', 'Johnson', 'bobjohnson', 'Password4', 'bobjohnson@example.com', 0, 0),
+('Charlie', 'Brown', 'charliebrown', 'Password5', 'charliebrown@example.com', 0, 0),
+('David', 'Williams', 'davidwilliams', 'Password6', 'davidwilliams@example.com', 0, 0),
+('Even', 'Jones', 'evejones', 'Password7', 'evejones@example.com', 0, 0),
+('Frank', 'Miller', 'frankmiller', 'Password8', 'frankmiller@example.com', 0, 0),
+('Grace', 'Davis', 'gracedavis', 'Password9', 'gracedavis@example.com', 0, 1),
+('Harry', 'Wilson', 'harrywilson', 'Password10', 'harrywilson@example.com', 0, 1);
 
 INSERT INTO forum_system.posts (created_by_id, title, content, creation_date)
 VALUES
