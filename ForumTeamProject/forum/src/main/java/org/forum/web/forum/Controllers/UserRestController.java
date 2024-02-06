@@ -65,8 +65,7 @@ public class UserRestController {
             @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            checkAdminRole(user);
-            return service.getById(id);
+            return service.getById(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
@@ -112,8 +111,7 @@ public class UserRestController {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             User userDetails = userMapper.dtoUserUpdate(userDto);
-            checkAccessPermissions(id, user);
-            service.update(id, userDetails);
+            service.update(id, userDetails, user);
 
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -132,18 +130,16 @@ public class UserRestController {
             @Valid @RequestBody UserDto userDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            checkAdminRole(user);
-
             User userDetails = new User();
 
             switch (status) {
                 case "ban":
                     userDetails = userMapper.dtoUserBanStatus(userDto);
-                    service.changeBanStatus(id, userDetails);
+                    service.changeBanStatus(id, userDetails, user);
                     break;
                 case "promote":
                     userDetails = userMapper.dtoUserAdminStatus(userDto);
-                    service.changeAdminStatus(id, userDetails);
+                    service.changeAdminStatus(id, userDetails, user);
                     break;
             }
 
@@ -162,30 +158,11 @@ public class UserRestController {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             User userDetails = userMapper.dtoUserPassword(userDto);
-            checkSourceUser(id, user);
-            service.changePassword(id, userDetails);
+            service.changePassword(id, userDetails, user);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
-
-    private static void checkAdminRole(User executingUser) {
-        if (!executingUser.getAdminStatus()) {
-            throw new AuthorizationException(ERROR_MESSAGE);
-        }
-    }
-
-    private static void checkSourceUser(int targetUserId, User executingUser) {
-        if (executingUser.getUserId() != targetUserId) {
-            throw new AuthorizationException(ERROR_MESSAGE);
-        }
-    }
-
-    private static void checkAccessPermissions(int targetUserId, User executingUser) {
-        if (!executingUser.getAdminStatus() && executingUser.getUserId() != targetUserId) {
-            throw new AuthorizationException(ERROR_MESSAGE);
         }
     }
 }

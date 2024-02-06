@@ -58,12 +58,6 @@ public class UserServiceImpl implements UserService {
         userRepository.create(user);
     }
 
-    private void checkAdminRole(User user) {
-        if (!user.getAdminStatus()) {
-            throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
-        }
-    }
-
     @Override
     public List<User> getFiltered(UserFilterOptions userFilterOptions) {
         return userRepository.getFiltered(userFilterOptions);
@@ -75,8 +69,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(int id) {
-        // TODO: add check here instead of in the controller
+    public User getById(int id, User requester) {
+        checkAdminRole(requester);
         return userRepository.getById(id);
     }
 
@@ -86,14 +80,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changeBanStatus(int id, User userDetails) {
+    public void changeBanStatus(int id, User userDetails, User requester) {
+        checkAdminRole(requester);
         User userToUpdate = userRepository.getById(id);
         userToUpdate.setBanStatus(userDetails.getBanStatus());
         userRepository.update(userToUpdate);
     }
 
     @Override
-    public void changeAdminStatus(int id, User userDetails) {
+    public void changeAdminStatus(int id, User userDetails, User requester) {
+        checkAdminRole(requester);
         User userToUpdate = userRepository.getById(id);
         userToUpdate.setAdminStatus(userDetails.getAdminStatus());
 
@@ -107,14 +103,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(int id, User userDetails) {
+    public void changePassword(int id, User userDetails, User requester) {
+        checkSourceUser(id, requester);
         User userToUpdate = userRepository.getById(id);
         userToUpdate.setPassword(userDetails.getPassword());
         userRepository.update(userToUpdate);
     }
 
     @Override
-    public void update(int id, User userDetails) {
+    public void update(int id, User userDetails, User requester) {
+        checkAccessPermissions(id, requester);
         User userToUpdate = userRepository.getById(id);
 
         updateFirstName(userDetails, userToUpdate);
@@ -172,6 +170,24 @@ public class UserServiceImpl implements UserService {
                 phoneNumberService.update(phoneNumberToUpdate);
                 userToUpdate.setPhoneNumber(phoneNumberToUpdate);
             }
+        }
+    }
+
+    private static void checkAdminRole(User requester) {
+        if (!requester.getAdminStatus()) {
+            throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
+        }
+    }
+
+    private static void checkSourceUser(int targetUserId, User requester) {
+        if (requester.getUserId() != targetUserId) {
+            throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
+        }
+    }
+
+    private static void checkAccessPermissions(int targetUserId, User requester) {
+        if (!requester.getAdminStatus() && requester.getUserId() != targetUserId) {
+            throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
         }
     }
 }
