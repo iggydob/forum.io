@@ -36,41 +36,15 @@ public class Comment {
     @Column(name = "creation_date")
     private Timestamp creationDate;
 
-//    @Column(name = "isDeleted")
-//    private boolean isDeleted;
-
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "liked_comments",
-//            joinColumns = @JoinColumn(name = "comment_id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id")
-//    )
-//    private Set<Like> likedList;
-//    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Like> likedList;
+    @Column(name = "isDeleted")
+    private boolean isDeleted;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Like> likedList = new HashSet<>();
 
-
-
-
-
-
-//    @ManyToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private Set<Like> likedList;
-
     public Comment() {
     }
-
-//    public boolean isDeleted() {
-//        return isDeleted;
-//    }
-
-//    public void setDeleted(boolean deleted) {
-//        isDeleted = deleted;
-//    }
 
     public Set<Like> getLikedList() {
         return likedList;
@@ -118,6 +92,14 @@ public class Comment {
 
     public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     @Override

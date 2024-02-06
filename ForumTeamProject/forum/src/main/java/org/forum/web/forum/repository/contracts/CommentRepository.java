@@ -10,7 +10,13 @@ public interface CommentRepository {
     void update(Comment comment);
     void delete(int id);
     List<Comment> getAll();
+
+    //    public List<Comment> getCommentsSortedByLikes();
+    long commentLikesCount(int commentId);
+    long commentDislikesCount(int commentId);
+
     Comment getById(int id);
+    List<Comment> getPostComments(int postId);
 
 
 }
