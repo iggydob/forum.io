@@ -64,7 +64,7 @@ public class UserRestController {
             @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(credentials);
-            return service.getById(id);
+            return service.getById(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
