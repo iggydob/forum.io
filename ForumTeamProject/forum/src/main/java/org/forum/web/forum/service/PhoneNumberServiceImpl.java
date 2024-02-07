@@ -23,4 +23,9 @@ public class PhoneNumberServiceImpl implements PhoneNumberService {
     public void update(PhoneNumber phoneNumber) {
         phoneNumberRepository.update(phoneNumber);
     }
+
+    @Override
+    public void delete(PhoneNumber phoneNumber) {
+        phoneNumberRepository.delete(phoneNumber);
+    }
 }

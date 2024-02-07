@@ -68,12 +68,6 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private void checkAdminRole(User user) {
-        if (!user.getAdminStatus()) {
-            throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
-        }
-    }
-
     @Override
     public List<User> getFiltered(UserFilterOptions userFilterOptions) {
         return userRepository.getFiltered(userFilterOptions);
@@ -85,8 +79,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(int id) {
-        // TODO: add check here instead of in the controller
+    public User getById(int id, User requester) {
+        checkAdminRole(requester);
         return userRepository.getById(id);
     }
 
@@ -96,90 +90,114 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changeBanStatus(int id, User userDetails) {
+    public void changeBanStatus(int id, User userDetails, User requester) {
+        checkAdminRole(requester);
         User userToUpdate = userRepository.getById(id);
         userToUpdate.setBanStatus(userDetails.getBanStatus());
         userRepository.update(userToUpdate);
     }
 
     @Override
-    public void changeAdminStatus(int id, User userDetails) {
+    public void changeAdminStatus(int id, User userDetails, User requester) {
+        checkAdminRole(requester);
         User userToUpdate = userRepository.getById(id);
         userToUpdate.setAdminStatus(userDetails.getAdminStatus());
+
+        if (userToUpdate.getPhoneNumber() != null) {
+//            PhoneNumber phoneToDelete = userToUpdate.getPhoneNumber();
+//            userToUpdate.setEmail(null);
+            phoneNumberService.delete(userToUpdate.getPhoneNumber());
+        }
+
         userRepository.update(userToUpdate);
     }
 
     @Override
-    public void changePassword(int id, User userDetails) {
+    public void changePassword(int id, User userDetails, User requester) {
+        checkSourceUser(id, requester);
         User userToUpdate = userRepository.getById(id);
         userToUpdate.setPassword(userDetails.getPassword());
         userRepository.update(userToUpdate);
     }
 
     @Override
-    public void update(int id, User userDetails) {
+    public void update(int id, User userDetails, User requester) {
+        checkAccessPermissions(id, requester);
         User userToUpdate = userRepository.getById(id);
 
-        if (userDetails.getFirstName() != null) {
-            userToUpdate.setFirstName(userDetails.getFirstName());
-        }
-
-        if (userDetails.getLastName() != null) {
-            userToUpdate.setLastName(userDetails.getLastName());
-        }
-
-        if (userDetails.getEmail() != null) {
-            userToUpdate.setEmail(userDetails.getEmail());
-        }
-
-        if (userToUpdate.getAdminStatus()) {
-            if (userDetails.getPhoneNumber() != null) {
-
-                if (userToUpdate.getPhoneNumber() == null) {
-                    PhoneNumber newPhoneNumber = new PhoneNumber();
-                    newPhoneNumber.setPhoneNumber(userDetails.getPhoneNumber().getPhoneNumber());
-                    phoneNumberService.create(newPhoneNumber);
-                    userToUpdate.setPhoneNumber(newPhoneNumber);
-                } else {
-
-                    userToUpdate.setPhoneNumber(userDetails.getPhoneNumber());
-                }
-            }
-
-        }
+        updateFirstName(userDetails, userToUpdate);
+        updateLastName(userDetails, userToUpdate);
+        updateEmail(userDetails, userToUpdate);
+        updatePhoneNumber(userDetails, userToUpdate);
 
         userRepository.update(userToUpdate);
     }
 
-//    @Autowired
-//    private SaveUserUseCase saveUser;
-//
-//    @Autowired
-//    private FindUserByLoginUseCase findUserByLogin;
-//
-//    /**
-//     * Finds a stored user information by login.
-//     *
-//     * @param login A string representing the user's system login
-//     * @return The corresponding user information if successful, or null if it is non-existent.
-//     */
-//
-//    public UserDetails findUserByLogin(String login) {
-//        return findUserByLogin.execute(login);
-//    }
-//
-//    /**
-//     * Adds a new user to the repository.
-//     *
-//     * @param userDTO A data transfer object representing a user to add.
-//     * @return The saved user if successful,  or null if there is an error.
-//     */
-//
-//    public User addUser(UserDto userDTO) {
-//
-//        User user = new User(userDTO);
-//
-//        return saveUser.execute(user);
-//    }
+    private static void updateFirstName(User userDetails, User userToUpdate) {
+        if (userDetails.getFirstName() != null) {
+            userToUpdate.setFirstName(userDetails.getFirstName());
+        }
+    }
 
+    private static void updateLastName(User userDetails, User userToUpdate) {
+        if (userDetails.getLastName() != null) {
+            userToUpdate.setLastName(userDetails.getLastName());
+        }
+    }
+
+    private void updateEmail(User userDetails, User userToUpdate) {
+        if (userDetails.getEmail() != null) {
+            boolean duplicateExists = true;
+
+            try {
+                userRepository.getByEmail(userDetails.getEmail());
+            } catch (EntityNotFoundException e) {
+                duplicateExists = false;
+            }
+
+            if (duplicateExists) {
+                throw new EntityDuplicateException("User", "e-mail", userDetails.getEmail());
+            }
+
+            userToUpdate.setEmail(userDetails.getEmail());
+        }
+    }
+
+    private void updatePhoneNumber(User userDetails, User userToUpdate) {
+        if (userToUpdate.getAdminStatus()) {
+            if (userDetails.getPhoneNumber() != null) {
+                PhoneNumber phoneNumberToUpdate;
+
+                if (userToUpdate.getPhoneNumber() == null) {
+                    phoneNumberToUpdate = new PhoneNumber();
+                    phoneNumberToUpdate.setUser(userToUpdate);
+                    phoneNumberService.create(phoneNumberToUpdate);
+                } else {
+                    phoneNumberToUpdate = userToUpdate.getPhoneNumber();
+                }
+
+                phoneNumberToUpdate.setPhoneNumber(userDetails.getPhoneNumber().getPhoneNumber());
+                phoneNumberService.update(phoneNumberToUpdate);
+                userToUpdate.setPhoneNumber(phoneNumberToUpdate);
+            }
+        }
+    }
+
+    private static void checkAdminRole(User requester) {
+        if (!requester.getAdminStatus()) {
+            throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
+        }
+    }
+
+    private static void checkSourceUser(int targetUserId, User requester) {
+        if (requester.getUserId() != targetUserId) {
+            throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
+        }
+    }
+
+    private static void checkAccessPermissions(int targetUserId, User requester) {
+        if (!requester.getAdminStatus() && requester.getUserId() != targetUserId) {
+            throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
+        }
+    }
 }

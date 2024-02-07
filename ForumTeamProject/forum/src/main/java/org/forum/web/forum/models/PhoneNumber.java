@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "phone_numbers")
 public class PhoneNumber {
@@ -34,6 +36,10 @@ public class PhoneNumber {
         return phoneNumber;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public void setPhoneNumberId(int phoneNumberId) {
         this.phoneNumberId = phoneNumberId;
     }
@@ -42,4 +48,20 @@ public class PhoneNumber {
         this.phoneNumber = phoneNumber;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PhoneNumber that = (PhoneNumber) o;
+        return phoneNumberId == that.phoneNumberId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(phoneNumberId);
+    }
 }

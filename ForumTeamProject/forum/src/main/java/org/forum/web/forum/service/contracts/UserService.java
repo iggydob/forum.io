@@ -8,23 +8,19 @@ import java.util.List;
 public interface UserService {
     User create(User user);
 
-//    void deleteById(int id, User user);
-
-//    void deleteByUsername(String username, User user);
-
     List<User> getAll();
 
-    User getById(int id);
+    User getById(int id, User requester);
 
     User getByUsername(String username);
 
-    public void changeBanStatus(int id, User userDetails);
+    public void changeBanStatus(int id, User userDetails, User requester);
 
-    public void changeAdminStatus(int id, User userDetails);
+    public void changeAdminStatus(int id, User userDetails, User requester);
 
-    public void changePassword(int id, User userDetails);
+    public void changePassword(int id, User userDetails, User requester);
 
-    public void update(int id, User userDetails);
+    public void update(int id, User userDetails, User requester);
 
     List<User> getFiltered(UserFilterOptions userFilterOptions);
 }

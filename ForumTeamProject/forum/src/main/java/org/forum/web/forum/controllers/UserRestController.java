@@ -1,4 +1,4 @@
-package org.forum.web.forum.controllers;
+package org.forum.web.forum.Controllers;
 
 import jakarta.validation.Valid;
 import org.forum.web.forum.exceptions.AuthorizationException;
@@ -41,7 +41,6 @@ public class UserRestController {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ERROR_MESSAGE);
             }
             return service.getAll();
-
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
@@ -65,7 +64,6 @@ public class UserRestController {
             @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(credentials);
-            checkAdminRole(user);
             return service.getById(id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -112,23 +110,14 @@ public class UserRestController {
         try {
             User user = authenticationHelper.tryGetUser(credentials);
             User userDetails = userMapper.dtoUserUpdate(userDto);
-
-//            switch (userType) {
-//                case "user":
-//                    user = userMapper.dtoUserUpdate(userDto);
-//                    break;
-//                case "admin":
-//                    user = userMapper.dtoUserAdminStatus(userDto);
-//                    break;
-//            }
-
-            checkAccessPermissions(id, user);
-            service.update(id, userDetails);
+            service.update(id, userDetails, user);
 
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -140,18 +129,16 @@ public class UserRestController {
             @Valid @RequestBody UserDto userDto) {
         try {
             User user = authenticationHelper.tryGetUser(credentials);
-            checkAdminRole(user);
-
             User userDetails = new User();
 
             switch (status) {
                 case "ban":
                     userDetails = userMapper.dtoUserBanStatus(userDto);
-                    service.changeBanStatus(id, userDetails);
+                    service.changeBanStatus(id, userDetails, user);
                     break;
                 case "promote":
                     userDetails = userMapper.dtoUserAdminStatus(userDto);
-                    service.changeAdminStatus(id, userDetails);
+                    service.changeAdminStatus(id, userDetails, user);
                     break;
             }
 
@@ -170,30 +157,11 @@ public class UserRestController {
         try {
             User user = authenticationHelper.tryGetUser(credentials);
             User userDetails = userMapper.dtoUserPassword(userDto);
-            checkSourceUser(id, user);
-            service.changePassword(id, userDetails);
+            service.changePassword(id, userDetails, user);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
-
-    private static void checkAdminRole(User executingUser) {
-        if (!executingUser.getAdminStatus()) {
-            throw new AuthorizationException(ERROR_MESSAGE);
-        }
-    }
-
-    private static void checkSourceUser(int targetUserId, User executingUser) {
-        if (executingUser.getUserId() != targetUserId) {
-            throw new AuthorizationException(ERROR_MESSAGE);
-        }
-    }
-
-    private static void checkAccessPermissions(int targetUserId, User executingUser) {
-        if (!executingUser.getAdminStatus() && executingUser.getUserId() != targetUserId) {
-            throw new AuthorizationException(ERROR_MESSAGE);
         }
     }
 }

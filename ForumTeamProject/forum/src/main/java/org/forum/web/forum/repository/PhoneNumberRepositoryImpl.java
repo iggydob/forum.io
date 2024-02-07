@@ -34,4 +34,12 @@ public class PhoneNumberRepositoryImpl implements PhoneNumberRepository {
         }
     }
 
+    @Override
+    public void delete(PhoneNumber phoneNumber) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.remove(phoneNumber);
+            session.getTransaction().commit();
+        }
+    }
 }
