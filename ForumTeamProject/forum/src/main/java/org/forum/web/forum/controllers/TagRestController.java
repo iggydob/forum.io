@@ -1,4 +1,4 @@
-package org.forum.web.forum.Controllers;
+package org.forum.web.forum.controllers;
 
 import jakarta.validation.Valid;
 import org.forum.web.forum.exceptions.AuthorizationException;
@@ -9,7 +9,6 @@ import org.forum.web.forum.models.Dtos.TagDto;
 import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.service.contracts.TagService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,9 +29,9 @@ public class TagRestController {
     }
 
     @GetMapping
-    public List<Tag> getAll(@RequestHeader HttpHeaders headers) {
+    public List<Tag> getAll(@RequestHeader(name = "Credentials") String credentials) {
         try {
-            authenticationHelper.tryGetUser(headers);
+            authenticationHelper.tryGetUser(credentials);
             return service.getAll();
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -40,9 +39,9 @@ public class TagRestController {
     }
 
     @GetMapping("/{id}")
-    public Tag getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public Tag getById(@RequestHeader(name = "Credentials") String credentials, @PathVariable int id) {
         try {
-            authenticationHelper.tryGetUser(headers);
+            authenticationHelper.tryGetUser(credentials);
             return service.getById(id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -52,9 +51,9 @@ public class TagRestController {
     }
 
     @PostMapping
-    public void create(@RequestHeader HttpHeaders headers, @Valid @RequestBody TagDto tagDto) {
+    public void create(@RequestHeader(name = "Credentials") String credentials, @Valid @RequestBody TagDto tagDto) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             Tag tag = tagMapper.fromDto(tagDto);
             service.create(tag, user);
         } catch (AuthorizationException e) {
@@ -63,10 +62,10 @@ public class TagRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public void delete(@RequestHeader(name = "Credentials") String credentials, @PathVariable int id) {
         Tag tag = service.getById(id);
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             service.delete(tag, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

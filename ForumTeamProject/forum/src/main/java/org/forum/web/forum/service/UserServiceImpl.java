@@ -10,6 +10,8 @@ import org.forum.web.forum.repository.contracts.UserRepository;
 import org.forum.web.forum.service.contracts.PhoneNumberService;
 import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,15 +22,20 @@ public class UserServiceImpl implements UserService {
     private static final String AUTHORIZATION_ERROR_MSG = "Access denied. You are not allowed to perform this action.";
     private final UserRepository userRepository;
     private final PhoneNumberService phoneNumberService;
+//    private final PasswordEncoderImpl encoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PhoneNumberService phoneNumberService) {
         this.userRepository = userRepository;
         this.phoneNumberService = phoneNumberService;
+//        this.encoder = encoder;
     }
 
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        return (UserDetails) getByUsername(username);
+//    }
     @Override
-    public void create(User user) {
+    public User create(User user) {
         boolean duplicateExists = true;
         try {
             userRepository.getByUsername(user.getUsername());
@@ -54,8 +61,11 @@ public class UserServiceImpl implements UserService {
 
         user.setAdminStatus(false);
         user.setBanStatus(false);
+//        user.setPassword(encoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
 
         userRepository.create(user);
+        return user;
     }
 
     private void checkAdminRole(User user) {
@@ -140,4 +150,36 @@ public class UserServiceImpl implements UserService {
 
         userRepository.update(userToUpdate);
     }
+
+//    @Autowired
+//    private SaveUserUseCase saveUser;
+//
+//    @Autowired
+//    private FindUserByLoginUseCase findUserByLogin;
+//
+//    /**
+//     * Finds a stored user information by login.
+//     *
+//     * @param login A string representing the user's system login
+//     * @return The corresponding user information if successful, or null if it is non-existent.
+//     */
+//
+//    public UserDetails findUserByLogin(String login) {
+//        return findUserByLogin.execute(login);
+//    }
+//
+//    /**
+//     * Adds a new user to the repository.
+//     *
+//     * @param userDTO A data transfer object representing a user to add.
+//     * @return The saved user if successful,  or null if there is an error.
+//     */
+//
+//    public User addUser(UserDto userDTO) {
+//
+//        User user = new User(userDTO);
+//
+//        return saveUser.execute(user);
+//    }
+
 }

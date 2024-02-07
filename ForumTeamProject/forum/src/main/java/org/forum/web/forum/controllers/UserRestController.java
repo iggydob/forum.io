@@ -1,4 +1,4 @@
-package org.forum.web.forum.Controllers;
+package org.forum.web.forum.controllers;
 
 import jakarta.validation.Valid;
 import org.forum.web.forum.exceptions.AuthorizationException;
@@ -7,12 +7,10 @@ import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.helpers.mappers.UserMapper;
 import org.forum.web.forum.models.Dtos.UserDto;
-import org.forum.web.forum.models.PhoneNumber;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.UserFilterOptions;
 import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,13 +33,15 @@ public class UserRestController {
     }
 
     @GetMapping
-    public List<User> getAll(@RequestHeader HttpHeaders headers) {
+    public List<User> getAll( @RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
+
             if (!user.getAdminStatus()) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, ERROR_MESSAGE);
             }
             return service.getAll();
+
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
@@ -61,10 +61,10 @@ public class UserRestController {
 
     @GetMapping("/{id}")
     public User getById(
-            @RequestHeader HttpHeaders headers,
+            @RequestHeader(name = "Credentials") String credentials,
             @PathVariable int id) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             checkAdminRole(user);
             return service.getById(id);
         } catch (EntityNotFoundException e) {
@@ -82,9 +82,9 @@ public class UserRestController {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortOrder,
-            @RequestHeader HttpHeaders headers) {
+            @RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
@@ -103,14 +103,14 @@ public class UserRestController {
     public void update(
             @PathVariable int id,
 //            @PathVariable String userType,
-            @RequestHeader HttpHeaders headers,
+            @RequestHeader(name = "Credentials") String credentials,
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String phoneNumber,
             @Valid @RequestBody UserDto userDto) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             User userDetails = userMapper.dtoUserUpdate(userDto);
 
 //            switch (userType) {
@@ -134,12 +134,12 @@ public class UserRestController {
 
     @PutMapping("/{id}/{status}")
     public void changeUserStatus(
-            @RequestHeader HttpHeaders headers,
+            @RequestHeader(name = "Credentials") String credentials,
             @PathVariable int id,
             @PathVariable String status,
             @Valid @RequestBody UserDto userDto) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             checkAdminRole(user);
 
             User userDetails = new User();
@@ -164,11 +164,11 @@ public class UserRestController {
 
     @PutMapping("/{id}/password_reset")
     public void changePassword(
-            @RequestHeader HttpHeaders headers,
+            @RequestHeader(name = "Credentials") String credentials,
             @PathVariable int id,
             @Valid @RequestBody UserDto userDto) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             User userDetails = userMapper.dtoUserPassword(userDto);
             checkSourceUser(id, user);
             service.changePassword(id, userDetails);

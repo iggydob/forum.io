@@ -25,12 +25,13 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void create(User user) {
+    public User create(User user) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.persist(user);
             session.getTransaction().commit();
         }
+        return user;
     }
 
 //    @Override

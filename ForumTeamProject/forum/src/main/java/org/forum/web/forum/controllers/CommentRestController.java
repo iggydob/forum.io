@@ -1,4 +1,4 @@
-package org.forum.web.forum.Controllers;
+package org.forum.web.forum.controllers;
 
 import jakarta.validation.Valid;
 import org.forum.web.forum.exceptions.AuthorizationException;
@@ -10,7 +10,6 @@ import org.forum.web.forum.models.Comment;
 import org.forum.web.forum.models.Dtos.CommentDTO;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.service.contracts.CommentService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,7 +26,6 @@ public class CommentRestController {
 
     private final CommentMapper commentMapper;
 
-
     public CommentRestController(CommentService service, AuthenticationHelper authenticationHelper, CommentMapper commentMapper) {
         this.service = service;
         this.authenticationHelper = authenticationHelper;
@@ -35,9 +33,9 @@ public class CommentRestController {
     }
 
     @GetMapping
-    public List<Comment> get(@RequestHeader HttpHeaders headers) {
+    public List<Comment> get(@RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             return service.getAll();
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -45,9 +43,9 @@ public class CommentRestController {
     }
 
     @GetMapping("/{id}")
-    public Comment get(@PathVariable int id, @RequestHeader HttpHeaders headers) {
+    public Comment get(@PathVariable int id, @RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             return service.getById(id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -72,9 +70,9 @@ public class CommentRestController {
 
 
     @GetMapping("/post/{postId}")
-    public List<Comment> getPostComments(@PathVariable int postId, @RequestHeader HttpHeaders headers) {
+    public List<Comment> getPostComments(@PathVariable int postId,@RequestHeader(name = "Credentials") String credentials) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             return service.getPostComments(postId);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -82,10 +80,10 @@ public class CommentRestController {
     }
 
     @PostMapping("/{postId}")
-    public Comment createComment(@RequestHeader HttpHeaders headers, @PathVariable int postId,
+    public Comment createComment(@RequestHeader(name = "Credentials") String credentials, @PathVariable int postId,
                                  @Valid @RequestBody CommentDTO commentDTO) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             Comment comment = commentMapper.fromDto(postId, commentDTO);
             service.create(user, comment);
             return comment;
@@ -97,10 +95,10 @@ public class CommentRestController {
     }
 
     @PutMapping("/{id}")
-    public Comment updateComment(@RequestHeader HttpHeaders headers, @PathVariable int id,
+    public Comment updateComment(@RequestHeader(name = "Credentials") String credentials, @PathVariable int id,
                                  @Valid @RequestBody CommentDTO commentDTO) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             Comment comment = commentMapper.fromDto(commentDTO, id);
             service.update(user, comment);
             return comment;
@@ -112,9 +110,9 @@ public class CommentRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteComment(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public void deleteComment(@RequestHeader(name = "Credentials") String credentials, @PathVariable int id) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             service.delete(user, id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -124,10 +122,10 @@ public class CommentRestController {
     }
 
     @PostMapping("/{reactionType}/{commentId}")
-    public void likeComment(@RequestHeader HttpHeaders headers, @PathVariable String reactionType,
+    public void likeComment(@RequestHeader(name = "Credentials") String credentials, @PathVariable String reactionType,
                             @PathVariable int commentId) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             switch (reactionType) {
                 case "like":
                     service.likeComment(commentId, user);

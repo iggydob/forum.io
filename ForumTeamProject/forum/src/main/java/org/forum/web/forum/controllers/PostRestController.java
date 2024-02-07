@@ -1,4 +1,4 @@
-package org.forum.web.forum.Controllers;
+package org.forum.web.forum.controllers;
 
 import jakarta.validation.Valid;
 import org.forum.web.forum.exceptions.AuthorizationException;
@@ -16,7 +16,6 @@ import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.repository.contracts.PostRepository;
 import org.forum.web.forum.service.contracts.PostService;
 import org.forum.web.forum.service.contracts.TagService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,9 +47,9 @@ public class PostRestController {
             @RequestParam(required = false) String author,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortOrder,
-            @RequestHeader HttpHeaders headers) {
+            @RequestHeader(name = "Credentials") String credentials) {
         try {
-            authenticationHelper.tryGetUser(headers);
+            authenticationHelper.tryGetUser(credentials);
             PostFilterOptions postFilterOptions = new PostFilterOptions(title, author, sortBy, sortOrder);
             return service.getFiltered(postFilterOptions);
         } catch (AuthorizationException e) {
@@ -64,10 +63,10 @@ public class PostRestController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortOrder,
             @PathVariable int id,
-            @RequestHeader HttpHeaders headers) {
+            @RequestHeader(name = "Credentials") String credentials) {
         try {
             PostFilterOptions filterOptions = new PostFilterOptions(title, null, sortBy, sortOrder);
-            authenticationHelper.tryGetUser(headers);
+            authenticationHelper.tryGetUser(credentials);
             return service.getByUserId(filterOptions, id);
         } catch (AuthorizationException | UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -101,9 +100,9 @@ public class PostRestController {
     }
 
     @PatchMapping("/{id}")
-    public void LikePost(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public void LikePost(@RequestHeader(name = "Credentials") String credentials, @PathVariable int id) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             service.likePost(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -113,9 +112,9 @@ public class PostRestController {
     }
 
     @PatchMapping("/{postId}/tags")
-    public void addTagToPost(@RequestHeader HttpHeaders headers, @PathVariable int postId, @Valid @RequestBody TagDto tagDto) {
+    public void addTagToPost(@RequestHeader(name = "Credentials") String credentials, @PathVariable int postId, @Valid @RequestBody TagDto tagDto) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             Post post = repository.getById(postId);
             Tag tag = tagMapper.fromDto(tagDto);
             service.addTagToPost(user, post, tag);
@@ -127,9 +126,9 @@ public class PostRestController {
     }
 
     @DeleteMapping("/{postId}/tags/{tagId}")
-    public void removeTagFromPost(@RequestHeader HttpHeaders headers, @PathVariable int postId, @PathVariable int tagId) {
+    public void removeTagFromPost(@RequestHeader(name = "Credentials") String credentials, @PathVariable int postId, @PathVariable int tagId) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             Post post = repository.getById(postId);
             Tag tag = tagService.getById(tagId);
             service.deleteTagFromPost(user, post, tag);
@@ -141,9 +140,9 @@ public class PostRestController {
     }
 
     @PostMapping
-    public Post create(@RequestHeader HttpHeaders headers, @Valid @RequestBody PostDto postDto) {
+    public Post create(@RequestHeader(name = "Credentials") String credentials, @Valid @RequestBody PostDto postDto) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             Post post = postMapper.fromDto(postDto);
             service.create(post, user);
             return post;
@@ -154,9 +153,9 @@ public class PostRestController {
     }
 
     @PutMapping("/{id}")
-    public Post update(@RequestHeader HttpHeaders headers, @PathVariable int id, @Valid @RequestBody PostDto postDto) {
+    public Post update(@RequestHeader(name = "Credentials") String credentials, @PathVariable int id, @Valid @RequestBody PostDto postDto) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             Post post = postMapper.fromDto(id, postDto);
             service.update(post, user);
             return post;
@@ -168,11 +167,11 @@ public class PostRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public void delete(@RequestHeader(name = "Credentials") String credentials, @PathVariable int id) {
         Post post = service.getById(id);
 
         try {
-            User user = authenticationHelper.tryGetUser(headers);
+            User user = authenticationHelper.tryGetUser(credentials);
             service.delete(post, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

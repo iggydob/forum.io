@@ -2,8 +2,8 @@ package org.forum.web.forum.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.*;
+import org.forum.web.forum.models.Dtos.UserDto;
 
 import java.util.Objects;
 import java.util.Set;
@@ -61,6 +61,14 @@ public class User {
     public User() {
     }
 
+    public User(UserDto userDto){
+        this.username = userDto.getUsername();
+        this.password = userDto.getPassword();
+        this.email = userDto.getEmail();
+        this.firstName = userDto.getFirstName();
+        this.lastName = userDto.getLastName();
+    }
+
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
@@ -84,7 +92,6 @@ public class User {
     public String getUsername() {
         return username;
     }
-
     public String getPassword() {
         return password;
     }
