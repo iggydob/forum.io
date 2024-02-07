@@ -1,4 +1,4 @@
-package org.forum.web.forum.Controllers;
+package org.forum.web.forum.controllers.rest;
 
 import jakarta.validation.Valid;
 import org.forum.web.forum.exceptions.AuthorizationException;
