@@ -15,6 +15,10 @@ public class PostFilterOptions {
         this.sortOrder = Optional.ofNullable(sortOrder);
     }
 
+    public PostFilterOptions() {
+        this(null, null, null, null);
+    }
+
     public Optional<String> getTitle() {
         return title;
     }
