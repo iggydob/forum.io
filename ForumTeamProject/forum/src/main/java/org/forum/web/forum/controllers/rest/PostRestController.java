@@ -115,7 +115,7 @@ public class PostRestController {
     public void addTagToPost(@RequestHeader(name = "Credentials") String credentials, @PathVariable int postId, @Valid @RequestBody TagDto tagDto) {
         try {
             User user = authenticationHelper.tryGetUser(credentials);
-            Post post = repository.getById(postId);
+            Post post = service.getById(postId);
             Tag tag = tagMapper.fromDto(tagDto);
             service.addTagToPost(user, post, tag);
         } catch (AuthorizationException | UnauthorizedOperationException e) {
@@ -129,7 +129,7 @@ public class PostRestController {
     public void removeTagFromPost(@RequestHeader(name = "Credentials") String credentials, @PathVariable int postId, @PathVariable int tagId) {
         try {
             User user = authenticationHelper.tryGetUser(credentials);
-            Post post = repository.getById(postId);
+            Post post = service.getById(postId);
             Tag tag = tagService.getById(tagId);
             service.deleteTagFromPost(user, post, tag);
         } catch (AuthorizationException | UnauthorizedOperationException e) {
@@ -168,11 +168,9 @@ public class PostRestController {
 
     @DeleteMapping("/{id}")
     public void delete(@RequestHeader(name = "Credentials") String credentials, @PathVariable int id) {
-        Post post = service.getById(id);
-
         try {
             User user = authenticationHelper.tryGetUser(credentials);
-            service.delete(post, user);
+            service.delete(user,id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException | UnauthorizedOperationException e) {
