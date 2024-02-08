@@ -1,6 +1,5 @@
 package org.forum.web.forum.service;
 
-import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.exceptions.UnauthorizedOperationException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
@@ -112,15 +111,28 @@ public class PostServiceImpl implements PostService {
         postRepository.update(post);
 
     }
+    //Hard delete
+//    @Override
+//    public void delete(Post post, User user) {
+//        try {
+//            authenticationHelper.checkAdmin(user);
+//            postRepository.delete(post);
+//        } catch (UnauthorizedOperationException e) {
+//            authenticationHelper.checkAuthor(user, post);
+//            postRepository.delete(post);
+//        }
+//    }
 
+    //soft delete
     @Override
-    public void delete(Post post, User user) {
+    public void delete (User user, int id){
+        Post post = postRepository.getById(id);
         try {
             authenticationHelper.checkAdmin(user);
-            postRepository.delete(post);
+            postRepository.delete(post.getId());
         } catch (UnauthorizedOperationException e) {
             authenticationHelper.checkAuthor(user, post);
-            postRepository.delete(post);
+            postRepository.delete(post.getId());
         }
     }
 }

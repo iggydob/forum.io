@@ -1,6 +1,5 @@
 package org.forum.web.forum.repository;
 
-import jakarta.transaction.Transactional;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;
@@ -10,6 +9,7 @@ import org.forum.web.forum.repository.contracts.PostRepository;
 import org.forum.web.forum.repository.contracts.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -174,17 +174,30 @@ public class PostRepositoryImpl implements PostRepository {
         }
     }
 
+    //hard delete
+//    @Override
+//    public void delete(Post post) {
+//        try (Session session = sessionFactory.openSession()) {
+//            session.beginTransaction();
+//            session.remove(post);
+//            session.getTransaction().commit();
+//        }
+//    }
     @Override
-    public void delete(Post post) {
+    public void delete(int id) {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.remove(post);
-            session.getTransaction().commit();
+            Transaction transaction = session.beginTransaction();
+
+            Query<Post> query = session.createQuery(
+                            "UPDATE Post p SET p.isDeleted = true WHERE p.id = :id", Post.class)
+                    .setParameter("id", id);
+
+            query.executeUpdate();
+            transaction.commit();
         }
     }
 
     @Override
-    //todo double check this
     public List<User> getLikedBy(int postId) {
 
         try (Session session = sessionFactory.openSession()) {
@@ -209,7 +222,6 @@ public class PostRepositoryImpl implements PostRepository {
         if (postFilterOptions.getSortPostBy().isEmpty()) {
             return "";
         }
-
         StringBuilder orderBy = new StringBuilder(" ORDER BY ");
         switch (postFilterOptions.getSortPostBy().get()) {
             case "title":
