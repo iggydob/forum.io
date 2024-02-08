@@ -28,6 +28,8 @@ public class HomeMvcController {
     @GetMapping
     public String showHomePage(Model model) {
 //        model.addAttribute("post", postService.getFiltered(new PostFilterOptions()));
+        model.addAttribute("mostCommentedPosts",postService.getMostCommented());
+        model.addAttribute("mostRecentPosts",postService.getMostRecent());
         return "HomePageView";
     }
 
