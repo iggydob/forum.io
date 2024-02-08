@@ -1,8 +1,6 @@
 package org.forum.web.forum.controllers.mvc;
 
 import org.forum.web.forum.helpers.AuthenticationHelper;
-import org.forum.web.forum.models.Post;
-import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.service.contracts.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +25,8 @@ public class HomeMvcController {
 
     @GetMapping
     public String showHomePage(Model model) {
-//        model.addAttribute("post", postService.getFiltered(new PostFilterOptions()));
+        model.addAttribute("mostCommentedPosts", postService.getMostCommented());
+        model.addAttribute("mostRecentPosts", postService.getMostRecent());
         return "HomePageView";
     }
 

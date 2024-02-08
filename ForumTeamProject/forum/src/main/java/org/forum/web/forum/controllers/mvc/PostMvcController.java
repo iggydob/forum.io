@@ -6,7 +6,6 @@ import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.service.contracts.PostService;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +32,7 @@ public class PostMvcController {
     public String requestURI(final HttpServletRequest request) {
         return request.getRequestURI();
     }
+
 
     @GetMapping("/{id}")
     public String showSinglePost(@PathVariable int id, Model model) {
