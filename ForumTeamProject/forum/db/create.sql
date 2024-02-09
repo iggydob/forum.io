@@ -32,12 +32,11 @@ create table posts
 (
     post_id       int auto_increment
         primary key,
-    created_by_id int           null,
-    title         varchar(64)   not null,
-    content       varchar(8192) not null,
-    creation_date timestamp     not null,
-    `like`        int           null,
-    dislike       int           null,
+    created_by_id int                  null,
+    title         varchar(64)          not null,
+    content       varchar(8192)        not null,
+    creation_date timestamp            not null,
+    isDeleted     tinyint(1) default 0 not null,
     constraint posts_users_user_id_fk
         foreign key (created_by_id) references users (user_id)
 );
@@ -104,6 +103,16 @@ create table users_comments
     constraint users_comments_comments_comment_id_fk
         foreign key (comment_id) references comments (comment_id),
     constraint users_comments_users_user_id_fk
+        foreign key (user_id) references users (user_id)
+);
+
+create table users_photos
+(
+    user_photo_id int  not null
+        primary key,
+    photo         blob null,
+    user_id       int  null,
+    constraint users_photos_users_user_id_fk
         foreign key (user_id) references users (user_id)
 );
 
