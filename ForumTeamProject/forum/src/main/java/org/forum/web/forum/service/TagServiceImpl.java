@@ -1,6 +1,6 @@
 package org.forum.web.forum.service;
 
-import org.forum.web.forum.helpers.AuthenticationHelper;
+import org.forum.web.forum.helpers.AuthorizationHelper;
 import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.repository.contracts.TagRepository;
@@ -12,11 +12,11 @@ import java.util.List;
 @Service
 public class TagServiceImpl implements TagService {
     private final TagRepository repository;
-    private final AuthenticationHelper authenticationHelper;
+    private final AuthorizationHelper authorizationHelper;
 
-    public TagServiceImpl(TagRepository repository, AuthenticationHelper authenticationHelper) {
+    public TagServiceImpl(TagRepository repository, AuthorizationHelper authorizationHelper) {
         this.repository = repository;
-        this.authenticationHelper = authenticationHelper;
+        this.authorizationHelper = authorizationHelper;
     }
 
     @Override
@@ -31,14 +31,14 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag create(Tag tag, User user) {
-        authenticationHelper.checkIfBanned(user);
+        authorizationHelper.checkIfBanned(user);
         repository.create(tag);
         return repository.getByContent(tag.getContent());
     }
 
     @Override
     public void delete(Tag tag, User user) {
-        authenticationHelper.checkAdmin(user);
+        authorizationHelper.checkAdmin(user);
         repository.delete(tag);
     }
 }

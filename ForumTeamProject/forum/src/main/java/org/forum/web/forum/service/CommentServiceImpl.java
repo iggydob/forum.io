@@ -2,7 +2,7 @@ package org.forum.web.forum.service;
 
 import org.forum.web.forum.exceptions.EntityDuplicateException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
-import org.forum.web.forum.helpers.AuthenticationHelper;
+import org.forum.web.forum.helpers.AuthorizationHelper;
 import org.forum.web.forum.models.Comment;
 import org.forum.web.forum.models.Like;
 import org.forum.web.forum.models.User;
@@ -25,18 +25,18 @@ public class CommentServiceImpl implements CommentService {
     private static final String DELETE_COMMENT_REACTION_ERROR_MESSAGE = "User has not liked or disliked this comment.";
 
     private final CommentRepository repository;
-    private final AuthenticationHelper authenticationHelper;
+    private final AuthorizationHelper authorizationHelper;
 
 
     @Autowired
-    public CommentServiceImpl(CommentRepository repository, AuthenticationHelper authenticationHelper) {
+    public CommentServiceImpl(CommentRepository repository, AuthorizationHelper authorizationHelper) {
         this.repository = repository;
-        this.authenticationHelper = authenticationHelper;
+        this.authorizationHelper = authorizationHelper;
     }
 
     @Override
     public void create(User user, Comment comment) {
-        authenticationHelper.checkIfBanned(user);
+        authorizationHelper.checkIfBanned(user);
         comment.setCreator(user);
         comment.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         repository.create(comment);
@@ -44,16 +44,16 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void update(User user, Comment comment) {
-        authenticationHelper.checkAuthor(comment.getCreator(), user);
-        authenticationHelper.checkIfBanned(user);
+        authorizationHelper.checkAuthor(comment.getCreator(), user);
+        authorizationHelper.checkIfBanned(user);
         repository.update(comment);
     }
     @Override
     public void delete(User user, int id) {
         Comment comment = repository.getById(id);
-        authenticationHelper.checkAdmin(user);
-        authenticationHelper.checkAuthor(comment.getCreator(), user);
-        authenticationHelper.checkIfBanned(user);
+        authorizationHelper.checkAdmin(user);
+        authorizationHelper.checkAuthor(comment.getCreator(), user);
+        authorizationHelper.checkIfBanned(user);
         repository.delete(id);
     }
 

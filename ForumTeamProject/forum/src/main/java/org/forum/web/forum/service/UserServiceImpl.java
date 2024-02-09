@@ -3,6 +3,7 @@ package org.forum.web.forum.service;
 import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityDuplicateException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
+import org.forum.web.forum.helpers.AuthorizationHelper;
 import org.forum.web.forum.models.PhoneNumber;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.UserFilterOptions;
@@ -22,13 +23,14 @@ public class UserServiceImpl implements UserService {
     private static final String AUTHORIZATION_ERROR_MSG = "Access denied. You are not allowed to perform this action.";
     private final UserRepository userRepository;
     private final PhoneNumberService phoneNumberService;
-//    private final PasswordEncoderImpl encoder;
+    private final AuthorizationHelper authorizationHelper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PhoneNumberService phoneNumberService) {
+    public UserServiceImpl(UserRepository userRepository, PhoneNumberService phoneNumberService, AuthorizationHelper authorizationHelper) {
         this.userRepository = userRepository;
         this.phoneNumberService = phoneNumberService;
 //        this.encoder = encoder;
+        this.authorizationHelper = authorizationHelper;
     }
 
 //    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -80,7 +82,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(int id, User requester) {
-        checkAdminRole(requester);
+//        checkAdminRole(requester);
+        authorizationHelper.checkAdmin(requester);
         return userRepository.getById(id);
     }
 

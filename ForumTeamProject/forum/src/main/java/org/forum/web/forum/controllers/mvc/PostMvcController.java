@@ -39,13 +39,11 @@ public class PostMvcController {
         try {
             Post post = postService.getById(id);
             model.addAttribute("post", post);
-            return "PostView";
+            return "PostViewTheme";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
         }
     }
-
-
 }

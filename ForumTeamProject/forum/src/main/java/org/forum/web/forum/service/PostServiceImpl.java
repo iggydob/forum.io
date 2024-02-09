@@ -2,7 +2,7 @@ package org.forum.web.forum.service;
 
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.exceptions.UnauthorizedOperationException;
-import org.forum.web.forum.helpers.AuthenticationHelper;
+import org.forum.web.forum.helpers.AuthorizationHelper;
 import org.forum.web.forum.models.LikePost;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.Tag;
@@ -26,14 +26,14 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final LikePostService likePostService;
     private final TagService tagService;
-    private final AuthenticationHelper authenticationHelper;
+    private final AuthorizationHelper authorizationHelper;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, LikePostService likePostService, TagService tagService, AuthenticationHelper authenticationHelper) {
+    public PostServiceImpl(PostRepository postRepository, LikePostService likePostService, TagService tagService,AuthorizationHelper authenticationHelper) {
         this.postRepository = postRepository;
         this.likePostService = likePostService;
         this.tagService = tagService;
-        this.authenticationHelper = authenticationHelper;
+        this.authorizationHelper = authenticationHelper;
     }
 
     @Override
@@ -63,8 +63,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void addTagToPost(User userWhoAdds, Post post, Tag tag) {
-        authenticationHelper.checkIfBanned(userWhoAdds);
-        authenticationHelper.checkAuthor(userWhoAdds, post.getCreator());
+        authorizationHelper.checkIfBanned(userWhoAdds);
+        authorizationHelper.checkAuthor(userWhoAdds, post.getCreator());
 
         Tag newTag = tagService.create(tag, userWhoAdds);
         post.getTags().add(newTag);
@@ -73,8 +73,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deleteTagFromPost(User userWhoDeletes, Post postFromWhichToDelete, Tag tag) {
-        authenticationHelper.checkIfBanned(userWhoDeletes);
-        authenticationHelper.checkAuthor(userWhoDeletes, postFromWhichToDelete.getCreator());
+        authorizationHelper.checkIfBanned(userWhoDeletes);
+        authorizationHelper.checkAuthor(userWhoDeletes, postFromWhichToDelete.getCreator());
 
         postFromWhichToDelete.getTags().remove(tag);
         postRepository.update(postFromWhichToDelete);
@@ -85,7 +85,7 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.getById(id);
 
         try {
-            authenticationHelper.checkIfBanned(user);
+            authorizationHelper.checkIfBanned(user);
             LikePost likePost = likePostService.get(post, user);
             post.setNewLike(user);
             likePostService.delete(likePost);
@@ -97,7 +97,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void create(Post post, User user) {
-        authenticationHelper.checkIfBanned(user);
+        authorizationHelper.checkIfBanned(user);
         post.setCreator(user);
         post.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         postRepository.create(post);
@@ -106,8 +106,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void update(Post post, User user) {
-        authenticationHelper.checkIfBanned(user);
-        authenticationHelper.checkAuthor(user, post);
+        authorizationHelper.checkIfBanned(user);
+        authorizationHelper.checkAuthor(user, post);
         postRepository.update(post);
 
     }
@@ -128,10 +128,10 @@ public class PostServiceImpl implements PostService {
     public void delete (User user, int id){
         Post post = postRepository.getById(id);
         try {
-            authenticationHelper.checkAdmin(user);
+            authorizationHelper.checkAdmin(user);
             postRepository.delete(post.getId());
         } catch (UnauthorizedOperationException e) {
-            authenticationHelper.checkAuthor(user, post);
+            authorizationHelper.checkAuthor(user, post);
             postRepository.delete(post.getId());
         }
     }

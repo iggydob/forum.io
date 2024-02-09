@@ -16,7 +16,7 @@ public class AuthenticationHelper {
 
     private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private static final String INVALID_AUTHENTICATION_ERROR = "Invalid user or password.";
-    private static final String AUTHORIZATION_ERROR = "Access denied! You are not allowed to perform this action!";
+
 
     private final UserService userService;
 
@@ -82,30 +82,5 @@ public class AuthenticationHelper {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
         }
     }
-    public void checkIfBanned(User user) {
-        if (user.getBanStatus()) {
-            throw new UnauthorizedOperationException("This user is banned!");
-        }
-    }
-    public void checkAuthor(User user, User userToCheck) {
-        if (userToCheck.getUserId() != user.getUserId()) {
-            throw new UnauthorizedOperationException(AUTHORIZATION_ERROR);
-        }
-    }
-    public void checkAuthor(User user, Post post){
-        if (user.getUserId() != post.getCreator().getUserId()){
-            throw new UnauthorizedOperationException(AUTHORIZATION_ERROR);
-        }
-    }
-    public void checkAuthor(User user, Comment comment){
-        if (user.getUserId() != comment.getCreator().getUserId()){
-            throw new UnauthorizedOperationException(AUTHORIZATION_ERROR);
-        }
-    }
 
-    public void checkAdmin(User user) {
-        if (!user.getAdminStatus()) {
-            throw new UnauthorizedOperationException(AUTHORIZATION_ERROR);
-        }
-    }
 }
