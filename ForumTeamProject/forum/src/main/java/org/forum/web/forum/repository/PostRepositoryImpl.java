@@ -9,7 +9,6 @@ import org.forum.web.forum.repository.contracts.PostRepository;
 import org.forum.web.forum.repository.contracts.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -125,7 +124,13 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Post getById(int id) {
         try (Session session = sessionFactory.openSession()) {
-            Post post = session.get(Post.class, id);
+//            Post post = session.get(Post.class, id);
+
+            Post post = session.createQuery(
+                            "SELECT p FROM Post p WHERE p.id = :id AND p.isDeleted = false", Post.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
+
             if (post == null) {
                 throw new EntityNotFoundException("Post", id);
             }
@@ -183,19 +188,19 @@ public class PostRepositoryImpl implements PostRepository {
 //            session.getTransaction().commit();
 //        }
 //    }
-    @Override
-    public void delete(int id) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-
-            Query<Post> query = session.createQuery(
-                            "UPDATE Post p SET p.isDeleted = true WHERE p.id = :id", Post.class)
-                    .setParameter("id", id);
-
-            query.executeUpdate();
-            transaction.commit();
-        }
-    }
+//    @Override
+//    public void delete(int id) {
+//        try (Session session = sessionFactory.openSession()) {
+//            Transaction transaction = session.beginTransaction();
+//
+//            Query<Post> query = session.createQuery(
+//                            "UPDATE Post p SET p.isDeleted = true WHERE p.id = :id", Post.class)
+//                    .setParameter("id", id);
+//
+//            query.executeUpdate();
+//            transaction.commit();
+//        }
+//    }
 
     @Override
     public List<User> getLikedBy(int postId) {

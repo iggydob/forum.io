@@ -38,4 +38,15 @@ public class AuthorizationHelper {
             throw new UnauthorizedOperationException(AUTHORIZATION_ERROR);
         }
     }
+    public boolean checkIfAuthor(User user, User userToCheck) {
+        if (userToCheck.getUserId() != user.getUserId()) {
+            return false;
+        }
+        return true;
+    }
+    public void verifyUser(User userOwner, User userToCheck){
+        if (!userToCheck.getAdminStatus() && !checkIfAuthor(userOwner, userToCheck)){
+            throw new UnauthorizedOperationException(AUTHORIZATION_ERROR);
+        }
+    }
 }
