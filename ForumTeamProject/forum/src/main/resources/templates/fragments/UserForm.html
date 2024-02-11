@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="details(bodyTitle)">
-<!--    <h2 th:text="${bodyTitle}">Body Title</h2>-->
-    <form action="#" th:action="@{__${requestURI}__}" th:object="${register}" method="post">
+    <!--    <h2 th:text="${bodyTitle}">Body Title</h2>-->
+    <form action="#" th:action="@{/auth/register}" th:object="${register}" method="post">
         <label th:text="#{user.label.username}">Username</label>
         <br/>
         <input type="text" th:field="*{username}"/>
@@ -15,11 +15,11 @@
         <label class="error" th:errors="*{password}">Password error placeholder</label>
         <br/><br/>
 
-        <!--        <label th:text="#{user.label.password-confirm}">Confirm Password</label>-->
-        <!--        <br/>-->
-        <!--        <input type="password" th:field="*{passwordConfirm}"/>-->
-        <!--        <label class="error" th:errors="*{passwordConfirm}">Password confirm error placeholder</label>-->
-        <!--        <br/><br/>-->
+        <label th:text="#{user.label.password-confirm}">Confirm Password</label>
+        <br/>
+        <input type="password" th:field="*{passwordConfirm}"/>
+        <label class="error" th:errors="*{passwordConfirm}">Password confirm error placeholder</label>
+        <br/><br/>
 
         <label th:text="#{user.label.first-name}">First Name</label>
         <br/>

@@ -7,6 +7,7 @@ import org.forum.web.forum.exceptions.EntityDuplicateException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.helpers.mappers.UserMapper;
 import org.forum.web.forum.models.Dtos.LoginDto;
+import org.forum.web.forum.models.Dtos.RegisterDto;
 import org.forum.web.forum.models.Dtos.UserDto;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.service.contracts.UserService;
@@ -72,24 +73,24 @@ public class AuthenticationMvcController {
 
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
-        model.addAttribute("register", new UserDto());
+        model.addAttribute("register", new RegisterDto());
         return "RegisterView";
     }
 
     @PostMapping("/register")
-    public String handleRegister(@Valid @ModelAttribute("register") UserDto register,
+    public String handleRegister(@Valid @ModelAttribute("register") RegisterDto register,
                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "RegisterView";
         }
 
-//        if (!register.getPassword().equals(register.getPasswordConfirm())) {
-//            bindingResult.rejectValue("passwordConfirm", "password_error", "Password confirmation should match password.");
-//            return "RegisterView";
-//        }
+        if (!register.getPassword().equals(register.getPasswordConfirm())) {
+            bindingResult.rejectValue("passwordConfirm", "password_error", "Password confirmation should match password.");
+            return "RegisterView";
+        }
 
         try {
-            User user = userMapper.dtoUserCreate(register);
+            User user = userMapper.dtoUserCreateMvc(register);
             userService.create(user);
             return "redirect:/auth/login";
         } catch (EntityDuplicateException e) {
@@ -97,6 +98,4 @@ public class AuthenticationMvcController {
             return "RegisterView";
         }
     }
-
-
 }

@@ -1,5 +1,6 @@
 package org.forum.web.forum.helpers.mappers;
 
+import org.forum.web.forum.models.Dtos.RegisterDto;
 import org.forum.web.forum.models.Dtos.UserDto;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.service.contracts.UserService;
@@ -20,6 +21,16 @@ public class UserMapper {
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
+        return user;
+    }
+
+    public User dtoUserCreateMvc(RegisterDto registerDto) {
+        User user = new User();
+        user.setFirstName(registerDto.getFirstName());
+        user.setLastName(registerDto.getLastName());
+        user.setUsername(registerDto.getUsername());
+        user.setPassword(registerDto.getPassword());
+        user.setEmail(registerDto.getEmail());
         return user;
     }
 

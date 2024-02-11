@@ -8,11 +8,46 @@
     <div class="card mb-4">
         <div class="card-header">Create your account</div>
         <div class="card-body">
-            <div class="input-group">
-                <form th:replace="~{fragments/UserForm :: details('Create your account')}"></form>
-            </div>
+            <form action="#" th:action="@{/auth/register}" th:object="${register}" method="post">
+                <label th:text="#{user.label.username}">Username</label>
+                <br/>
+                <input type="text" th:field="*{username}"/>
+                <br/><label class="error" th:errors="*{username}">Username error placeholder</label>
+                <br/>
 
-            <a class="btn btn-primary" type="submit" value="Register">Sign up</a>
+                <label th:text="#{user.label.password}">Password</label>
+                <br/>
+                <input type="password" th:field="*{password}"/>
+                <br/><label class="error" th:errors="*{password}">Password error placeholder</label>
+                <br/>
+
+                <label th:text="#{user.label.password-confirm}">Confirm Password</label>
+                <br/>
+                <input type="password" th:field="*{passwordConfirm}"/>
+                <br/><label class="error" th:errors="*{passwordConfirm}">Password confirm error placeholder</label>
+                <br/>
+
+                <label th:text="#{user.label.first-name}">First Name</label>
+                <br/>
+                <input type="text" th:field="*{firstName}"/>
+                <br/><label class="error" th:errors="*{firstName}">First name error placeholder</label>
+                <br/>
+
+                <label th:text="#{user.label.last-name}">Last Name</label>
+                <br/>
+                <input type="text" th:field="*{lastName}"/>
+                <br/><label class="error" th:errors="*{lastName}">Last name error placeholder</label>
+                <br/>
+
+                <label th:text="#{user.label.email}">Email</label>
+                <br/>
+                <input type="text" th:field="*{email}"/>
+                <br/><label class="error" th:errors="*{email}">Email error placeholder</label>
+                <br/>
+                <input class="btn btn-primary" type="submit" value="Sign up"></input>
+            </form>
+
+
         </div>
     </div>
    </div>
