@@ -4712,6 +4712,13 @@ textarea.form-control-lg {
     color: var(--bs-card-color);
 }
 
+.card-body-centered {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+}
+
 .card-title {
     margin-bottom: var(--bs-card-title-spacer-y);
 }

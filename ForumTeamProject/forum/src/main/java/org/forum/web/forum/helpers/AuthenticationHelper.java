@@ -53,7 +53,7 @@ public class AuthenticationHelper {
         return verifyAuthentication(username, password);
     }
 
-    private String getUsername(String userInfo) {
+    public String getUsername(String userInfo) {
         int firstSpace = userInfo.indexOf(" ");
         if (firstSpace == -1) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
@@ -62,7 +62,7 @@ public class AuthenticationHelper {
         return userInfo.substring(0, firstSpace);
     }
 
-    private String getPassword(String userInfo) {
+    public String getPassword(String userInfo) {
         int firstSpace = userInfo.indexOf(" ");
         if (firstSpace == -1) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
@@ -71,7 +71,7 @@ public class AuthenticationHelper {
         return userInfo.substring(firstSpace + 1);
     }
 
-    private User verifyAuthentication(String username, String password) {
+    public User verifyAuthentication(String username, String password) {
         try {
             User user = userService.getByUsername(username);
             if (!user.getPassword().equals(password)) {
