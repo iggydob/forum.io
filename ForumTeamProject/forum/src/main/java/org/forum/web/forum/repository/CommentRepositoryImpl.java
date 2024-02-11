@@ -10,10 +10,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class CommentRepositoryImpl implements CommentRepository {
@@ -44,19 +41,19 @@ public class CommentRepositoryImpl implements CommentRepository {
         }
     }
 
-    @Override
-    public void delete(int id) {
-        try (Session session = sessionFactory.openSession()) {
-            Transaction transaction = session.beginTransaction();
-
-            Query<Comment> query = session.createQuery(
-                            "UPDATE Comment c SET c.isDeleted = true WHERE c.id = :id", Comment.class)
-                    .setParameter("id", id);
-
-            query.executeUpdate();
-            transaction.commit();
-        }
-    }
+//    @Override
+//    public void delete(int id) {
+//        try (Session session = sessionFactory.openSession()) {
+//            Transaction transaction = session.beginTransaction();
+//
+//            Query<Comment> query = session.createQuery(
+//                            "UPDATE Comment c SET c.isDeleted = true WHERE c.id = :id", Comment.class);
+////                    .setParameter("id", id);
+//
+//            query.executeUpdate();
+//            transaction.commit();
+//        }
+//    }
 //    Only receiving comments with likes not all
 //    @Override
 //    public List<Comment> getCommentsSortedByLikes() {

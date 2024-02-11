@@ -8,7 +8,7 @@ public interface CommentRepository {
 
     void create(Comment comment);
     void update(Comment comment);
-    void delete(int id);
+//    void delete(int id);
     List<Comment> getAll();
 
     //    public List<Comment> getCommentsSortedByLikes();
