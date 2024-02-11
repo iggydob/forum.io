@@ -1,13 +1,18 @@
 package org.forum.web.forum.controllers.mvc;
 
+import jakarta.servlet.http.HttpSession;
+import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.Post;
+import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.service.contracts.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -20,9 +25,14 @@ public class HomeMvcController {
     @Autowired
     public HomeMvcController(
             AuthenticationHelper authenticationHelper,
-                             PostService postService) {
+            PostService postService) {
         this.authenticationHelper = authenticationHelper;
         this.postService = postService;
+    }
+
+    @ModelAttribute("isAuthenticated")
+    public boolean populateIsAuthenticated(HttpSession session) {
+        return session.getAttribute("currentUser") != null;
     }
 
     @GetMapping
