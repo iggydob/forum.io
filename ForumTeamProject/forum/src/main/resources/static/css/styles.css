@@ -8406,6 +8406,7 @@ textarea.form-control-lg {
     margin-top: 1rem !important;
     margin-left: 1rem !important;
 }
+
 .mt-5 {
     margin-top: 3rem !important;
 }
@@ -9365,6 +9366,10 @@ textarea.form-control-lg {
     .mx-sm-3 {
         margin-right: 1rem !important;
         margin-left: 1rem !important;
+    }
+
+    .margin-right {
+        margin-right: 1rem !important;
     }
 
     .mx-sm-4 {
@@ -12414,7 +12419,19 @@ textarea.form-control-lg {
     }
 
     .rounded-profile {
-    max-width: 5px;
-    max-height: 5px;
-}
+        max-width: 5px;
+        max-height: 5px;
+    }
+
+    .gradient-custom { /* fallback for old browsers */
+        background: #4facfe;
+        /* Chrome 10-25,
+       Safari 5.1-6 */
+        background: -webkit-linear-gradient(to bottom right, rgba(79, 172, 254,
+        1), rgba(0, 242, 254, 1));
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+,
+       Safari 7+ */
+        background: linear-gradient(to bottom right, rgba(79, 172, 254, 1), rgba(0,
+        242, 254, 1))
+    }
 }

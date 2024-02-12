@@ -1,5 +1,6 @@
 package org.forum.web.forum.helpers;
 
+import jakarta.servlet.http.HttpSession;
 import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.exceptions.UnauthorizedOperationException;
@@ -51,6 +52,16 @@ public class AuthenticationHelper {
         String password = parts[1];
 
         return verifyAuthentication(username, password);
+    }
+
+    public User tryGetCurrentUser(HttpSession session) {
+        String currentUsername = (String) session.getAttribute("currentUser");
+
+        if (currentUsername == null) {
+            throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
+        }
+
+        return userService.getByUsername(currentUsername);
     }
 
     public String getUsername(String userInfo) {
