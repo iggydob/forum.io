@@ -8402,6 +8402,10 @@ textarea.form-control-lg {
     margin-top: 1.5rem !important;
 }
 
+.margin-top-left {
+    margin-top: 1rem !important;
+    margin-left: 1rem !important;
+}
 .mt-5 {
     margin-top: 3rem !important;
 }
@@ -12408,4 +12412,9 @@ textarea.form-control-lg {
     .d-print-none {
         display: none !important;
     }
+
+    .rounded-profile {
+    max-width: 5px;
+    max-height: 5px;
+}
 }

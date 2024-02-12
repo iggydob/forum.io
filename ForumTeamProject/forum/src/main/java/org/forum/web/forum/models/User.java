@@ -41,6 +41,9 @@ public class User {
     @Column(name = "is_banned")
     private boolean banStatus;
 
+    @Column (name = "photo_url")
+    private String photoUrl;
+
     @OneToOne(mappedBy = "user")
     @JoinColumn(name = "phone_number_id")
 //    @JoinTable(name = "phone_numbers",
@@ -108,7 +111,11 @@ public class User {
         return banStatus;
     }
 
-//    public String getPhoneNumber() {
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    //    public String getPhoneNumber() {
 //        return phoneNumber;
 //    }
 
@@ -144,7 +151,11 @@ public class User {
         this.banStatus = banStatus;
     }
 
-//    public void setPhoneNumber(String phoneNumber) {
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    //    public void setPhoneNumber(String phoneNumber) {
 //        this.phoneNumber = phoneNumber;
 //    }
 

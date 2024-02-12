@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
         this.authorizationHelper = authorizationHelper;
     }
 
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    //    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //        return (UserDetails) getByUsername(username);
 //    }
     @Override
@@ -82,7 +82,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(int id, User requester) {
-//        checkAdminRole(requester);
         authorizationHelper.checkAdmin(requester);
         return userRepository.getById(id);
     }

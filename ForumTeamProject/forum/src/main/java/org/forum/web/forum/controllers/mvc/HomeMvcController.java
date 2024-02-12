@@ -7,6 +7,7 @@ import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.service.contracts.PostService;
+import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -22,12 +23,16 @@ public class HomeMvcController {
     private final AuthenticationHelper authenticationHelper;
     private final PostService postService;
 
+    private final UserService userService;
+
     @Autowired
     public HomeMvcController(
             AuthenticationHelper authenticationHelper,
-            PostService postService) {
+            PostService postService,
+            UserService userService) {
         this.authenticationHelper = authenticationHelper;
         this.postService = postService;
+        this.userService = userService;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -36,9 +41,14 @@ public class HomeMvcController {
     }
 
     @GetMapping
-    public String showHomePage(Model model) {
+    public String showHomePage(Model model, HttpSession session) {
         model.addAttribute("mostCommentedPosts", postService.getMostCommented());
         model.addAttribute("mostRecentPosts", postService.getMostRecent());
+        String username = (String) session.getAttribute("currentUser");
+        if (username != null) {
+            User currentUser = userService.getByUsername(username);
+            model.addAttribute("currentUser", currentUser);
+        }
         return "HomePageView";
     }
 

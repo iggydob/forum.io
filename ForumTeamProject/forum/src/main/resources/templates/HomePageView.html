@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<div th:insert = "~{fragments/PageFrame :: head('Home Page')}"></div>
+<div th:insert="~{fragments/PageFrame :: head('Home Page')}"></div>
 <body>
 <!-- Responsive navbar-->
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
@@ -16,6 +16,82 @@
 <!-- Page content-->
 <div class="container">
     <div class="row">
+        <!-- Side widgets-->
+        <div class="col-lg-4">
+            <!-- User screen-->
+            <div th:if="${isAuthenticated}" class="card mb-4">
+                <div class="card-header">User
+                    <b>
+                        <span th:if="${currentUser.getBanStatus()}" th:style="'color: red;'">[Banned]</span>
+                        <span th:unless="${currentUser.getBanStatus()}" th:style="'color: green;'">[Active]</span>
+                    </b></div>
+                <div class="d-flex margin-top-left">
+                    <div class="flex-shrink-0">
+                        <img class="rounded-circle" th:src="${currentUser.getPhotoUrl()}" alt="User profile picture"
+                             style="max-width: 75px; max-height: 75px;"/>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center ml-3">
+                        <div class="card-body"> You've logged in as <b><span
+                                th:text="${currentUser.username}"></span></b> </br>
+                            Your current role is
+                            <b><span th:if="${currentUser.getAdminStatus()}">admin</span></b>
+                            <b> <span th:unless="${currentUser.getAdminStatus()}">regular user</span></b>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><a href="#!">Change details</a></li>
+                                <li><a href="#!">Change password</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><a href="#!">Admin panel</a></li>
+                                <li><a href="#!">Ban/unban user</a></li>
+                                <li><a href="#!">Promote/demote user</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Search widget-->
+            <div class=" card mb-4
+                ">
+                <div class="card-header">Search</div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="Enter search term..."
+                               aria-label="Enter search term..." aria-describedby="button-search"/>
+                        <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Categories widget-->
+            <div class="card mb-4">
+                <div class="card-header">Tags</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><a href="#!">Web Design</a></li>
+                                <li><a href="#!">HTML</a></li>
+                                <li><a href="#!">Freebies</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><a href="#!">JavaScript</a></li>
+                                <li><a href="#!">CSS</a></li>
+                                <li><a href="#!">Tutorials</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Blog entries-->
         <div class="col-lg-8">
             <!-- Featured blog post-->
@@ -75,49 +151,6 @@
             <!--                    <li class="page-item"><a class="page-link" href="#!">Older</a></li>-->
             <!--                </ul>-->
             <!--            </nav>-->
-        </div>
-        <!-- Side widgets-->
-        <div class="col-lg-4">
-            <!-- Search widget-->
-            <div class="card mb-4">
-                <div class="card-header">Search</div>
-                <div class="card-body">
-                    <div class="input-group">
-                        <input class="form-control" type="text" placeholder="Enter search term..."
-                               aria-label="Enter search term..." aria-describedby="button-search"/>
-                        <button class="btn btn-primary" id="button-search" type="button">Go!</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Categories widget-->
-            <div class="card mb-4">
-                <div class="card-header">Tags</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">Web Design</a></li>
-                                <li><a href="#!">HTML</a></li>
-                                <li><a href="#!">Freebies</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">JavaScript</a></li>
-                                <li><a href="#!">CSS</a></li>
-                                <li><a href="#!">Tutorials</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Side widget-->
-            <div class="card mb-4">
-                <div class="card-header">Side Widget</div>
-                <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use,
-                    and feature the Bootstrap 5 card component!
-                </div>
-            </div>
         </div>
     </div>
 </div>
