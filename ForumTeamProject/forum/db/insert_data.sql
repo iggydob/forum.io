@@ -1,15 +1,15 @@
-INSERT INTO forum_system.users (first_name, last_name, username, password, email, is_admin, is_banned)
+INSERT INTO forum_system.users (first_name, last_name, username, password, email, is_admin, is_banned,photo_url)
 VALUES
-('John', 'Doe', 'johndoe', 'Password1', 'johndoe@example.com', 1, 0),
-('Jane', 'Doe', 'janedoe', 'Password2', 'janedoe@example.com', 0, 0),
-('Alice', 'Smith', 'alicesmith', 'Password', 'alicesmith@example.com', 0, 0),
-('Bobby', 'Johnson', 'bobjohnson', 'Password4', 'bobjohnson@example.com', 0, 0),
-('Charlie', 'Brown', 'charliebrown', 'Password5', 'charliebrown@example.com', 0, 0),
-('David', 'Williams', 'davidwilliams', 'Password6', 'davidwilliams@example.com', 0, 0),
-('Even', 'Jones', 'evejones', 'Password7', 'evejones@example.com', 0, 0),
-('Frank', 'Miller', 'frankmiller', 'Password8', 'frankmiller@example.com', 0, 0),
-('Grace', 'Davis', 'gracedavis', 'Password9', 'gracedavis@example.com', 0, 1),
-('Harry', 'Wilson', 'harrywilson', 'Password10', 'harrywilson@example.com', 0, 1);
+    ('John', 'Doe', 'johndoe', 'Password1', 'johndoe@example.com', 1, 0, 'assets/users/male1.jpg'),
+    ('Jane', 'Doe', 'janedoe', 'Password2', 'janedoe@example.com', 0, 0, 'assets/users/female1.jpg'),
+    ('Alice', 'Smith', 'alicesmith', 'Password', 'alicesmith@example.com', 0, 0, 'assets/users/female2.jpg'),
+    ('Bobby', 'Johnson', 'bobjohnson', 'Password4', 'bobjohnson@example.com', 0, 0, 'assets/users/male2.jpg'),
+    ('Charlie', 'Brown', 'charliebrown', 'Password5', 'charliebrown@example.com', 0, 0, 'assets/users/defaultUser.jpg'),
+    ('David', 'Williams', 'davidwilliams', 'Password6', 'davidwilliams@example.com', 0, 0, 'assets/users/defaultUser.jpg'),
+    ('Even', 'Jones', 'evejones', 'Password7', 'evejones@example.com', 0, 0, 'assets/users/defaultUser.jpg'),
+    ('Frank', 'Miller', 'frankmiller', 'Password8', 'frankmiller@example.com', 0, 0, 'assets/users/defaultUser.jpg'),
+    ('Grace', 'Davis', 'gracedavis', 'Password9', 'gracedavis@example.com', 0, 1, 'assets/users/defaultUser.jpg'),
+    ('Harry', 'Wilson', 'harrywilson', 'Password10', 'harrywilson@example.com', 0, 1, 'assets/users/defaultUser.jpg');
 
 INSERT INTO forum_system.posts (created_by_id, title, content, creation_date)
 VALUES

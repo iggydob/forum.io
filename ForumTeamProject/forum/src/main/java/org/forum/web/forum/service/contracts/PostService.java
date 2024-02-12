@@ -22,6 +22,7 @@ public interface PostService {
     void deleteTagFromPost(User userWhoDeletes, Post postFromWhichToDelete, Tag tag);
 
     void likePost(int id, User user);
+    long getPostCount();
 
     void create(Post post, User user);
 

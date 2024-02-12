@@ -139,7 +139,6 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    //moje bi shte mi trqbva vuv FE.
     public long getPostCount() {
         try (Session session = sessionFactory.openSession()) {
             Query<Long> query = session.createQuery("select COUNT (p) from Post p", Long.class);

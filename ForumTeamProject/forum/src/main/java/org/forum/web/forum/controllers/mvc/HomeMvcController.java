@@ -44,6 +44,7 @@ public class HomeMvcController {
     public String showHomePage(Model model, HttpSession session) {
         model.addAttribute("mostCommentedPosts", postService.getMostCommented());
         model.addAttribute("mostRecentPosts", postService.getMostRecent());
+        model.addAttribute("postCount",postService.getPostCount());
         String username = (String) session.getAttribute("currentUser");
         if (username != null) {
             User currentUser = userService.getByUsername(username);

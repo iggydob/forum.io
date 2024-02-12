@@ -77,7 +77,7 @@ public class PostRestController {
 
     @GetMapping("/count")
     public long getCount() {
-        return repository.getPostCount();
+        return service.getPostCount();
     }
 
     @GetMapping("/recent")

@@ -93,6 +93,11 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    @Override
+    public long getPostCount() {
+        return postRepository.getPostCount();
+    }
+
 
     @Override
     public void create(Post post, User user) {
