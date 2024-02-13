@@ -21,7 +21,7 @@
                     <div class="text-muted fst-italic mb-2" th:text="${'Author: ' + post.creator.username}">Creator
                     </div>
                     <!-- Post categories-->
-                    <a class="badge bg-secondary text-decoration-none link-light" href="#!">Deff</a>
+                    <a class="badge bg-secondary text-decoration-none link-light" href="#!"th:each="tags : ${tags}" th:text="${tags.getContent()}">Deff</a>
                 </header>
                 <!-- Post content-->
                 <section class="mb-5">
@@ -34,27 +34,13 @@
             <section class="mb-5">
                 <div class="card bg-light">
                     <div class="card-body">
-<!--                         Comment form-->
-<!--                                                <label th:text="#{user.label.username}">Username</label>-->
-<!--                                                <br/>-->
-<!--                                                <input type="text" th:field="*{username}"/>-->
-<!--                                                <br/><label class="error" th:errors="*{username}">Username error placeholder</label>-->
-<!--                                                <br/>-->
-
-                        <form action="#" th:action="@{/posts/submitComment}" th:object="${commentDto}" th:method="post" class="mb-4">
-<!--                            <textarea class="form-control" rows="3" th:field="*{getContent()}"-->
-<!--                                      placeholder="Join the discussion and leave a comment!"></textarea>-->
-<!--                            </br>-->
-<!--                            <label th:text="#{comment.label.content}">Comment content</label>-->
+                        <form action="#" th:action="@{/posts/submitComment}" th:object="${commentDto}" th:method="post"
+                              class="mb-4">
                             <br/>
-                            <textarea class="form-control" rows="3" th:field="*{content}" placeholder="Write your comment..."></textarea>
-                            <!--<input type="text" th:field="*{content}"/>-->
-
+                            <textarea class="form-control" rows="3" th:field="*{content}"
+                                      placeholder="Write your comment..."></textarea>
                             <br/>
-
                             <input class="btn btn-primary" type="submit" value="Submit"/>
-
-
                         </form>
                         <div class="row d-flex justify-content-center">
                             <div class="mb-4" th:each="comments : ${comments}">
