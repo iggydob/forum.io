@@ -42,7 +42,7 @@ public class User {
     private boolean banStatus;
 
     @Column (name = "photo_url")
-    private String photoUrl;
+    private String photoUrl = "assets/users/defaultUser.jpg";
 
     @OneToOne(mappedBy = "user")
     @JoinColumn(name = "phone_number_id")
@@ -114,10 +114,6 @@ public class User {
     public String getPhotoUrl() {
         return photoUrl;
     }
-
-    //    public String getPhoneNumber() {
-//        return phoneNumber;
-//    }
 
     public void setUserId(int userId) {
         this.userId = userId;
