@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="user-panel" th:if="${isAuthenticated}" class="card mb-4">
+    <div class="card-header">User
+        <b>
+            <span th:if="${currentUser.banStatus}" th:style="'color: red;'">[Banned]</span>
+            <span th:unless="${currentUser.banStatus}" th:style="'color: green;'">[Active]</span>
+        </b></div>
+    <div class="d-flex margin-top-left">
+        <div class="flex-shrink-0">
+            <img class="rounded-circle" th:src="${currentUser.photoUrl}" alt="User profile picture"
+                 style="max-width: 65px; max-height: 65px;"/>
+        </div>
+        <div class="d-flex flex-column justify-content-center ml-3">
+            <div class="card-body"> You've logged in as <b><span
+                    th:text="${currentUser.username}"></span></b> </br>
+                Your current role is
+                <b><span th:if="${currentUser.adminStatus}">admin</span></b>
+                <b> <span th:unless="${currentUser.adminStatus}">regular user</span></b>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <ul class="list-unstyled mb-0">
+                    <li><a href="#!">Change details</a></li>
+                    <li><a href="#!">Change password</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-6">
+                <ul class="list-unstyled mb-0">
+                    <li><a th:if="${currentUser.adminStatus}" href="#!">Admin panel</a></li>
+                    <li><a th:if="${currentUser.adminStatus}" href="#!">Ban/unban user</a></li>
+                    <li><a th:if="${currentUser.adminStatus}" href="#!">Promote/demote user</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
