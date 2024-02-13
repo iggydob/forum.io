@@ -57,12 +57,19 @@ public class PostMvcController {
         return request.getRequestURI();
     }
 
+//    @ModelAttribute("lastPartOfUrl")
+//    public int getLastPartOfUrl(HttpServletRequest request) {
+//        String uri = request.getRequestURI();
+//        String lastPart = uri.substring(uri.lastIndexOf('/') + 1);
+//        return Integer.parseInt(lastPart);
+//    }
+
     @PostMapping("/submitComment")
     public String createComment(@ModelAttribute("comment") CommentDTO commentDTO,
                                 Model model,
+                                HttpServletRequest request,
                                 HttpSession session) {
         User user;
-
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
@@ -70,12 +77,12 @@ public class PostMvcController {
         }
 
         try {
-            Comment comment = commentMapper.fromDto(commentDTO);
+            int postId = (int) session.getAttribute("sessionPostId");
+            Comment comment = commentMapper.fromDto(postId, commentDTO);
             commentService.create(user, comment);
             model.addAttribute("comment", comment);
 
-            int id = comment.getPost().getId();
-            return "redirect:/posts/" + id;
+            return "redirect:/posts/" + postId;
         } catch (UnauthorizedOperationException e) {
             model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
@@ -84,13 +91,15 @@ public class PostMvcController {
     }
 
     @GetMapping("/{id}")
-    public String showSinglePost(@PathVariable int id, Model model) {
+    public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
         try {
             Post post = postService.getById(id);
             //todo think about comments and tags
             List<Comment> comment = commentService.getPostComments(post.getId());
             model.addAttribute("post", post);
             model.addAttribute("comments", comment);
+            model.addAttribute("commentDto", new CommentDTO());
+            session.setAttribute("sessionPostId", id);
             return "PostViewTheme";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());

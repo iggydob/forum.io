@@ -5,6 +5,7 @@ import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.helpers.AuthorizationHelper;
 import org.forum.web.forum.models.Comment;
 import org.forum.web.forum.models.Like;
+import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.repository.contracts.CommentRepository;
 import org.forum.web.forum.service.contracts.CommentService;

@@ -41,12 +41,20 @@
 <!--                                                <br/><label class="error" th:errors="*{username}">Username error placeholder</label>-->
 <!--                                                <br/>-->
 
-                        <form action="#" th:action="@{/posts/${post.id}/submitComment}" th:method="post" class="mb-4">
-                            <input type="hidden" th:field="*{id}" th:object="${post}"/>
-                            <textarea class="form-control" rows="3" th:field="*{post.getComments()}"
-                                      placeholder="Join the discussion and leave a comment!"></textarea>
-                            </br>
+                        <form action="#" th:action="@{/posts/submitComment}" th:object="${commentDto}" th:method="post" class="mb-4">
+<!--                            <textarea class="form-control" rows="3" th:field="*{getContent()}"-->
+<!--                                      placeholder="Join the discussion and leave a comment!"></textarea>-->
+<!--                            </br>-->
+<!--                            <label th:text="#{comment.label.content}">Comment content</label>-->
+                            <br/>
+                            <textarea class="form-control" rows="3" th:field="*{content}" placeholder="Write your comment..."></textarea>
+                            <!--<input type="text" th:field="*{content}"/>-->
+
+                            <br/>
+
                             <input class="btn btn-primary" type="submit" value="Submit"/>
+
+
                         </form>
                         <div class="row d-flex justify-content-center">
                             <div class="mb-4" th:each="comments : ${comments}">
