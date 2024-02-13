@@ -88,8 +88,8 @@ public class PostMvcController {
     @GetMapping("/{id}")
     public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
         try {
-            User user;
             Post post = postService.getById(id);
+            User user = post.getCreator();
             //todo think about comments and tags
             List<Comment> comment = commentService.getPostComments(post.getId());
             Set<Tag> tags = post.getTags();
