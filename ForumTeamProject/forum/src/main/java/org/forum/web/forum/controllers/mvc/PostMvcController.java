@@ -57,13 +57,6 @@ public class PostMvcController {
         return request.getRequestURI();
     }
 
-//    @ModelAttribute("lastPartOfUrl")
-//    public int getLastPartOfUrl(HttpServletRequest request) {
-//        String uri = request.getRequestURI();
-//        String lastPart = uri.substring(uri.lastIndexOf('/') + 1);
-//        return Integer.parseInt(lastPart);
-//    }
-
     @PostMapping("/submitComment")
     public String createComment(@ModelAttribute("comment") CommentDTO commentDTO,
                                 Model model,
@@ -93,12 +86,14 @@ public class PostMvcController {
     @GetMapping("/{id}")
     public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
         try {
+            User user;
             Post post = postService.getById(id);
             //todo think about comments and tags
             List<Comment> comment = commentService.getPostComments(post.getId());
             model.addAttribute("post", post);
             model.addAttribute("comments", comment);
             model.addAttribute("commentDto", new CommentDTO());
+            model.addAttribute("user", user);
             session.setAttribute("sessionPostId", id);
             return "PostViewTheme";
         } catch (EntityNotFoundException e) {
