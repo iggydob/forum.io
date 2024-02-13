@@ -10,6 +10,7 @@ import org.forum.web.forum.helpers.mappers.CommentMapper;
 import org.forum.web.forum.models.Comment;
 import org.forum.web.forum.models.Dtos.CommentDTO;
 import org.forum.web.forum.models.Post;
+import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.service.contracts.CommentService;
 import org.forum.web.forum.service.contracts.PostService;
@@ -21,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/posts")
@@ -90,8 +92,10 @@ public class PostMvcController {
             Post post = postService.getById(id);
             //todo think about comments and tags
             List<Comment> comment = commentService.getPostComments(post.getId());
+            Set<Tag> tags = post.getTags();
             model.addAttribute("post", post);
             model.addAttribute("comments", comment);
+            model.addAttribute("tags", tags);
             model.addAttribute("commentDto", new CommentDTO());
             model.addAttribute("user", user);
             session.setAttribute("sessionPostId", id);
