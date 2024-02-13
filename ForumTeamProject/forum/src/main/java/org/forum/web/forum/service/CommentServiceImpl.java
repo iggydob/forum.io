@@ -32,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentServiceImpl(CommentRepository repository, AuthorizationHelper authorizationHelper) {
         this.repository = repository;
         this.authorizationHelper = authorizationHelper;
+
     }
 
     @Override
