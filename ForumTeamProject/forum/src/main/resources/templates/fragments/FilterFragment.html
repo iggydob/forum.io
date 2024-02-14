@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!-- Search widget-->
+<div th:fragment="filter" class=" card mb-4">
+    <div class="card-header">Search</div>
+    <div class="card-body">
+        <form class="input-group" action="#" th:action="@{/posts}" mehtod="get" th:object="${filterOptions}">
+            <input class="form-control" type="text" placeholder="Enter search term..." th:field="*{title}"
+                   aria-label="Enter search term..." aria-describedby="button-search"/>
+            <button class="btn btn-primary" id="button-search" type="submit" value="Go!">Go!</button>
+
+    </div>
+    <select class="card-header" th:field="*{filterOptions.sortPostBy}">
+        <option value="">Sort By</option>
+        <option value="title">Title</option>
+        <option value="author">Author</option>
+
+    </select>
+    <select class="card-header" th:field="*{filterOptions.sortOrder}">
+        <option value="">Sort Order</option>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+    </select>
+    </form>
+</div>
+
+
+
+</body>
+</html>
