@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('New Post')}"></div>
+<body>
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+<!--<div class="container">-->
+<!--    <div class="container d-flex align-items-center flex-column">-->
+<!--        <form th:replace="~{fragments/PostForm :: details('createPost')}"></form>-->
+<!--    </div>-->
+<!--</div>-->
+
+<section class="mb-5">
+    <div class="card bg-light">
+        <div class="card-body">
+
+            <form action="#" th:action="@{/posts/new}" th:object="${post}" th:method="post" class="mb-4">
+
+                <br/>
+                <textarea class="form-control" rows="3" th:field="*{title}" placeholder="Write your title..."></textarea>
+                <br/><label class="error" th:errors="*{title}">Title error placeholder</label>
+
+                <textarea class="form-control" rows="3" th:field="*{content}" placeholder="Write your content..." style="height: 12rem" ></textarea>
+                <br/><label class="error" th:errors="*{content}">Content error placeholder</label>
+
+
+<!--                <div class="form-floating">-->
+<!--                    <input class="form-control" id="title" type="text" placeholder="Title"/>-->
+<!--                    <label for="title">Title</label>-->
+<!--                    <div class="invalid-feedback" >A title is required.</div>-->
+<!--                </div>-->
+<!--                <div class="form-floating">-->
+<!--                    <textarea class="form-control" id="content" placeholder="Enter your content here..." style="height: 12rem" ></textarea>-->
+<!--                    <label for="content">Content</label>-->
+<!--                    <div class="invalid-feedback" >A content is required.</div>-->
+<!--                </div>-->
+<!--                <br />-->
+
+                <br/>
+
+                <input class="btn btn-primary" type="submit" value="Submit"/>
+
+
+            </form>
+        </div>
+    </div>
+</section>
+
+<br/>
+<div th:replace="~{/fragments/PageFrame :: footer}"></div>
+<div th:replace="~{/fragments/PageFrame :: scripts}"></div>
+</body>
+</html>

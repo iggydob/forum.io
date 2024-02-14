@@ -24,6 +24,10 @@
                 <li class="nav-item"><a a th:href="@{/}" class="nav-link" href="#">Home</a></li>
 
                 <li class="nav-item"><a class="nav-link" href="#!">All Posts</a></li>
+
+                <li th:unless="${isAuthenticated}" class="nav-item">
+                <li class="nav-item"><a class="nav-link" href="#!" th:href="@{/posts/new}">Create Post</a></li>
+
                 <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
 
