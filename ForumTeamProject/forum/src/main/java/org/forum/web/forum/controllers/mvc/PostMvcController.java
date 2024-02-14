@@ -13,9 +13,11 @@ import org.forum.web.forum.helpers.mappers.PostMapper;
 import org.forum.web.forum.models.Comment;
 import org.forum.web.forum.models.Dtos.CommentDTO;
 import org.forum.web.forum.models.Dtos.PostDto;
+import org.forum.web.forum.models.Dtos.PostFilterDto;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;
+import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.service.contracts.CommentService;
 import org.forum.web.forum.service.contracts.PostService;
 import org.forum.web.forum.service.contracts.TagService;
@@ -67,6 +69,28 @@ public class PostMvcController {
         return request.getRequestURI();
     }
 
+    @GetMapping
+    public String showAllPosts(@ModelAttribute("filterOptions") PostFilterDto filterDto, Model model, HttpSession session) {
+        PostFilterOptions filterOptions = new PostFilterOptions(
+                filterDto.getTitle(),
+                filterDto.getPostAuthor(),
+                filterDto.getSortPostBy(),
+                filterDto.getSortOrder());
+        List<Post> posts = postService.getFiltered(filterOptions);
+        if (populateIsAuthenticated(session)) {
+            String currentUsername = (String) session.getAttribute("currentUser");
+            model.addAttribute("currentUser", userService.getByUsername(currentUsername));
+        } else {
+            model.addAttribute("mostCommentedPosts", postService.getMostCommented());
+            model.addAttribute("mostRecentPosts", postService.getMostRecent());
+            model.addAttribute("postCount", postService.getPostCount());
+            return "HomePageNotLogged";
+        }
+        model.addAttribute("filterOptions", filterDto);
+        model.addAttribute("posts", posts);
+        model.addAttribute("postCount", postService.getPostCount());
+        return "HomePageView";
+    }
     @PostMapping("/submitComment")
     public String createComment(@ModelAttribute("comment") CommentDTO commentDTO,
                                 Model model,
