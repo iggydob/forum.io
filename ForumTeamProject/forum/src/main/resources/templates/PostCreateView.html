@@ -3,38 +3,27 @@
 <div th:insert="~{fragments/PageFrame :: head('New Post')}"></div>
 <body>
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
-<!--<div class="container">-->
-<!--    <div class="container d-flex align-items-center flex-column">-->
-<!--        <form th:replace="~{fragments/PostForm :: details('createPost')}"></form>-->
-<!--    </div>-->
-<!--</div>-->
+<header class="py-5 bg-light border-bottom mb-4">
+    <div class="container">
+        <div class="text-center my-5">
+            <h1 class="fw-bolder">Create New Post</h1>
+        </div>
+    </div>
+</header>
 
 <section class="mb-5">
     <div class="card bg-light">
         <div class="card-body">
 
-            <form action="#" th:action="@{/posts/new}" th:object="${post}" th:method="post" class="mb-4">
+            <form action="#" th:action="@{/posts/new}" th:object="${newPost}" th:method="post" class="mb-4">
 
                 <br/>
-                <textarea class="form-control" rows="3" th:field="*{title}" placeholder="Write your title..."></textarea>
-                <br/><label class="error" th:errors="*{title}">Title error placeholder</label>
-
-                <textarea class="form-control" rows="3" th:field="*{content}" placeholder="Write your content..." style="height: 12rem" ></textarea>
-                <br/><label class="error" th:errors="*{content}">Content error placeholder</label>
+                <input class="form-control" rows="3" th:field="*{title}" placeholder="Write your title..."></input>
+                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{title}">Title error placeholder</label>
 
 
-<!--                <div class="form-floating">-->
-<!--                    <input class="form-control" id="title" type="text" placeholder="Title"/>-->
-<!--                    <label for="title">Title</label>-->
-<!--                    <div class="invalid-feedback" >A title is required.</div>-->
-<!--                </div>-->
-<!--                <div class="form-floating">-->
-<!--                    <textarea class="form-control" id="content" placeholder="Enter your content here..." style="height: 12rem" ></textarea>-->
-<!--                    <label for="content">Content</label>-->
-<!--                    <div class="invalid-feedback" >A content is required.</div>-->
-<!--                </div>-->
-<!--                <br />-->
-
+                <input class="form-control" rows="3" th:field="*{content}" placeholder="Write your content..." style="height: 12rem" ></input>
+                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{content}">Content error placeholder</label>
                 <br/>
 
                 <input class="btn btn-primary" type="submit" value="Submit"/>

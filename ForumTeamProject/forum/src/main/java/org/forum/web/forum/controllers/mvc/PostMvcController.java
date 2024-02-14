@@ -139,9 +139,12 @@ public class PostMvcController {
         }
     }
     @GetMapping("/new")
-    public String showNewPostPage(Model model, HttpSession httpSession) {
+    public String showNewPostPage(@Valid @ModelAttribute("newPost") PostDto postDto,
+                                  BindingResult bindingResult,
+                                  Model model,
+                                  HttpSession session){
         try {
-            authenticationHelper.tryGetCurrentUser(httpSession);
+            authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
@@ -162,9 +165,15 @@ public class PostMvcController {
             return "redirect:/auth/login";
         }
 
+
+
         if (populateIsAuthenticated(session)) {
             String currentUsername = (String) session.getAttribute("currentUser");
             model.addAttribute("currentUser", userService.getByUsername(currentUsername));
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "PostCreateView";
         }
 
         try {
