@@ -44,15 +44,15 @@ public class UserMapper {
         return user;
     }
 
-//    public User dtoAdminUpdate(UserDto userDto) {
-//        User user = new User();
-//        user.setFirstName(userDto.getFirstName());
-//        user.setLastName(userDto.getLastName());
-//        user.setPassword(userDto.getPassword());
-//        user.setEmail(userDto.getEmail());
-//        user.setPhoneNumber(userDto.getPhoneNumber());
-//        return user;
-//    }
+    public UserDto userToDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setPassword(user.getPassword());
+        userDto.setEmail(user.getEmail());
+        userDto.setPhoneNumber(user.getPhoneNumber());
+        return userDto;
+    }
 
     public User dtoUserBanStatus(UserDto userDto) {
         User user = new User();
