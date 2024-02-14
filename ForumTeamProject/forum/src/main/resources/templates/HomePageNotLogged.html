@@ -17,14 +17,6 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-4">
-            <!-- User screen-->
-            <div th:if="${isAuthenticated}" class="card mb-4">
-                <div class="card-header">User
-                    <b>
-                        <span th:if="${currentUser.getBanStatus()}" th:style="'color: red;'">[Banned]</span>
-                        <span th:unless="${currentUser.getBanStatus()}" th:style="'color: green;'">[Active]</span>
-                    </b></div>
-            </div>
             <!-- Side widget-->
             <div class="card mb-4">
                 <div class="card-header">Forum activity</div>

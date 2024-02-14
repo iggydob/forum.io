@@ -13,13 +13,13 @@
                     <label th:text="#{user.label.username}">Username</label>
                     <br/>
                     <input type="text" th:field="*{username}"/>
-                    <br/><label class="error" th:errors="*{username}">Username error placeholder</label>
+                    <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{username}">Username error placeholder</label>
                     <br/>
 
                     <label th:text="#{user.label.password}">Password</label>
                     <br/>
                     <input type="password" th:field="*{password}"/>
-                    <br/><label class="error" th:errors="*{password}">Password error placeholder</label>
+                    <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{password}">Password error placeholder</label>
                     <br/>
 
                     <input class="btn btn-primary" type="submit" value="Sign in"/>

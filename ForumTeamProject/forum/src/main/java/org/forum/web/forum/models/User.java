@@ -42,19 +42,12 @@ public class User {
     private boolean banStatus;
 
     @Column (name = "photo_url")
-    private String photoUrl;
+    private String photoUrl = "assets/users/defaultUser.png";
 
     @OneToOne(mappedBy = "user")
     @JoinColumn(name = "phone_number_id")
-//    @JoinTable(name = "phone_numbers",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "phone_number_id"))
     private PhoneNumber phoneNumber;
 
-//    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
-//    private List<Post> likedPosts;
-
-    //work!!!!
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinTable(name = "liked_posts",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -115,10 +108,6 @@ public class User {
         return photoUrl;
     }
 
-    //    public String getPhoneNumber() {
-//        return phoneNumber;
-//    }
-
     public void setUserId(int userId) {
         this.userId = userId;
     }
@@ -154,18 +143,6 @@ public class User {
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
-
-    //    public void setPhoneNumber(String phoneNumber) {
-//        this.phoneNumber = phoneNumber;
-//    }
-
-//    public List<Post> getLikedPosts() {
-//        return likedPosts;
-//    }
-
-//    public void setLikedPosts(List<Post> likedPosts) {
-//        this.likedPosts = likedPosts;
-//    }
 
     @Override
     public boolean equals(Object o) {

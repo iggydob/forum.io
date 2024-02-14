@@ -1,16 +1,13 @@
 package org.forum.web.forum.controllers.mvc;
 
 import jakarta.servlet.http.HttpSession;
-import org.forum.web.forum.exceptions.AuthorizationException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.Dtos.PostFilterDto;
 import org.forum.web.forum.models.Post;
-import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.service.contracts.PostService;
 import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

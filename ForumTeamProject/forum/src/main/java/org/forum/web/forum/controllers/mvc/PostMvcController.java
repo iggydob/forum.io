@@ -97,6 +97,7 @@ public class PostMvcController {
     public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
         try {
             Post post = postService.getById(id);
+            User user = post.getCreator();
             //todo think about comments and tags
             List<Comment> comment = commentService.getPostComments(post.getId());
             Set<Tag> tags = post.getTags();
@@ -104,6 +105,7 @@ public class PostMvcController {
             model.addAttribute("comments", comment);
             model.addAttribute("tags", tags);
             model.addAttribute("commentDto", new CommentDTO());
+            model.addAttribute("user", user);
             session.setAttribute("sessionPostId", id);
             return "PostViewTheme";
         } catch (EntityNotFoundException e) {
