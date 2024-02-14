@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('Edit account')}"></div>
+<body>
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+<br/><br/>
+<div class="card-body-centered">
+    <div class="card mb-4">
+        <div class="card-header">Edit user details</div>
+        <div class="card-body">
+            <form action="#" th:action="@{/users/edit}" th:object="${edit}" method="post">
+<!--                <label th:text="#{user.label.username}">Username</label>-->
+<!--                <br/>-->
+<!--                <input type="text" th:field="*{username}"/>-->
+<!--                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{username}">Username error placeholder</label>-->
+<!--                <br/>-->
+
+<!--                <label th:text="#{user.label.password}">Password</label>-->
+<!--                <br/>-->
+<!--                <input type="password" th:field="*{password}"/>-->
+<!--                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{password}">Password error placeholder</label>-->
+<!--                <br/>-->
+
+<!--                <label th:text="#{user.label.password-confirm}">Confirm Password</label>-->
+<!--                <br/>-->
+<!--                <input type="password" th:field="*{passwordConfirm}"/>-->
+<!--                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{passwordConfirm}">Password confirm error placeholder</label>-->
+<!--                <br/>-->
+
+                <label th:text="#{user.label.first-name}">First Name</label>
+                <br/>
+                <input type="text" th:field="*{firstName}"/>
+                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{firstName}">First name error placehoClder</label>
+                <br/>
+
+                <label th:text="#{user.label.last-name}">Last Name</label>
+                <br/>
+                <input type="text" th:field="*{lastName}"/>
+                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{lastName}">Last name error placeholder</label>
+                <br/>
+
+                <label th:text="#{user.label.email}">Email</label>
+                <br/>
+                <input type="text" th:field="*{email}"/>
+                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{email}">Email error placeholder</label>
+                <br/>
+                <input class="btn btn-primary" type="submit" value="Submit"></input>
+            </form>
+
+
+        </div>
+    </div>
+</div>
+<br/>
+<div th:replace="~{fragments/PageFrame :: footer}"></div>
+<div th:replace="~{fragments/PageFrame :: scripts}"></div>
+</body>
+</html>
