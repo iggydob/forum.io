@@ -23,10 +23,10 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "created_by_id")
     private User creator;
-    @NotNull
+
     @Column(name = "title")
     private String title;
-    @NotNull
+
     @Column(name = "content")
     private String content;
     @Column(name = "creation_date")

@@ -92,6 +92,7 @@ public class PostMvcController {
         model.addAttribute("postCount", postService.getPostCount());
         return "HomePageView";
     }
+
     @PostMapping("/submitComment")
     public String createComment(@ModelAttribute("comment") CommentDTO commentDTO,
                                 Model model,
@@ -116,6 +117,7 @@ public class PostMvcController {
             return "ErrorView";
         }
     }
+
     @PostMapping("/like/{commentId}")
     public String likeComment(Model model,
                               HttpSession session,
@@ -150,8 +152,8 @@ public class PostMvcController {
 
     @PostMapping("/dislike/{commentId}")
     public String dislikeComment(Model model,
-                              HttpSession session,
-                              @PathVariable int commentId) {
+                                 HttpSession session,
+                                 @PathVariable int commentId) {
         User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
@@ -183,7 +185,7 @@ public class PostMvcController {
 
     @PostMapping("/like")
     public String likePost(Model model,
-                              HttpSession session) {
+                           HttpSession session) {
         User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
@@ -207,6 +209,7 @@ public class PostMvcController {
             return "ErrorView";
         }
     }
+
     @GetMapping("/{id}")
     public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
         try {
@@ -276,6 +279,55 @@ public class PostMvcController {
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
         }
+    }
+
+    @GetMapping("/{id}/update")
+    public String showUpdatePostView(@PathVariable int id, HttpSession session, Model model) {
+        try {
+            authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+        try {
+            Post post = postService.getById(id);
+            PostDto postDto = postMapper.toDto(post);
+            model.addAttribute("postId", id);
+            model.addAttribute("post", postDto);
+            return "PostUpdateView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
+    @PostMapping("/{id}/update")
+    public String updatePost(@PathVariable int id,
+                             @Valid @ModelAttribute("post") PostDto postDto,
+                             BindingResult bindingResult,
+                             Model model,
+                             HttpSession session
+    ) {
+        User user;
+
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+        if (bindingResult.hasErrors()) {
+            return "PostUpdateView";
+        }
+        try {
+            Post post = postMapper.fromDto(id, postDto);
+            postService.update(post, user);
+            return "redirect:/posts";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+
     }
 
 }
