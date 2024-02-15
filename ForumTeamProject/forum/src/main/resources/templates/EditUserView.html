@@ -9,27 +9,9 @@
         <div class="card-header">Edit user details</div>
         <div class="card-body">
             <form action="#" th:action="@{/users/edit}" th:object="${currentUser}" method="post">
-<!--                <label th:text="#{user.label.username}">Username</label>-->
-<!--                <br/>-->
-<!--                <input type="text" th:field="*{username}"/>-->
-<!--                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{username}">Username error placeholder</label>-->
-<!--                <br/>-->
-
-<!--                <label th:text="#{user.label.password}">Password</label>-->
-<!--                <br/>-->
-<!--                <input type="password" th:field="*{password}"/>-->
-<!--                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{password}">Password error placeholder</label>-->
-<!--                <br/>-->
-
-<!--                <label th:text="#{user.label.password-confirm}">Confirm Password</label>-->
-<!--                <br/>-->
-<!--                <input type="password" th:field="*{passwordConfirm}"/>-->
-<!--                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{passwordConfirm}">Password confirm error placeholder</label>-->
-<!--                <br/>-->
-
                 <label th:text="#{user.label.first-name}">First Name</label>
                 <br/>
-                <input type="text" th:field="*{firstName}"/>
+                <input type="text" th:field="*{firstName}" th:value="${currentUser.firstName}"/>
                 <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{firstName}">First name error placeholder</label>
                 <br/>
 

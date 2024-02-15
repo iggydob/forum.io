@@ -2,13 +2,12 @@ package org.forum.web.forum.controllers.mvc;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.forum.web.forum.exceptions.AuthorizationException;
-import org.forum.web.forum.exceptions.EntityDuplicateException;
-import org.forum.web.forum.exceptions.EntityNotFoundException;
+import org.forum.web.forum.exceptions.*;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.helpers.mappers.UserMapper;
 import org.forum.web.forum.models.Dtos.UserDto;
 import org.forum.web.forum.models.User;
+import org.forum.web.forum.models.filters.UserFilterOptions;
 import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -36,7 +35,8 @@ public class UserMvcController {
     }
 
     @GetMapping("/edit")
-    public String handleUserEdit(Model model,
+    public String handleUserEdit(UserDto userDto,
+                                 Model model,
                                  HttpSession session) {
 
         try {
@@ -47,8 +47,8 @@ public class UserMvcController {
 
         try {
             User currentUser = authenticationHelper.tryGetCurrentUser(session);
-            UserDto userDto = userMapper.userToDto(currentUser);
-            model.addAttribute("currentUser", userDto);
+            UserDto userDetails = userMapper.userToDto(currentUser);
+            model.addAttribute("currentUser", userDetails);
             return "EditUserView";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -59,32 +59,31 @@ public class UserMvcController {
 
     @PostMapping("/edit")
     public String showUserEdit(@Valid @ModelAttribute("currentUser") UserDto userDto,
-                               Model model,
                                BindingResult bindingResult,
+                               Model model,
                                HttpSession session) {
+
 
         User requester = authenticationHelper.tryGetCurrentUser(session);
 
+        try {
+            authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
         if (bindingResult.hasErrors()) {
+            model.addAttribute("currentUser", userDto);
             return "EditUserView";
         }
 
         try {
             User userToUpdate = userMapper.dtoUserUpdate(userDto);
             userService.update(requester.getUserId(), userToUpdate, requester);
-            return "redirect:/users/edit";
-        } catch (EntityNotFoundException e) {
-            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
-            model.addAttribute("error", e.getMessage());
-            return "ErrorView";
-        } catch (AuthorizationException e) {
-            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            model.addAttribute("error", e.getMessage());
-            return "ErrorView";
+            return "redirect:/posts";
         } catch (EntityDuplicateException e) {
-            model.addAttribute("statusCode", HttpStatus.CONFLICT.getReasonPhrase());
-            model.addAttribute("error", e.getMessage());
-            return "ErrorView";
+            bindingResult.rejectValue("email", "email_error", "E-mail already exists!");
+            return "EditUserView";
         }
     }
 }
