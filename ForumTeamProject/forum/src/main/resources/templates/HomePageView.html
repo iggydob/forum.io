@@ -8,8 +8,8 @@
 <header class="py-5 bg-light border-bottom mb-4">
     <div class="container">
         <div class="text-center my-5">
-            <h1 class="fw-bolder">Welcome to Blog Home!</h1>
-            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+            <h1 class="fw-bolder">Welcome to forum for self-improvement!</h1>
+            <p class="lead mb-0">Be a better version of you than yesterday!</p>
         </div>
     </div>
 </header>
@@ -30,8 +30,9 @@
             <div th:insert="~{fragments/FilterFragment :: filter}"></div>
             <!-- Categories widget-->
             <div class="card mb-4">
-                <div class="card-header">Tags</div>
-                <div class="card-body">
+                <div class="card-header" >Tags</div>
+                <div class="card-body" th:each="tags : ${allTags}"
+                     th:text="${tags.content}">
                     <div class="row">
                         <div class="col-sm-6">
                             <ul class="list-unstyled mb-0">
@@ -56,7 +57,7 @@
             <div class="row">
                 <div class="col-lg-6">
                     <!-- Blog post-->
-                    <h3>Most recent posts</h3>
+                    <h3>All posts</h3>
                     <div class="card-body" th:each="post : ${posts}">
                         <div class="card mb-4">
                             <div class="small text-muted" th:text="${post.getCreationDate()}">January 1, 2023</div>

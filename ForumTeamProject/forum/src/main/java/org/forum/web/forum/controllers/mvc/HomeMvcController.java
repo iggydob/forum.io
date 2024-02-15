@@ -4,8 +4,10 @@ import jakarta.servlet.http.HttpSession;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.Dtos.PostFilterDto;
 import org.forum.web.forum.models.Post;
+import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.service.contracts.PostService;
+import org.forum.web.forum.service.contracts.TagService;
 import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,16 +24,17 @@ public class HomeMvcController {
 
     private final AuthenticationHelper authenticationHelper;
     private final PostService postService;
-
+    private final TagService tagService;
     private final UserService userService;
 
     @Autowired
     public HomeMvcController(
             AuthenticationHelper authenticationHelper,
-            PostService postService,
+            PostService postService, TagService tagService,
             UserService userService) {
         this.authenticationHelper = authenticationHelper;
         this.postService = postService;
+        this.tagService = tagService;
         this.userService = userService;
     }
 
@@ -62,5 +65,9 @@ public class HomeMvcController {
         model.addAttribute("posts", posts);
         model.addAttribute("postCount", postService.getPostCount());
         return "HomePageView";
+    }
+    @ModelAttribute("allTags")
+    public List<Tag>allTags(){
+        return tagService.getAll();
     }
 }

@@ -21,7 +21,8 @@
                     <div class="text-muted fst-italic mb-2" th:text="${'Author: ' + post.creator.username}">Creator
                     </div>
                     <!-- Post categories-->
-                    <a class="badge bg-secondary text-decoration-none link-light" href="#!"th:each="tags : ${tags}" th:text="${tags.getContent()}">Deff</a>
+                    <a class="badge bg-secondary text-decoration-none link-light" href="#!" th:each="tags : ${tags}"
+                       th:text="${tags.getContent()}" >Deff</a>
                 </header>
                 <!-- Post content-->
                 <section class="mb-5">
@@ -82,31 +83,6 @@
                     </div>
                 </div>
             </section>
-        </div>
-        <!-- Side widgets-->
-        <div class="col-lg-4">
-            <!-- Categories widget-->
-            <div class="card mb-4">
-                <div class="card-header">Categories</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">Web Design</a></li>
-                                <li><a href="#!">HTML</a></li>
-                                <li><a href="#!">Freebies</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">JavaScript</a></li>
-                                <li><a href="#!">CSS</a></li>
-                                <li><a href="#!">Tutorials</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

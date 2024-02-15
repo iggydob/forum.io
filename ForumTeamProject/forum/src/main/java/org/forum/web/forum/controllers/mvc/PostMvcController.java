@@ -18,10 +18,7 @@ import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.Tag;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
-import org.forum.web.forum.service.contracts.CommentService;
-import org.forum.web.forum.service.contracts.PostService;
-import org.forum.web.forum.service.contracts.TagService;
-import org.forum.web.forum.service.contracts.UserService;
+import org.forum.web.forum.service.contracts.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +39,7 @@ public class PostMvcController {
     private final AuthenticationHelper authenticationHelper;
     private final CommentMapper commentMapper;
     private final PostMapper postMapper;
+    private final LikePostService likePostService;
 
     public PostMvcController(PostService postService,
                              CommentService commentService,
@@ -49,7 +47,7 @@ public class PostMvcController {
                              UserService userService,
                              AuthenticationHelper authenticationHelper,
                              CommentMapper commentMapper,
-                             PostMapper postMapper) {
+                             PostMapper postMapper, LikePostService likePostService) {
         this.postService = postService;
         this.commentService = commentService;
         this.tagService = tagService;
@@ -57,6 +55,7 @@ public class PostMvcController {
         this.authenticationHelper = authenticationHelper;
         this.commentMapper = commentMapper;
         this.postMapper = postMapper;
+        this.likePostService = likePostService;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -91,10 +90,10 @@ public class PostMvcController {
         model.addAttribute("postCount", postService.getPostCount());
         return "HomePageView";
     }
+
     @PostMapping("/submitComment")
     public String createComment(@ModelAttribute("comment") CommentDTO commentDTO,
                                 Model model,
-                                HttpServletRequest request,
                                 HttpSession session) {
         User user;
         try {
@@ -138,11 +137,12 @@ public class PostMvcController {
             return "ErrorView";
         }
     }
+
     @GetMapping("/new")
     public String showNewPostPage(@Valid @ModelAttribute("newPost") PostDto postDto,
                                   BindingResult bindingResult,
                                   Model model,
-                                  HttpSession session){
+                                  HttpSession session) {
         try {
             authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
@@ -158,13 +158,12 @@ public class PostMvcController {
                              BindingResult bindingResult,
                              Model model,
                              HttpSession session) {
-      User user;
+        User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
-
 
 
         if (populateIsAuthenticated(session)) {
@@ -185,9 +184,7 @@ public class PostMvcController {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
-        } catch (EntityDuplicateException e) {
-            bindingResult.rejectValue("name", "duplicate_post", e.getMessage());
-            return "PostCreateView";
         }
     }
+
 }
