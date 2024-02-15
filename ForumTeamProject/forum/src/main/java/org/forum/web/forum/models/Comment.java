@@ -1,16 +1,13 @@
 package org.forum.web.forum.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "comments")
@@ -43,7 +40,19 @@ public class Comment {
     @JsonManagedReference
     private Set<Like> likedList = new HashSet<>();
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<Like> dislikedList = new HashSet<>();
+
     public Comment() {
+    }
+
+    public Set<Like> getDislikedList() {
+        return dislikedList;
+    }
+
+    public void setDislikedList(Set<Like> dislikedList) {
+        this.dislikedList = dislikedList;
     }
 
     public Set<Like> getLikedList() {

@@ -30,6 +30,30 @@
                         an activity of the free human mind. Because it transforms who we are, how we live, and it gives
                         us an understanding of our place in the universe.</p>
                 </section>
+
+                <form th:action="@{/posts/like}" method="post">
+
+                    <button type="submit"
+                            style="border: none; background: none; padding: 0; font: inherit; cursor: pointer;">
+                        <a href="#" style="text-decoration: none;">
+                            <i class="fas fa-thumbs-up fa-xs"></i>
+                            <div style="text-align: right;">
+                                <span class="small">👍 Like</span>
+                            </div>
+                        </a>
+                    </button>
+
+                    <!--                    <div class="ui labeled button mt-5 ml-5" tabindex="0">-->
+                    <!--                        <div class="ui blue button">-->
+                    <!--                            <i class="fas fa-thumbs-up"></i>-->
+                    <!--                        </div>-->
+                    <!--                        <span class="ui basic blue label">0</span>-->
+                    <!--                    </div>-->
+
+                    <span th:text="${post.getLikedByUser().size()}"></span> Likes
+
+                </form>
+
             </article>
             <!-- Comments section-->
             <section class="mb-5">
@@ -62,9 +86,22 @@
                                                                     Maria Smantha <span
                                                                         class="small">- 2 hours ago</span>
                                                                 </p></b>
-                                                                <a href="#!"><i
-                                                                        class="fas fa-reply fa-xs"></i><span
-                                                                        class="small"> 👍 Like</span></a>
+
+
+                                                                <form th:action="@{/posts/like/__${singleComment.id}__}"
+                                                                      method="post">
+
+                                                                    <button type="submit"
+                                                                            style="border: none; background: none; padding: 0; font: inherit; cursor: pointer;">
+                                                                        <a href="#" style="text-decoration: none;">
+                                                                            <i class="fas fa-thumbs-up fa-xs"></i><span
+                                                                                class="small">👍 Like</span>
+                                                                        </a>
+                                                                    </button>
+                                                                    <span th:text="${singleComment.getLikedList().size()}"></span>
+                                                                    Likes
+                                                                </form>
+
                                                             </div>
                                                             <p class="small mb-0" th:text="${singleComment.content}">
                                                                 It is a long established fact that a reader will
@@ -89,5 +126,6 @@
 <!-- Footer-->
 <div th:replace="~{/fragments/PageFrame :: footer}"></div>
 <div th:replace="~{/fragments/PageFrame :: scripts}"></div>
+<!--<script src="../static/js/LikeButton.js" th:src="@{/js/LikeButton.js}"></script>-->
 </body>
 </html>

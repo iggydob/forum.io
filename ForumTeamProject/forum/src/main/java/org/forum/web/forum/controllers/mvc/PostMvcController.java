@@ -47,7 +47,9 @@ public class PostMvcController {
                              UserService userService,
                              AuthenticationHelper authenticationHelper,
                              CommentMapper commentMapper,
-                             PostMapper postMapper, LikePostService likePostService) {
+                             PostMapper postMapper,
+                             LikePostService likePostService) {
+
         this.postService = postService;
         this.commentService = commentService;
         this.tagService = tagService;
@@ -90,7 +92,6 @@ public class PostMvcController {
         model.addAttribute("postCount", postService.getPostCount());
         return "HomePageView";
     }
-
     @PostMapping("/submitComment")
     public String createComment(@ModelAttribute("comment") CommentDTO commentDTO,
                                 Model model,
@@ -115,7 +116,97 @@ public class PostMvcController {
             return "ErrorView";
         }
     }
+    @PostMapping("/like/{commentId}")
+    public String likeComment(Model model,
+                              HttpSession session,
+                              @PathVariable int commentId) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
 
+        if (populateIsAuthenticated(session)) {
+            String currentUsername = (String) session.getAttribute("currentUser");
+            model.addAttribute("currentUser", userService.getByUsername(currentUsername));
+        }
+
+        int postId = (int) session.getAttribute("sessionPostId");
+
+        try {
+            commentService.likeComment(commentId, user);
+            model.addAttribute("comment", commentService.getById(commentId));
+            return "redirect:/posts/" + postId;
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        } catch (EntityDuplicateException e) {
+            model.addAttribute("duplicateError", e.getMessage());
+            return "redirect:/posts/" + postId;
+        }
+    }
+
+    @PostMapping("/dislike/{commentId}")
+    public String dislikeComment(Model model,
+                              HttpSession session,
+                              @PathVariable int commentId) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+        if (populateIsAuthenticated(session)) {
+            String currentUsername = (String) session.getAttribute("currentUser");
+            model.addAttribute("currentUser", userService.getByUsername(currentUsername));
+        }
+
+        int postId = (int) session.getAttribute("sessionPostId");
+
+        try {
+            commentService.dislikeComment(commentId, user);
+            model.addAttribute("comment", commentService.getById(commentId));
+            return "redirect:/posts/" + postId;
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        } catch (EntityDuplicateException e) {
+            model.addAttribute("duplicateError", e.getMessage());
+            return "redirect:/posts/" + postId;
+        }
+    }
+
+
+    @PostMapping("/like")
+    public String likePost(Model model,
+                              HttpSession session) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+        int postId = (int) session.getAttribute("sessionPostId");
+
+        try {
+            postService.likePost(postId, user);
+            Post updatedPost = postService.getById(postId);
+            model.addAttribute("post", updatedPost);
+            int likesCount = likePostService.getByPostId(postId).size();
+            model.addAttribute("likesCount", likesCount);
+            //model.addAttribute("likes", postService.getLikes(id));
+            return "redirect:/posts/" + postId;
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("notFound", e.getMessage());
+            return "ErrorView";
+        }
+    }
     @GetMapping("/{id}")
     public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
         try {

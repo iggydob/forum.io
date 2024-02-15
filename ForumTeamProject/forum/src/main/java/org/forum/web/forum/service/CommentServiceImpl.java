@@ -1,11 +1,9 @@
 package org.forum.web.forum.service;
 
-import org.forum.web.forum.exceptions.EntityDuplicateException;
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.helpers.AuthorizationHelper;
 import org.forum.web.forum.models.Comment;
 import org.forum.web.forum.models.Like;
-import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.repository.contracts.CommentRepository;
 import org.forum.web.forum.service.contracts.CommentService;
@@ -93,58 +91,37 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void likeComment(int commentID, User user) {
         Comment likeComment = repository.getById(commentID);
-        boolean isFound = false;
-
-        Hibernate.initialize(likeComment.getLikedList());
 
         for (Like like : likeComment.getLikedList()){
-            if (like.getUser().equals(user) && !like.isDeleted() && like.isLiked()){
-                throw new EntityDuplicateException(DUPLICATE_LIKE_COMMENT_ERROR_MESSAGE);
-            } else if (like.getUser().equals(user)) {
-                if (like.isDeleted()){
-                    like.setDeleted(false);
-                }
-                like.setLiked(true);
-                isFound = true;
-                break;
+            if (like.getUser().equals(user)){
+                likeComment.getLikedList().remove(like);
+                repository.delete(like);
+                return;
             }
         }
-        if (!isFound) {
             Like newLike = new Like(user, likeComment);
             newLike.setLiked(true);
             likeComment.getLikedList().add(newLike);
-        }
 
-        repository.update(likeComment);
+            repository.update(likeComment);
     }
 
     @Override
     public void dislikeComment(int commentID, User user) {
-        Comment commentToDislike = repository.getById(commentID);
-        Like newLike = new Like(user,commentToDislike);
+        Comment dislikeComment = repository.getById(commentID);
 
-        boolean isFound = false;
-
-        Hibernate.initialize(commentToDislike.getLikedList());
-
-        for (Like like : commentToDislike.getLikedList()){
-             if (like.getUser().equals(user) && !like.isDeleted() && !like.isLiked()){
-                throw new EntityDuplicateException(DUPLICATE_DISLIKE_COMMENT_ERROR_MESSAGE);
-            } else if (like.getUser().equals(user)) {
-                 if (like.isDeleted()){
-                     like.setDeleted(false);
-                 }
-                 like.setLiked(false);
-                 isFound = true;
-                 break;
+        for (Like dislike : dislikeComment.getDislikedList()){
+            if (dislike.getUser().equals(user)){
+                dislikeComment.getDislikedList().remove(dislike);
+                repository.delete(dislike);
+                return;
             }
         }
+        Like newDislike = new Like(user, dislikeComment);
+        newDislike.setLiked(false);
+        dislikeComment.getDislikedList().add(newDislike);
 
-        if (!isFound){
-            commentToDislike.getLikedList().add(newLike);
-            newLike.setLiked(false);
-        }
-        repository.update(commentToDislike);
+//        repository.update(dislikeComment);
     }
 
     @Override

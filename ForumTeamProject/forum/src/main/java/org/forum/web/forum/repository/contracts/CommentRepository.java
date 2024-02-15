@@ -1,6 +1,7 @@
 package org.forum.web.forum.repository.contracts;
 
 import org.forum.web.forum.models.Comment;
+import org.forum.web.forum.models.Like;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public interface CommentRepository {
     long commentDislikesCount(int commentId);
 
     Comment getById(int id);
+    void delete(Like like);
     List<Comment> getPostComments(int postId);
 
 
