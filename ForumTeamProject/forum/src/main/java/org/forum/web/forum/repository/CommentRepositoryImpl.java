@@ -2,6 +2,7 @@ package org.forum.web.forum.repository;
 
 import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.models.Comment;
+import org.forum.web.forum.models.Like;
 import org.forum.web.forum.repository.contracts.CommentRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -40,6 +41,16 @@ public class CommentRepositoryImpl implements CommentRepository {
             session.getTransaction().commit();
         }
     }
+
+    @Override
+    public void delete(Like like) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.remove(like);
+            session.getTransaction().commit();
+        }
+    }
+
 
 //    @Override
 //    public void delete(int id) {

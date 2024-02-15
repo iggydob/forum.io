@@ -10,6 +10,32 @@
  * Copyright 2011-2022 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+likeBody {
+    background: #ddd;
+    text-align: center;
+}
+
+/*span {*/
+/*    cursor: auto;*/
+/*}*/
+
+.likeButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333; /* Change the color to match your design */
+}
+
+.likeButton:hover {
+    color: #007bff; /* Change the color to match your design */
+}
+
+.small {
+    font-size: 12px;
+    color: #666; /* Change the color to match your design */
+}
+
 .error-wrap {
     overflow: hidden;
     position: relative;

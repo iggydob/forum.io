@@ -21,7 +21,8 @@
                     <div class="text-muted fst-italic mb-2" th:text="${'Author: ' + post.creator.username}">Creator
                     </div>
                     <!-- Post categories-->
-                    <a class="badge bg-secondary text-decoration-none link-light" href="#!"th:each="tags : ${tags}" th:text="${tags.getContent()}">Deff</a>
+                    <a class="badge bg-secondary text-decoration-none link-light" href="#!" th:each="tags : ${tags}"
+                       th:text="${tags.getContent()}" >Deff</a>
                 </header>
                 <!-- Post content-->
                 <section class="mb-5">
@@ -29,6 +30,30 @@
                         an activity of the free human mind. Because it transforms who we are, how we live, and it gives
                         us an understanding of our place in the universe.</p>
                 </section>
+
+                <form th:action="@{/posts/like}" method="post">
+
+                    <button type="submit"
+                            style="border: none; background: none; padding: 0; font: inherit; cursor: pointer;">
+                        <a href="#" style="text-decoration: none;">
+                            <i class="fas fa-thumbs-up fa-xs"></i>
+                            <div style="text-align: right;">
+                                <span class="small">👍 Like</span>
+                            </div>
+                        </a>
+                    </button>
+
+                    <!--                    <div class="ui labeled button mt-5 ml-5" tabindex="0">-->
+                    <!--                        <div class="ui blue button">-->
+                    <!--                            <i class="fas fa-thumbs-up"></i>-->
+                    <!--                        </div>-->
+                    <!--                        <span class="ui basic blue label">0</span>-->
+                    <!--                    </div>-->
+
+                    <span th:text="${post.getLikedByUser().size()}"></span> Likes
+
+                </form>
+
             </article>
             <!-- Comments section-->
             <section class="mb-5">
@@ -61,9 +86,22 @@
                                                                     Maria Smantha <span
                                                                         class="small">- 2 hours ago</span>
                                                                 </p></b>
-                                                                <a href="#!"><i
-                                                                        class="fas fa-reply fa-xs"></i><span
-                                                                        class="small"> 👍 Like</span></a>
+
+
+                                                                <form th:action="@{/posts/like/__${singleComment.id}__}"
+                                                                      method="post">
+
+                                                                    <button type="submit"
+                                                                            style="border: none; background: none; padding: 0; font: inherit; cursor: pointer;">
+                                                                        <a href="#" style="text-decoration: none;">
+                                                                            <i class="fas fa-thumbs-up fa-xs"></i><span
+                                                                                class="small">👍 Like</span>
+                                                                        </a>
+                                                                    </button>
+                                                                    <span th:text="${singleComment.getLikedList().size()}"></span>
+                                                                    Likes
+                                                                </form>
+
                                                             </div>
                                                             <p class="small mb-0" th:text="${singleComment.content}">
                                                                 It is a long established fact that a reader will
@@ -83,35 +121,11 @@
                 </div>
             </section>
         </div>
-        <!-- Side widgets-->
-        <div class="col-lg-4">
-            <!-- Categories widget-->
-            <div class="card mb-4">
-                <div class="card-header">Categories</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">Web Design</a></li>
-                                <li><a href="#!">HTML</a></li>
-                                <li><a href="#!">Freebies</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-6">
-                            <ul class="list-unstyled mb-0">
-                                <li><a href="#!">JavaScript</a></li>
-                                <li><a href="#!">CSS</a></li>
-                                <li><a href="#!">Tutorials</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <!-- Footer-->
 <div th:replace="~{/fragments/PageFrame :: footer}"></div>
 <div th:replace="~{/fragments/PageFrame :: scripts}"></div>
+<!--<script src="../static/js/LikeButton.js" th:src="@{/js/LikeButton.js}"></script>-->
 </body>
 </html>
