@@ -100,6 +100,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void changeBanStatusMvc(int id, boolean status, User requester) {
+        checkAdminRole(requester);
+        User userToUpdate = userRepository.getById(id);
+        userToUpdate.setBanStatus(status);
+        userRepository.update(userToUpdate);
+    }
+    @Override
     public void changeAdminStatus(int id, User userDetails, User requester) {
         checkAdminRole(requester);
         User userToUpdate = userRepository.getById(id);
@@ -114,6 +121,13 @@ public class UserServiceImpl implements UserService {
         userRepository.update(userToUpdate);
     }
 
+    @Override
+    public void changeAdminStatusMvc(int id, boolean status, User requester) {
+        checkAdminRole(requester);
+        User userToUpdate = userRepository.getById(id);
+        userToUpdate.setAdminStatus(status);
+        userRepository.update(userToUpdate);
+    }
     @Override
     public void changePassword(int id, User userDetails, User requester) {
         checkSourceUser(id, requester);

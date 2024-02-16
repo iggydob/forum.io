@@ -2,15 +2,14 @@ package org.forum.web.forum.controllers.mvc;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.forum.web.forum.exceptions.*;
+import org.forum.web.forum.exceptions.AuthorizationException;
+import org.forum.web.forum.exceptions.EntityDuplicateException;
+import org.forum.web.forum.exceptions.EntityNotFoundException;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.helpers.mappers.UserMapper;
-import org.forum.web.forum.models.Dtos.PostFilterDto;
 import org.forum.web.forum.models.Dtos.UserDto;
 import org.forum.web.forum.models.Dtos.UserFilterDto;
-import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
-import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.models.filters.UserFilterOptions;
 import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.http.HttpStatus;
@@ -97,9 +96,9 @@ public class UserMvcController {
     public String showUserPanel(@ModelAttribute("filterOptions") UserFilterDto filterDto,
                                 Model model,
                                 HttpSession session) {
-        User currentUsername;
+        User currentUser;
         try {
-            currentUsername = authenticationHelper.tryGetCurrentUser(session);
+            currentUser = authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
@@ -116,8 +115,81 @@ public class UserMvcController {
 
         model.addAttribute("filterOptions", filterDto);
         model.addAttribute("users", users);
-        model.addAttribute("currentUser", userService.getByUsername(currentUsername.getUsername()));
+        model.addAttribute("currentUser", userService.getByUsername(currentUser.getUsername()));
 
         return "AdminPanelView";
     }
+
+    @PostMapping("{userId}/admin/ban")
+    public String banUser(@PathVariable int userId,
+                          Model model,
+                          HttpSession session) {
+
+        User currentUser;
+        try {
+            currentUser = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+        model.addAttribute("currentUser", userService.getByUsername(currentUser.getUsername()));
+        userService.changeBanStatusMvc(userId, true, currentUser);
+
+        return "redirect:/users/admin";
+    }
+
+    @PostMapping("{userId}/admin/unban")
+    public String unbanUser(@PathVariable int userId,
+                            Model model,
+                            HttpSession session) {
+
+        User currentUser;
+        try {
+            currentUser = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+        model.addAttribute("currentUser", userService.getByUsername(currentUser.getUsername()));
+        userService.changeBanStatusMvc(userId, false, currentUser);
+
+        return "redirect:/users/admin";
+    }
+
+    @PostMapping("{userId}/admin/promote")
+    public String promoteUser(@PathVariable int userId,
+                          Model model,
+                          HttpSession session) {
+
+        User currentUser;
+        try {
+            currentUser = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+        model.addAttribute("currentUser", userService.getByUsername(currentUser.getUsername()));
+        userService.changeAdminStatusMvc(userId, true, currentUser);
+
+        return "redirect:/users/admin";
+    }
+
+    @PostMapping("{userId}/admin/demote")
+    public String demoteUser(@PathVariable int userId,
+                            Model model,
+                            HttpSession session) {
+
+        User currentUser;
+        try {
+            currentUser = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+        model.addAttribute("currentUser", userService.getByUsername(currentUser.getUsername()));
+        userService.changeAdminStatusMvc(userId, false, currentUser);
+
+        return "redirect:/users/admin";
+    }
+
 }

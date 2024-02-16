@@ -6,51 +6,24 @@
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
 <!-- Page header with logo and tagline-->
 <header class="py-5 bg-light border-bottom mb-4">
-    <div class="container">
+    <div class="container" th:if="${!currentUser.adminStatus}">
         <div class="text-center my-5">
-            <h1 class="fw-bolder">Welcome to forum for self-improvement!</h1>
-            <p class="lead mb-0">Be a better version of you than yesterday!</p>
+            <h1 class="fw-bolder">You must be an admin to see this page.</h1>
         </div>
     </div>
+    <div class="container" th:if="${currentUser.adminStatus}">
+        <div class="text-center my-5">
+            <h1 class="fw-bolder">Admin panel</h1>
+        </div>
+    </div>
+
 </header>
 <!-- Page content-->
-<div class="container">
+<div class="container" th:if="${currentUser.adminStatus}">
     <div class="row">
         <div class="col-lg-4">
             <!-- User screen-->
             <div th:replace="~{fragments/UserPanel :: user-panel}"></div>
-            <!-- Side widget-->
-            <!--            <div class="card mb-4">-->
-            <!--                <div class="card-header">Forum activity</div>-->
-            <!--                <div class="card-body" th:text="${'Total posts in forum: ' + postCount}">You can put anything you want-->
-            <!--                    inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!-->
-            <!--                </div>-->
-            <!--            </div>-->
-            <!-- Search widget-->
-
-            <!-- Categories widget-->
-            <!--            <div class="card mb-4">-->
-            <!--                <div class="card-header" >Tags</div>-->
-            <!--                <div class="card-body" th:each="tags : ${allTags}"-->
-            <!--                     th:text="${tags.content}">-->
-            <!--                    <div class="row">-->
-            <!--                        <div class="col-sm-6">-->
-            <!--                            <ul class="list-unstyled mb-0">-->
-            <!--                                <li><a href="#!">Web Design</a></li>-->
-            <!--                                <li><a href="#!">HTML</a></li>-->
-            <!--                                <li><a href="#!">Freebies</a></li>-->
-            <!--                            </ul>-->
-            <!--                        </div>-->
-            <!--                        <div class="col-sm-6">-->
-            <!--                            <ul class="list-unstyled mb-0">-->
-            <!--                                <li><a href="#!">JavaScript</a></li>-->
-            <!--                                <li><a href="#!">CSS</a></li>-->
-            <!--                                <li><a href="#!">Tutorials</a></li>-->
-            <!--                            </ul>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </div>-->
         </div>
         <!-- Blog entries-->
         <div class="col-lg-8">
@@ -87,8 +60,6 @@
             <option value="desc">Descending</option>
         </select></span>
                 </div>
-                <br/>
-
                 <table style="margin: 20px; margin-right: 0; float: right;">
                     <tr>
                         <th>Username</th>
@@ -111,21 +82,34 @@
                             <span th:if="${result.banStatus}">⛔</span>
                             <span th:if="${!result.banStatus}"></span>
                         </td>
-                        <td>
-                            <a class="btn btn-primary" href="#">
-                                <span th:if="${result.adminStatus}">Demote</span>
-                                <span th:if="${!result.adminStatus}">Promote</span>
-                            </a>
+
+                        <td th:if="${!result.adminStatus}">
+                            <form th:action="@{/users/__${result.userId}__/admin/promote}" method="post">
+                                <button type="submit" class="btn btn-primary">Promote</button>
+                            </form>
                         </td>
-                        <td>
-                            <a class="btn btn-primary" href="#">
-                                <span th:if="${result.banStatus}">Unban</span>
-                                <span th:if="${!result.banStatus}">Ban</span>
-                            </a>
+
+                        <td th:if="${result.adminStatus}">
+                            <form th:action="@{/users/__${result.userId}__/admin/demote}" method="post">
+                                <button type="submit" class="btn btn-primary">Demote</button>
+                            </form>
                         </td>
+
+                        <td th:if="${result.banStatus}">
+                            <form th:action="@{/users/__${result.userId}__/admin/unban}" method="post">
+                                <button type="submit" class="btn btn-primary">Unban</button>
+                            </form>
+                        </td>
+
+                        <td th:if="${!result.banStatus}">
+                            <form th:action="@{/users/__${result.userId}__/admin/ban}" method="post">
+                                <button type="submit" class="btn btn-primary">Ban</button>
+                            </form>
+                        </td>
+                        </a>
+                    </td>
                     </tr>
                 </table>
-
             </div>
         </div>
 

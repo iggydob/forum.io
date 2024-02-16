@@ -16,7 +16,11 @@ public interface UserService {
 
     public void changeBanStatus(int id, User userDetails, User requester);
 
+    public void changeBanStatusMvc(int id, boolean status, User requester);
+
     public void changeAdminStatus(int id, User userDetails, User requester);
+
+    public void changeAdminStatusMvc(int id, boolean status, User requester);
 
     public void changePassword(int id, User userDetails, User requester);
 
