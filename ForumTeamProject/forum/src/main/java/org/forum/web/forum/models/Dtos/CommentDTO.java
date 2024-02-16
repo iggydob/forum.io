@@ -1,11 +1,12 @@
 package org.forum.web.forum.models.Dtos;
 
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.sql.Timestamp;
 
 public class CommentDTO {
 
+    @NotEmpty(message = "The content field cannot be empty!")
     private String content;
     private Timestamp creationDate;
 //    @Positive(message = "PostId should be positive")
@@ -29,12 +30,4 @@ public class CommentDTO {
     public void setCreationDate(Timestamp creationDate) {
         this.creationDate = Timestamp.valueOf(creationDate.toLocalDateTime());
     }
-//
-//    public int getPostID() {
-//        return postID;
-//    }
-//
-//    public void setPostID(int postID) {
-//        this.postID = postID;
-//    }
 }

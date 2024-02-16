@@ -25,8 +25,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.*;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+
+import static javax.swing.SortOrder.DESCENDING;
 
 @Controller
 @RequestMapping("/posts")
@@ -70,6 +75,10 @@ public class PostMvcController {
         return request.getRequestURI();
     }
 
+    @ModelAttribute("allTags")
+    public List<Tag>allTags(){
+        return tagService.getAll();
+    }
     @GetMapping
     public String showAllPosts(@ModelAttribute("filterOptions") PostFilterDto filterDto, Model model, HttpSession session) {
         PostFilterOptions filterOptions = new PostFilterOptions(
@@ -94,22 +103,28 @@ public class PostMvcController {
     }
 
     @PostMapping("/submitComment")
-    public String createComment(@ModelAttribute("comment") CommentDTO commentDTO,
+    public String createComment(@Valid @ModelAttribute("comment") CommentDTO commentDTO,
+                                BindingResult bindingResult,
                                 Model model,
                                 HttpSession session) {
         User user;
+
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
 
+        if (bindingResult.hasErrors()) {
+            return "PostViewTheme";
+        }
+
+        int postId = (int) session.getAttribute("sessionPostId");
+
         try {
-            int postId = (int) session.getAttribute("sessionPostId");
             Comment comment = commentMapper.fromDto(postId, commentDTO);
             commentService.create(user, comment);
             model.addAttribute("comment", comment);
-
             return "redirect:/posts/" + postId;
         } catch (UnauthorizedOperationException e) {
             model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
@@ -217,7 +232,7 @@ public class PostMvcController {
             User user = post.getCreator();
             //todo think about comments and tags
             List<Comment> comment = commentService.getPostComments(post.getId());
-            Set<Tag> tags = post.getTags();
+            Collections.sort(comment, Comparator.comparing(Comment::getCreationDate).reversed());            Set<Tag> tags = post.getTags();
             model.addAttribute("post", post);
             model.addAttribute("comments", comment);
             model.addAttribute("tags", tags);
@@ -312,6 +327,7 @@ public class PostMvcController {
 
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
+            session.setAttribute("isAdmin", user.getAdminStatus());
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
@@ -343,7 +359,7 @@ public class PostMvcController {
         try {
             postService.delete(user, id);
             return "redirect:/posts";
-        }  catch (UnauthorizedOperationException e) {
+        } catch (UnauthorizedOperationException e) {
             model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
@@ -356,8 +372,8 @@ public class PostMvcController {
 
     @GetMapping("/{postId}/delete/{commentId}")
     public String deleteComment(Model model,
-                              HttpSession session,
-                              @PathVariable int commentId,
+                                HttpSession session,
+                                @PathVariable int commentId,
                                 @PathVariable int postId) {
         User user;
         try {
@@ -375,7 +391,7 @@ public class PostMvcController {
         try {
             commentService.delete(user, commentId);
             return "redirect:/posts/" + postId;
-        }  catch (UnauthorizedOperationException e) {
+        } catch (UnauthorizedOperationException e) {
             model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";

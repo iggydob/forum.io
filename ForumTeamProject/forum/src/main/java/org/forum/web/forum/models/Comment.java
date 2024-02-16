@@ -2,7 +2,7 @@ package org.forum.web.forum.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -26,7 +26,7 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @NotNull
+    @NotEmpty(message = "The content field cannot be empty!")
     @Column(name = "content")
     private String content;
 

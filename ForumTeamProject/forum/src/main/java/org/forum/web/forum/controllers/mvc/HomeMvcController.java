@@ -5,6 +5,7 @@ import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.models.Dtos.PostFilterDto;
 import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.Tag;
+import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.service.contracts.PostService;
 import org.forum.web.forum.service.contracts.TagService;
@@ -47,6 +48,10 @@ public class HomeMvcController {
     @ModelAttribute("allTags")
     public List<Tag>allTags(){
         return tagService.getAll();
+    }
+    @ModelAttribute("allUsers")
+    public List<User>allUsers(){
+        return userService.getAll();
     }
     @GetMapping
     public String showHomePage(@ModelAttribute("filterOptions") PostFilterDto filterDto, Model model, HttpSession session) {
