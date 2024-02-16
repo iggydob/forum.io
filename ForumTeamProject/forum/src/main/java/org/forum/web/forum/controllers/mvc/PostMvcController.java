@@ -94,22 +94,28 @@ public class PostMvcController {
     }
 
     @PostMapping("/submitComment")
-    public String createComment(@ModelAttribute("comment") CommentDTO commentDTO,
+    public String createComment(@Valid @ModelAttribute("comment") CommentDTO commentDTO,
+                                BindingResult bindingResult,
                                 Model model,
                                 HttpSession session) {
         User user;
+
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
 
+        if (bindingResult.hasErrors()) {
+            return "PostViewTheme";
+        }
+
+        int postId = (int) session.getAttribute("sessionPostId");
+
         try {
-            int postId = (int) session.getAttribute("sessionPostId");
             Comment comment = commentMapper.fromDto(postId, commentDTO);
             commentService.create(user, comment);
             model.addAttribute("comment", comment);
-
             return "redirect:/posts/" + postId;
         } catch (UnauthorizedOperationException e) {
             model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());

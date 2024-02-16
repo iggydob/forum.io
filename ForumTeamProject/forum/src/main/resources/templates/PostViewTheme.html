@@ -69,9 +69,13 @@
                         <form action="#" th:action="@{/posts/submitComment}" th:object="${commentDto}" th:method="post"
                               class="mb-4">
                             <br/>
-                            <textarea class="form-control" rows="3" th:field="*{content}"
-                                      placeholder="Write your comment..."></textarea>
-                            <br/>
+<!--                            <textarea class="form-control" rows="3" th:field="*{content}"-->
+<!--                                      placeholder="Write your comment..."></textarea>-->
+<!--                            <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{content}">Content error placeholder</label>-->
+
+                            <input class="form-control" rows="3" type="text" th:field="*{content}" placeholder="Write your comment..." style="height: 12rem" required></input>
+                            <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{content}">Content error placeholder</label>
+
                             <input class="btn btn-primary" type="submit" value="Submit"/>
                         </form>
                         <div class="row d-flex justify-content-center">
