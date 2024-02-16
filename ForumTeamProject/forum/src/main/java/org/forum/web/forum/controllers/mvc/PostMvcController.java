@@ -312,6 +312,7 @@ public class PostMvcController {
 
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
+            session.setAttribute("isAdmin", user.getAdminStatus());
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
@@ -343,7 +344,7 @@ public class PostMvcController {
         try {
             postService.delete(user, id);
             return "redirect:/posts";
-        }  catch (UnauthorizedOperationException e) {
+        } catch (UnauthorizedOperationException e) {
             model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
@@ -356,8 +357,8 @@ public class PostMvcController {
 
     @GetMapping("/{postId}/delete/{commentId}")
     public String deleteComment(Model model,
-                              HttpSession session,
-                              @PathVariable int commentId,
+                                HttpSession session,
+                                @PathVariable int commentId,
                                 @PathVariable int postId) {
         User user;
         try {
@@ -375,7 +376,7 @@ public class PostMvcController {
         try {
             commentService.delete(user, commentId);
             return "redirect:/posts/" + postId;
-        }  catch (UnauthorizedOperationException e) {
+        } catch (UnauthorizedOperationException e) {
             model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
