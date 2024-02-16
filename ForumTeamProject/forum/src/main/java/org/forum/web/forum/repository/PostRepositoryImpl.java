@@ -45,10 +45,11 @@ public class PostRepositoryImpl implements PostRepository {
                 filters.add(" post.title LIKE :title");
                 params.put("title", String.format("%%%s%%", value));
             });
-            StringBuilder queryString = new StringBuilder("FROM Post post JOIN post.creator user");
+
+            StringBuilder queryString = new StringBuilder("FROM Post post JOIN post.creator user WHERE post.isDeleted = false");
             if (!filters.isEmpty()) {
                 queryString
-                        .append(" WHERE ")
+//                        .append(" WHERE ")
                         .append(String.join("AND ", filters));
             }
             queryString.append(generatedOrderBy(postFilterOptions));
@@ -70,7 +71,7 @@ public class PostRepositoryImpl implements PostRepository {
                 filters.add("title like :title");
                 params.put("title", String.format("%%%s%%", value));
             });
-            StringBuilder queryString = new StringBuilder("from Post where creator = :creator");
+            StringBuilder queryString = new StringBuilder("from Post p where creator = :creator and p.isDeleted = false");
             if (!filters.isEmpty()) {
                 queryString
                         .append(" and ")
@@ -98,7 +99,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public List<Post> getRecent() {
         try (Session session = sessionFactory.openSession()) {
-            Query<Post> query = session.createQuery("from Post order by creationDate desc", Post.class);
+            Query<Post> query = session.createQuery("select p from Post p WHERE p.isDeleted = false order by creationDate desc", Post.class);
             query.setMaxResults(10);
             return query.list();
         }
@@ -111,6 +112,7 @@ public class PostRepositoryImpl implements PostRepository {
                             SELECT p
                             FROM Post p
                             LEFT JOIN Comment c ON p.id = c.post.id
+                            WHERE p.isDeleted = false
                             GROUP BY p
                             ORDER BY COUNT(c.id) DESC
                             """, Post.class)
@@ -141,7 +143,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public long getPostCount() {
         try (Session session = sessionFactory.openSession()) {
-            Query<Long> query = session.createQuery("select COUNT (p) from Post p", Long.class);
+            Query<Long> query = session.createQuery("select COUNT (p) from Post p WHERE p.isDeleted = false", Long.class);
             return query.uniqueResult();
         }
     }
@@ -149,7 +151,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Post getByTitle(String title) {
         try (Session session = sessionFactory.openSession()) {
-            Query<Post> query = session.createQuery("from Post where title = :title", Post.class);
+            Query<Post> query = session.createQuery("from Post p where title = :title and p.isDeleted = false", Post.class);
             query.setParameter("title", title);
 
             List<Post> posts = query.list();

@@ -26,4 +26,10 @@ public class PostMapper {
         post.setContent(postDto.getContent());
         return post;
     }
+    public PostDto toDto(Post post) {
+        PostDto dto = new PostDto();
+        dto.setTitle(post.getTitle());
+        dto.setContent(post.getContent());
+        return dto;
+    }
 }

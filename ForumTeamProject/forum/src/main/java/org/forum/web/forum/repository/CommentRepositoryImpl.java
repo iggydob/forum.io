@@ -51,35 +51,6 @@ public class CommentRepositoryImpl implements CommentRepository {
         }
     }
 
-
-//    @Override
-//    public void delete(int id) {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//
-//            Query<Comment> query = session.createQuery(
-//                            "UPDATE Comment c SET c.isDeleted = true WHERE c.id = :id", Comment.class);
-////                    .setParameter("id", id);
-//
-//            query.executeUpdate();
-//            transaction.commit();
-//        }
-//    }
-//    Only receiving comments with likes not all
-//    @Override
-//    public List<Comment> getCommentsSortedByLikes() {
-//        try (Session session = sessionFactory.openSession()) {
-//            String queryString = "SELECT c " +
-//                    "FROM Comment c " +
-//                    "LEFT JOIN c.likedList like " +
-//                    "WHERE like.isLiked = true AND like.isDeleted = false " +
-//                    "GROUP BY c " +
-//                    "ORDER BY COUNT(like.id) DESC";
-//            Query<Comment> query = session.createQuery(queryString, Comment.class);
-//            return query.getResultList();
-//        }
-//    }
-
     @Override
     public List<Comment> getAll() {
         try (Session session = sessionFactory.openSession()) {
@@ -91,7 +62,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public List<Comment> getPostComments(int postId) {
         try (Session session = sessionFactory.openSession()) {
-            Query<Comment> query = session.createQuery("SELECT c FROM Comment c WHERE c.post.id = :postId", Comment.class)
+            Query<Comment> query = session.createQuery("SELECT c FROM Comment c WHERE c.post.id = :postId and c.isDeleted = false", Comment.class)
                     .setParameter("postId", postId);
             return query.list();
         }

@@ -44,6 +44,10 @@ public class HomeMvcController {
     }
 
     //show home page with all post
+    @ModelAttribute("allTags")
+    public List<Tag>allTags(){
+        return tagService.getAll();
+    }
     @GetMapping
     public String showHomePage(@ModelAttribute("filterOptions") PostFilterDto filterDto, Model model, HttpSession session) {
         PostFilterOptions filterOptions = new PostFilterOptions(
@@ -65,9 +69,5 @@ public class HomeMvcController {
         model.addAttribute("posts", posts);
         model.addAttribute("postCount", postService.getPostCount());
         return "HomePageView";
-    }
-    @ModelAttribute("allTags")
-    public List<Tag>allTags(){
-        return tagService.getAll();
     }
 }
