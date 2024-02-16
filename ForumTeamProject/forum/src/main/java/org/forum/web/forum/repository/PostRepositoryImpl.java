@@ -46,9 +46,10 @@ public class PostRepositoryImpl implements PostRepository {
                 params.put("title", String.format("%%%s%%", value));
             });
 
-            StringBuilder queryString = new StringBuilder(" FROM Post post JOIN post.creator user WHERE post.isDeleted = false AND ");
+            StringBuilder queryString = new StringBuilder(" FROM Post post JOIN post.creator user WHERE post.isDeleted = false ");
             if (!filters.isEmpty()) {
                 queryString
+                        .append("AND")
                         .append(String.join("AND ", filters));
             }
             queryString.append(generatedOrderBy(postFilterOptions));
