@@ -5,8 +5,12 @@ import jakarta.validation.Valid;
 import org.forum.web.forum.exceptions.*;
 import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.helpers.mappers.UserMapper;
+import org.forum.web.forum.models.Dtos.PostFilterDto;
 import org.forum.web.forum.models.Dtos.UserDto;
+import org.forum.web.forum.models.Dtos.UserFilterDto;
+import org.forum.web.forum.models.Post;
 import org.forum.web.forum.models.User;
+import org.forum.web.forum.models.filters.PostFilterOptions;
 import org.forum.web.forum.models.filters.UserFilterOptions;
 import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.http.HttpStatus;
@@ -14,6 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/users")
@@ -35,9 +41,9 @@ public class UserMvcController {
     }
 
     @GetMapping("/edit")
-    public String handleUserEdit(UserDto userDto,
-                                 Model model,
-                                 HttpSession session) {
+    public String showUserEdit(UserDto userDto,
+                               Model model,
+                               HttpSession session) {
 
         try {
             authenticationHelper.tryGetCurrentUser(session);
@@ -58,10 +64,10 @@ public class UserMvcController {
     }
 
     @PostMapping("/edit")
-    public String showUserEdit(@Valid @ModelAttribute("currentUser") UserDto userDto,
-                               BindingResult bindingResult,
-                               Model model,
-                               HttpSession session) {
+    public String handleUserEdit(@Valid @ModelAttribute("currentUser") UserDto userDto,
+                                 BindingResult bindingResult,
+                                 Model model,
+                                 HttpSession session) {
 
 
         User requester = authenticationHelper.tryGetCurrentUser(session);
@@ -85,5 +91,33 @@ public class UserMvcController {
             bindingResult.rejectValue("email", "email_error", "E-mail already exists!");
             return "EditUserView";
         }
+    }
+
+    @GetMapping("/admin")
+    public String showUserPanel(@ModelAttribute("filterOptions") UserFilterDto filterDto,
+                                Model model,
+                                HttpSession session) {
+        User currentUsername;
+        try {
+            currentUsername = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+        UserFilterOptions filterOptions = new UserFilterOptions(
+                filterDto.getFirstName(),
+                filterDto.getLastName(),
+                filterDto.getUsername(),
+                filterDto.getEmail(),
+                filterDto.getSortBy(),
+                filterDto.getSortOrder());
+
+        List<User> users = userService.getFiltered(filterOptions);
+
+        model.addAttribute("filterOptions", filterDto);
+        model.addAttribute("users", users);
+        model.addAttribute("currentUser", userService.getByUsername(currentUsername.getUsername()));
+
+        return "AdminPanelView";
     }
 }

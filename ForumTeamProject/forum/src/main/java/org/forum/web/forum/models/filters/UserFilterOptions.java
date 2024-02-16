@@ -24,6 +24,10 @@ public class UserFilterOptions {
         this.sortOrder = Optional.ofNullable(sortOrder);
     }
 
+    public UserFilterOptions() {
+        this(null, null, null, null, null, null);
+    }
+
     public Optional<String> getFirstName() {
         return firstName;
     }

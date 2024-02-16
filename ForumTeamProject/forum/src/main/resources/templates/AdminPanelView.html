@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('Admin Panel')}"></div>
+<body>
+<!-- Responsive navbar-->
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+<!-- Page header with logo and tagline-->
+<header class="py-5 bg-light border-bottom mb-4">
+    <div class="container">
+        <div class="text-center my-5">
+            <h1 class="fw-bolder">Welcome to forum for self-improvement!</h1>
+            <p class="lead mb-0">Be a better version of you than yesterday!</p>
+        </div>
+    </div>
+</header>
+<!-- Page content-->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            <!-- User screen-->
+            <div th:replace="~{fragments/UserPanel :: user-panel}"></div>
+            <!-- Side widget-->
+            <!--            <div class="card mb-4">-->
+            <!--                <div class="card-header">Forum activity</div>-->
+            <!--                <div class="card-body" th:text="${'Total posts in forum: ' + postCount}">You can put anything you want-->
+            <!--                    inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!-- Search widget-->
+
+            <!-- Categories widget-->
+            <!--            <div class="card mb-4">-->
+            <!--                <div class="card-header" >Tags</div>-->
+            <!--                <div class="card-body" th:each="tags : ${allTags}"-->
+            <!--                     th:text="${tags.content}">-->
+            <!--                    <div class="row">-->
+            <!--                        <div class="col-sm-6">-->
+            <!--                            <ul class="list-unstyled mb-0">-->
+            <!--                                <li><a href="#!">Web Design</a></li>-->
+            <!--                                <li><a href="#!">HTML</a></li>-->
+            <!--                                <li><a href="#!">Freebies</a></li>-->
+            <!--                            </ul>-->
+            <!--                        </div>-->
+            <!--                        <div class="col-sm-6">-->
+            <!--                            <ul class="list-unstyled mb-0">-->
+            <!--                                <li><a href="#!">JavaScript</a></li>-->
+            <!--                                <li><a href="#!">CSS</a></li>-->
+            <!--                                <li><a href="#!">Tutorials</a></li>-->
+            <!--                            </ul>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+        </div>
+        <!-- Blog entries-->
+        <div class="col-lg-8">
+
+            <div th:fragment="filter" class=" card mb-4">
+                <div class="card-header">Users</div>
+                <div class="card-body">
+                    <form class="input-group" action="#" th:action="@{/users/admin}" method="get"
+                          th:object="${filterOptions}">
+                        <input class="form-control" type="text" placeholder="Username" th:field="*{username}"
+                               aria-label="Enter search term..." aria-describedby="button-search"/>
+                        <input class="form-control" type="text" placeholder="First name" th:field="*{firstName}"
+                               aria-label="Enter search term..." aria-describedby="button-search"/>
+                        <input class="form-control" type="text" placeholder="Last name" th:field="*{lastName}"
+                               aria-label="Enter search term..." aria-describedby="button-search"/>
+                        <input class="form-control" type="text" placeholder="E-mail" th:field="*{email}"
+                               aria-label="Enter search term..." aria-describedby="button-search"/>
+                        <button class="btn btn-primary" id="button-search" type="submit" value="search">🔍 Search️
+                        </button>
+                    </form>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <select class="card-header" th:field="*{filterOptions.sortBy}" style="width: 200px;">
+                        <option value="">Sort By</option>
+                        <option value="username">Username</option>
+                        <option value="firstName">First Name</option>
+                        <option value="lastName">Last Name</option>
+                        <option value="email">Email</option>
+                    </select>
+                    <span style="margin-left: 10px;"><select class="card-header" th:field="*{filterOptions.sortOrder}"
+                                                             style="width: 200px;">
+            <option value="">Sort Order</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </select></span>
+                </div>
+                <br/>
+                <table style="margin: 20px; margin-right: 0; float: right;">
+                    <tr>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Admin</th>
+                        <th>Banned</th>
+                    </tr>
+                    <tr th:each="result : ${users}">
+                        <td th:text="${result.username}"></td>
+                        <td th:text="${result.firstName}"></td>
+                        <td th:text="${result.lastName}"></td>
+                        <td th:text="${result.email}"></td>
+                        <td th:text="${result.adminStatus}"></td>
+                        <td th:text="${result.banStatus}"></td>
+                        <td>
+                            <a class="btn btn-primary" href="#">
+                                <span th:if="${result.adminStatus}">Demote</span>
+                                <span th:if="${!result.adminStatus}">Promote</span>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" href="#">
+                                <span th:if="${result.banStatus}">Unban</span>
+                                <span th:if="${!result.banStatus}">Ban</span>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+<!-- Footer-->
+<div th:replace="~{/fragments/PageFrame :: footer}"></div>
+<div th:replace="~{/fragments/PageFrame :: scripts}"></div>
+</body>
+</html>
