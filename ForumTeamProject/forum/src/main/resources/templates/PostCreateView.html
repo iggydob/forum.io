@@ -22,7 +22,8 @@
                 <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{title}">Title error placeholder</label>
 
 
-                <input class="form-control" rows="3" th:field="*{content}" placeholder="Write your content..." style="height: 12rem" ></input>
+                <textarea class="form-control" rows="3" id="symbolTextArea" oninput="countSymbols()" th:field="*{content}" placeholder="Write your content..." style="height: 12rem" ></textarea>
+                <p>Number of symbols: <span id="symbolCount">0</span></p>
                 <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{content}">Content error placeholder</label>
                 <br/>
 
@@ -37,5 +38,14 @@
 <br/>
 <div th:replace="~{/fragments/PageFrame :: footer}"></div>
 <div th:replace="~{/fragments/PageFrame :: scripts}"></div>
+<script>
+    function countSymbols() {
+        const input = document.getElementById('symbolTextArea');
+        const count = document.getElementById('symbolCount');
+        count.textContent = input.value.length;
+    }
+
+</script>
+
 </body>
 </html>

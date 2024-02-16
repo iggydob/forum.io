@@ -46,10 +46,9 @@ public class PostRepositoryImpl implements PostRepository {
                 params.put("title", String.format("%%%s%%", value));
             });
 
-            StringBuilder queryString = new StringBuilder("FROM Post post JOIN post.creator user WHERE post.isDeleted = false");
+            StringBuilder queryString = new StringBuilder(" FROM Post post JOIN post.creator user WHERE post.isDeleted = false AND ");
             if (!filters.isEmpty()) {
                 queryString
-//                        .append(" WHERE ")
                         .append(String.join("AND ", filters));
             }
             queryString.append(generatedOrderBy(postFilterOptions));
@@ -71,7 +70,7 @@ public class PostRepositoryImpl implements PostRepository {
                 filters.add("title like :title");
                 params.put("title", String.format("%%%s%%", value));
             });
-            StringBuilder queryString = new StringBuilder("from Post p where creator = :creator and p.isDeleted = false");
+            StringBuilder queryString = new StringBuilder("from Post p where creator = :creator and p.isDeleted = false ");
             if (!filters.isEmpty()) {
                 queryString
                         .append(" and ")
@@ -180,28 +179,6 @@ public class PostRepositoryImpl implements PostRepository {
         }
     }
 
-    //hard delete
-//    @Override
-//    public void delete(Post post) {
-//        try (Session session = sessionFactory.openSession()) {
-//            session.beginTransaction();
-//            session.remove(post);
-//            session.getTransaction().commit();
-//        }
-//    }
-//    @Override
-//    public void delete(int id) {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//
-//            Query<Post> query = session.createQuery(
-//                            "UPDATE Post p SET p.isDeleted = true WHERE p.id = :id", Post.class)
-//                    .setParameter("id", id);
-//
-//            query.executeUpdate();
-//            transaction.commit();
-//        }
-//    }
 
     @Override
     public List<User> getLikedBy(int postId) {
