@@ -88,6 +88,7 @@
         </select></span>
                 </div>
                 <br/>
+
                 <table style="margin: 20px; margin-right: 0; float: right;">
                     <tr>
                         <th>Username</th>
@@ -102,8 +103,14 @@
                         <td th:text="${result.firstName}"></td>
                         <td th:text="${result.lastName}"></td>
                         <td th:text="${result.email}"></td>
-                        <td th:text="${result.adminStatus}"></td>
-                        <td th:text="${result.banStatus}"></td>
+                        <td class="center" style="text-align: center;">
+                            <span th:if="${result.adminStatus}">👑</span>
+                            <span th:if="${!result.adminStatus}"></span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span th:if="${result.banStatus}">⛔</span>
+                            <span th:if="${!result.banStatus}"></span>
+                        </td>
                         <td>
                             <a class="btn btn-primary" href="#">
                                 <span th:if="${result.adminStatus}">Demote</span>
@@ -118,6 +125,7 @@
                         </td>
                     </tr>
                 </table>
+
             </div>
         </div>
 
