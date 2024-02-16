@@ -330,4 +330,59 @@ public class PostMvcController {
 
     }
 
+    @GetMapping("/{id}/delete")
+    public String deletePost(@PathVariable int id, Model model, HttpSession session) {
+
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+        try {
+            postService.delete(user, id);
+            return "redirect:/posts";
+        }  catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
+    @GetMapping("/{postId}/delete/{commentId}")
+    public String deleteComment(Model model,
+                              HttpSession session,
+                              @PathVariable int commentId,
+                                @PathVariable int postId) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+            session.setAttribute("isAdmin", user.getAdminStatus());
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+        if (populateIsAuthenticated(session)) {
+            String currentUsername = (String) session.getAttribute("currentUser");
+            model.addAttribute("currentUser", userService.getByUsername(currentUsername));
+        }
+
+        try {
+            commentService.delete(user, commentId);
+            return "redirect:/posts/" + postId;
+        }  catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
 }
