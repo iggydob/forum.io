@@ -46,11 +46,10 @@ public class PostRepositoryImpl implements PostRepository {
                 params.put("title", String.format("%%%s%%", value));
             });
 
-            StringBuilder queryString = new StringBuilder("FROM Post post JOIN post.creator user ");
+            StringBuilder queryString = new StringBuilder("FROM Post post JOIN post.creator user WHERE post.isDeleted = false");
             if (!filters.isEmpty()) {
-                filters.add(" post.isDeleted = false ");
                 queryString
-                        .append(" WHERE ")
+//                        .append(" WHERE ")
                         .append(String.join("AND ", filters));
             }
             queryString.append(generatedOrderBy(postFilterOptions));
@@ -114,7 +113,6 @@ public class PostRepositoryImpl implements PostRepository {
                             FROM Post p
                             LEFT JOIN Comment c ON p.id = c.post.id
                             WHERE p.isDeleted = false
-                              AND c.isDeleted = false
                             GROUP BY p
                             ORDER BY COUNT(c.id) DESC
                             """, Post.class)
