@@ -19,8 +19,17 @@ public class UserDto {
     private PhoneNumber phoneNumber;
     private boolean banStatus;
     private boolean adminStatus;
+    private String photoUrl;
 
     public UserDto() {
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public String getFirstName() {

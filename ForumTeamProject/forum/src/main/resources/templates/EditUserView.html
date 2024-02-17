@@ -23,7 +23,28 @@
                 error placeholder</label>
                 <br/>
 
-                <div th:if="${requester.adminStatus}">
+                <label th:text="#{user.label.email}">Email</label>
+                <br/>
+                <input type="text" th:field="*{email}"/>
+                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{email}">Email error
+                placeholder</label>
+                <br/>
+
+                <label th:text="#{user.label.password}">Last Name</label>
+                <br/>
+                <input type="text" th:field="*{password}"/>
+                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{password}">Last name
+                error placeholder</label>
+                <br/>
+
+                <label th:text="#{user.label.photo-url}">Last Name</label>
+                <br/>
+                <input type="text" th:field="*{photoUrl}"/>
+                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{photoUrl}">Last name
+                error placeholder</label>
+                <br/>
+
+                <div th:if="${currentUser.adminStatus}">
                     <label th:text="#{user.label.phone-number}">Last Name</label>
                     <br/>
                     <input type="text" th:field="*{phoneNumber.phoneNumber}"/>
@@ -41,17 +62,13 @@
 
 
     <div class="card mb-4">
-        <div class="card-header">Edit e-mail address</div>
+        <div class="card-header">Profile picture preview</div>
         <div class="card-body">
-            <form action="#" th:action="@{/users/edit}" th:object="${currentUser}" method="post">
-                <label th:text="#{user.label.email}">Email</label>
-                <br/>
-                <input type="text" th:field="*{email}"/>
-                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{email}">Email error
-                placeholder</label>
-                <br/>
-                <input class="btn btn-primary" type="submit" value="Submit"></input>
-            </form>
+            <div class="flex-shrink-0">
+                <img class="rounded-profile"
+                     th:src="${currentUser.photoUrl != null ? (currentUser.photoUrl.startsWith('http') ? currentUser.photoUrl : '@{/}' + currentUser.photoUrl) : '@{/assets/users/defaultUser.png}'}"
+                     style="max-height: 428px;"/>
+            </div>
         </div>
     </div>
 </div>

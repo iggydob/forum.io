@@ -106,6 +106,7 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setBanStatus(status);
         userRepository.update(userToUpdate);
     }
+
     @Override
     public void changeAdminStatus(int id, User userDetails, User requester) {
         checkAdminRole(requester);
@@ -128,6 +129,7 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setAdminStatus(status);
         userRepository.update(userToUpdate);
     }
+
     @Override
     public void changePassword(int id, User userDetails, User requester) {
         checkSourceUser(id, requester);
@@ -145,6 +147,7 @@ public class UserServiceImpl implements UserService {
         updateLastName(userDetails, userToUpdate);
         updateEmail(userDetails, userToUpdate);
         updatePhoneNumber(userDetails, userToUpdate);
+        userToUpdate.setPhotoUrl(userDetails.getPhotoUrl());
 
         userRepository.update(userToUpdate);
     }
@@ -168,6 +171,10 @@ public class UserServiceImpl implements UserService {
             try {
                 userRepository.getByEmail(userDetails.getEmail());
             } catch (EntityNotFoundException e) {
+                duplicateExists = false;
+            }
+
+            if (userDetails.getEmail().equals(userToUpdate.getEmail())) {
                 duplicateExists = false;
             }
 

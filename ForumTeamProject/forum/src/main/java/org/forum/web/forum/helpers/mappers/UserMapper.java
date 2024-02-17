@@ -44,6 +44,7 @@ public class UserMapper {
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
         user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setPhotoUrl(userDto.getPhotoUrl());
         return user;
     }
 
@@ -56,6 +57,7 @@ public class UserMapper {
         if (user.getPhoneNumber() != null) {
             userDto.setPhoneNumber(phoneConverter.convert(user.getPhoneNumber().getPhoneNumber()));
         }
+        userDto.setPhotoUrl(user.getPhotoUrl());
         return userDto;
     }
 

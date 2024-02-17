@@ -94,6 +94,7 @@ public class UserMvcController {
         try {
             User userToUpdate = userMapper.dtoUserUpdate(userDto);
             userService.update(requester.getUserId(), userToUpdate, requester);
+            userService.changePassword(requester.getUserId(), userToUpdate, requester);
             return "redirect:/posts";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("email", "email_error", "E-mail already exists!");
