@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:insert="~{fragments/PageFrame :: head('Post')}"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <body>
 <!-- Responsive navbar-->
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
@@ -31,25 +32,27 @@
                         us an understanding of our place in the universe.</p>
                 </section>
 
-                <form th:action="@{/posts/like}" method="post"
+                <form id="likeForm" th:action="@{/posts/like}" method="post"
                       style="display: flex; align-items: center; justify-content: space-between;">
 
-                    <button type="submit"
-                            style="border: none; background: none; padding: 0; font: inherit; cursor: pointer;">
-                        <a href="#" style="text-decoration: none;">
+
+                <!--                    <button type="submit"-->
+<!--                            style="border: none; background: none; padding: 0; font: inherit; cursor: pointer;">-->
+<!--                        <a href="#" style="text-decoration: none;">-->
+<!--                            <i class="fas fa-thumbs-up fa-xs"></i>-->
+<!--                            <span class="small">👍 Like</span>-->
+<!--                        </a>-->
+<!--                    </button>-->
+
+                    <div class="button">
+                        <input type="checkbox" id="liked" name="like" onclick="toggleLike()">
+                        <label for="liked">
                             <i class="fas fa-thumbs-up fa-xs"></i>
-                            <span class="small">👍 Like</span>
-                        </a>
-                    </button>
-
-                    <!--                    <div class="ui labeled button mt-5 ml-5" tabindex="0">-->
-                    <!--                        <div class="ui blue button">-->
-                    <!--                            <i class="fas fa-thumbs-up"></i>-->
-                    <!--                        </div>-->
-                    <!--                        <span class="ui basic blue label">0</span>-->
-                    <!--                    </div>-->
-
-                    <span th:text="${post.getLikedByUser().size()}"></span> Likes
+                            <span id="likeCount" th:text="${post.getLikedByUser().size()}"></span>
+                        </label>
+<!--                        <label for="liked"><span id="likeCount" th:text="${post.getLikedByUser().size()}"></span></label>-->
+                        <link rel="stylesheet" type="text/css" href="/css/button.css">
+                    </div>
 
                     <div th:if="${session.isAdmin} or ${post.creator.getUsername() == session.currentUser}"
                          style="display: flex; justify-content: flex-end;" href="#!">
@@ -60,6 +63,7 @@
 
 
                 </form>
+                <br>
 
             </article>
             <!-- Comments section-->
@@ -124,6 +128,10 @@
                                                                 <a href="#"
                                                                    th:href="@{__${requestURI}__/delete/__${singleComment.id}__}"
                                                                    class="btn btn-primary">Delete</a>
+                                                                <h3>|</h3>
+                                                                <a href="#"
+                                                                   th:href="@{__${requestURI}__/update/__${singleComment.id}__}"
+                                                                   class="btn btn-primary">Update</a>
                                                             </div>
 
                                                             <p class="content-around-l"
@@ -151,5 +159,38 @@
 <div th:replace="~{/fragments/PageFrame :: footer}"></div>
 <div th:replace="~{/fragments/PageFrame :: scripts}"></div>
 <!--<script src="../static/js/LikeButton.js" th:src="@{/js/LikeButton.js}"></script>-->
+<script th:inline="javascript">
+    // Function to handle like action
+    function toggleLike() {
+        var likeButton = document.getElementById('liked');
+        var likeCountElement = document.getElementById('likeCount');
+
+        // Send an HTTP POST request to the like endpoint
+        fetch('/posts/like', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Add any additional headers if needed
+            },
+            body: JSON.stringify({ /* Add any request payload if needed */ }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to toggle like');
+                }
+                // Toggle the like state and update the like count
+                if (likeButton.checked) {
+                    likeCountElement.textContent = parseInt(likeCountElement.textContent) + 1;
+                } else {
+                    likeCountElement.textContent = parseInt(likeCountElement.textContent) - 1;
+                }
+
+            })
+            .catch(error => {
+                console.error('Error toggling like:', error);
+                // Handle error scenario if needed
+            });
+    }
+</script>
 </body>
 </html>

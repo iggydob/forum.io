@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/PageFrame :: head('Edit Comment')}"></div>
+<body>
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<div th:replace="~{fragments/PageFrame :: navbar}"></div>
+<header class="py-5 bg-light border-bottom mb-4">
+    <div class="container">
+        <div class="text-center my-5">
+            <h1 class="fw-bolder">Edit Comment</h1>
+        </div>
+    </div>
+</header>
+
+<section class="mb-5">
+    <div class="card bg-light">
+        <div class="card-body">
+
+            <form action="#" th:action="@{__${requestURI}__}" th:object="${comment}" th:method="post" class="mb-4">
+
+                <input class="form-control" rows="3" type="text" th:field="*{content}" placeholder="Edit your content..." style="height: 12rem" required></input>
+                <br/><label class="error" style="color: red; font-weight: normal;" th:errors="*{content}">Content error placeholder</label>
+                <br/>
+
+                <input class="btn btn-primary" type="submit" value="Submit"/>
+
+
+            </form>
+        </div>
+    </div>
+</section>
+
+<br/>
+<div th:replace="~{/fragments/PageFrame :: footer}"></div>
+<div th:replace="~{/fragments/PageFrame :: scripts}"></div>
+</body>
+</html>
