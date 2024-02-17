@@ -16,7 +16,6 @@ public class PhoneNumber {
     @Column(name = "phone_number_id")
     private int phoneNumberId;
 
-    @Size(max = 15, message = "Phone number cannot exceed 15 symbols.")
     @Column(name = "phone_number")
     private String phoneNumber = "+359";
 

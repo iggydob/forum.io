@@ -45,8 +45,9 @@ public class UserMvcController {
                                Model model,
                                HttpSession session) {
 
+        User requester;
         try {
-            authenticationHelper.tryGetCurrentUser(session);
+            requester = authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
@@ -55,11 +56,12 @@ public class UserMvcController {
             User currentUser = authenticationHelper.tryGetCurrentUser(session);
             UserDto userDetails = userMapper.userToDto(currentUser);
             model.addAttribute("currentUser", userDetails);
-
+            model.addAttribute("requester", requester);
             PhoneNumber phoneNumber = new PhoneNumber();
             if (currentUser.getAdminStatus()) {
                 model.addAttribute("currentPhoneNumber", phoneNumber);
             }
+            model.addAttribute("currentPhoneNumber", phoneNumber);
 
             return "EditUserView";
         } catch (EntityNotFoundException e) {

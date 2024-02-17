@@ -51,7 +51,7 @@ public class UserMapper {
         UserDto userDto = new UserDto();
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
-//        userDto.setPassword(user.getPassword());
+        userDto.setPassword(user.getPassword());
         userDto.setEmail(user.getEmail());
         if (user.getPhoneNumber() != null) {
             userDto.setPhoneNumber(phoneConverter.convert(user.getPhoneNumber().getPhoneNumber()));

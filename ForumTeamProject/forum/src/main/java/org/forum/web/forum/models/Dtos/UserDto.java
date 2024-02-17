@@ -15,7 +15,7 @@ public class UserDto {
     private String password;
     @Email(message = "E-mail should be valid.")
     private String email;
-
+//    @Size(min = 4, max = 15, message = "Phone number cannot exceed 15 symbols.")
     private PhoneNumber phoneNumber;
     private boolean banStatus;
     private boolean adminStatus;
@@ -83,7 +83,6 @@ public class UserDto {
         this.adminStatus = adminStatus;
     }
 
-    @Size (max =15, message = "Number should not exceed 15 digits.")
     public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
