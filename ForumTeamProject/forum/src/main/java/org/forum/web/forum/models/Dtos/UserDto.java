@@ -15,6 +15,7 @@ public class UserDto {
     private String password;
     @Email(message = "E-mail should be valid.")
     private String email;
+
     private PhoneNumber phoneNumber;
     private boolean banStatus;
     private boolean adminStatus;
@@ -22,42 +23,30 @@ public class UserDto {
     public UserDto() {
     }
 
-    //        @NotNull(message = "First name can't be an empty field.")
-//    @Size(min = 4, max = 32, message = "First name should be between 4 and 32 symbols.")
     public String getFirstName() {
         return firstName;
     }
-
-    //    @NotNull(message = "Last name can't be an empty field.")
 
     public String getLastName() {
         return lastName;
     }
 
-    //    @NotNull(message = "Username can't be an empty field.")
-
     public String getUsername() {
         return username;
     }
-
-    //    @NotNull(message = "Password can't be an empty field.")
 
     public String getPassword() {
         return password;
     }
 
-    //    @Size(max = 10, message = "Phone number should not exceed 10 symbols.")
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
-
-//        @NotNull(message = "E-mail can't be an empty field.")
 
     public String getEmail() {
         return email;
     }
 
-    //    @NotNull(message = "Ban status field cannot be an empty field.")
     public boolean getBanStatus() {
         return banStatus;
     }
@@ -94,6 +83,7 @@ public class UserDto {
         this.adminStatus = adminStatus;
     }
 
+    @Size (max =15, message = "Number should not exceed 15 digits.")
     public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
     }

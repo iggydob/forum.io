@@ -1,5 +1,6 @@
 package org.forum.web.forum.helpers.mappers;
 
+import org.forum.web.forum.helpers.PhoneConverter;
 import org.forum.web.forum.models.Dtos.RegisterDto;
 import org.forum.web.forum.models.Dtos.UserDto;
 import org.forum.web.forum.models.User;
@@ -9,9 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
     private final UserService userService;
+    private final PhoneConverter phoneConverter;
 
-    public UserMapper(UserService userService) {
+    public UserMapper(UserService userService, PhoneConverter phoneConverter) {
         this.userService = userService;
+        this.phoneConverter = phoneConverter;
     }
 
     public User dtoUserCreate(UserDto userDto) {
@@ -50,7 +53,9 @@ public class UserMapper {
         userDto.setLastName(user.getLastName());
 //        userDto.setPassword(user.getPassword());
         userDto.setEmail(user.getEmail());
-//        userDto.setPhoneNumber(user.getPhoneNumber());
+        if (user.getPhoneNumber() != null) {
+            userDto.setPhoneNumber(phoneConverter.convert(user.getPhoneNumber().getPhoneNumber()));
+        }
         return userDto;
     }
 

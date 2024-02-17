@@ -9,6 +9,7 @@ import org.forum.web.forum.helpers.AuthenticationHelper;
 import org.forum.web.forum.helpers.mappers.UserMapper;
 import org.forum.web.forum.models.Dtos.UserDto;
 import org.forum.web.forum.models.Dtos.UserFilterDto;
+import org.forum.web.forum.models.PhoneNumber;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.UserFilterOptions;
 import org.forum.web.forum.service.contracts.UserService;
@@ -54,6 +55,12 @@ public class UserMvcController {
             User currentUser = authenticationHelper.tryGetCurrentUser(session);
             UserDto userDetails = userMapper.userToDto(currentUser);
             model.addAttribute("currentUser", userDetails);
+
+            PhoneNumber phoneNumber = new PhoneNumber();
+            if (currentUser.getAdminStatus()) {
+                model.addAttribute("currentPhoneNumber", phoneNumber);
+            }
+
             return "EditUserView";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -158,8 +165,8 @@ public class UserMvcController {
 
     @PostMapping("{userId}/admin/promote")
     public String promoteUser(@PathVariable int userId,
-                          Model model,
-                          HttpSession session) {
+                              Model model,
+                              HttpSession session) {
 
         User currentUser;
         try {
@@ -176,8 +183,8 @@ public class UserMvcController {
 
     @PostMapping("{userId}/admin/demote")
     public String demoteUser(@PathVariable int userId,
-                            Model model,
-                            HttpSession session) {
+                             Model model,
+                             HttpSession session) {
 
         User currentUser;
         try {

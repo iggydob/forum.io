@@ -18,7 +18,7 @@ public class PhoneNumber {
 
     @Size(max = 15, message = "Phone number cannot exceed 15 symbols.")
     @Column(name = "phone_number")
-    private String phoneNumber;
+    private String phoneNumber = "+359";
 
     @OneToOne
     @JsonIgnore
