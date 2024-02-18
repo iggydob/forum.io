@@ -2,6 +2,7 @@ package org.forum.web.forum;
 
 import org.forum.web.forum.models.*;
 import org.forum.web.forum.models.filters.PostFilterOptions;
+import org.forum.web.forum.models.filters.UserFilterOptions;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -81,4 +82,14 @@ public class Helpers {
         return adminUser;
     }
 
+    public static UserFilterOptions createMockUserFilterOptions() {
+        return new UserFilterOptions(
+                "firstName",
+                "lastName",
+                "username",
+                "email",
+                "sortBy",
+                "sortOrder"
+        );
+    }
 }

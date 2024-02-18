@@ -29,13 +29,9 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository, PhoneNumberService phoneNumberService, AuthorizationHelper authorizationHelper) {
         this.userRepository = userRepository;
         this.phoneNumberService = phoneNumberService;
-//        this.encoder = encoder;
         this.authorizationHelper = authorizationHelper;
     }
 
-    //    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        return (UserDetails) getByUsername(username);
-//    }
     @Override
     public User create(User user) {
         boolean duplicateExists = true;
@@ -63,7 +59,6 @@ public class UserServiceImpl implements UserService {
 
         user.setAdminStatus(false);
         user.setBanStatus(false);
-//        user.setPassword(encoder.encode(user.getPassword()));
         user.setPassword(user.getPassword());
 
         userRepository.create(user);
@@ -114,8 +109,6 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setAdminStatus(userDetails.getAdminStatus());
 
         if (userToUpdate.getPhoneNumber() != null) {
-//            PhoneNumber phoneToDelete = userToUpdate.getPhoneNumber();
-//            userToUpdate.setEmail(null);
             phoneNumberService.delete(userToUpdate.getPhoneNumber());
         }
 
@@ -158,13 +151,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private static void updateLastName(User userDetails, User userToUpdate) {
+    public static void updateLastName(User userDetails, User userToUpdate) {
         if (userDetails.getLastName() != null) {
             userToUpdate.setLastName(userDetails.getLastName());
         }
     }
 
-    private void updateEmail(User userDetails, User userToUpdate) {
+    public void updateEmail(User userDetails, User userToUpdate) {
         if (userDetails.getEmail() != null) {
             boolean duplicateExists = true;
 
@@ -186,7 +179,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void updatePhoneNumber(User userDetails, User userToUpdate) {
+    public void updatePhoneNumber(User userDetails, User userToUpdate) {
         if (userToUpdate.getAdminStatus()) {
             if (userDetails.getPhoneNumber() != null) {
                 PhoneNumber phoneNumberToUpdate;
