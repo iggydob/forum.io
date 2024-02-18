@@ -53,17 +53,21 @@
                         <!--                        <label for="liked"><span id="likeCount" th:text="${post.getLikedByUser().size()}"></span></label>-->
                         <link rel="stylesheet" type="text/css" href="/css/button.css">
                     </div>
-                    <div th:if="${post.creator.getUsername() == session.currentUser}"
-                         style="display: flex; justify-content: flex-end;" href="#!">
-                        <a href="#" th:href="@{__${requestURI}__/update}" class="btn btn-primary">Edit</a>
 
-                        <span th:if="${session.isAdmin} or ${post.creator.getUsername() == session.currentUser}"
-                              style="display: flex; justify-content: flex-end;" href="#!">
+                    <div style="display: flex; justify-content: flex-end;">
+
+                        <div style="margin-right: 10px;" th:if="${post.creator.getUsername() == session.currentUser}">
+                            <a href="#" th:href="@{__${requestURI}__/update}" class="btn btn-primary">Edit</a>
+                        </div>
+
+                        <div th:if="${session.isAdmin}" style="margin-right: 10px;">
                             <h3>|</h3>
-                        <a href="#" th:href="@{__${requestURI}__/delete}" class="btn btn-primary">Delete</a>
+                        </div>
 
+                        <div th:if="${session.isAdmin} or ${post.creator.getUsername() == session.currentUser}">
+                            <a href="#" th:href="@{__${requestURI}__/delete}" class="btn btn-primary">Delete</a>
+                        </div>
 
-                    </span>
                     </div>
 
                 </form>

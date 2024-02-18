@@ -76,6 +76,10 @@ public class PostMvcController {
     public List<Tag>allTags(){
         return tagService.getAll();
     }
+    @ModelAttribute("allUsers")
+    public List<User>allUsers(){
+        return userService.getAll();
+    }
     @GetMapping
     public String showAllPosts(@ModelAttribute("filterOptions") PostFilterDto filterDto, Model model, HttpSession session) {
         PostFilterOptions filterOptions = new PostFilterOptions(
