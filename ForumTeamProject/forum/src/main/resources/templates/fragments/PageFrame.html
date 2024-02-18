@@ -24,12 +24,11 @@
                 <li class="nav-item"><a a th:href="@{/}" class="nav-link" href="#">Home</a></li>
 
                 <li th:if="${isAuthenticated}" class="nav-item">
-                <li class="nav-item"><a class="nav-link" href="#!" th:href="@{/posts/new}">Create Post</a></li>
+                    <a th:href="@{/posts/new}" class="nav-link" href="#!">Create Post</a></li>
 
                 <li th:if="${isAuthenticated}" class="nav-item">
-                <li class="nav-item"><a class="nav-link" href="#!" th:href="@{/posts/userPosts}">My Posts</a></li>
+                    <a th:href="@{/posts/userPosts}" class="nav-link" href="#!">My Posts</a></li>
 
-<!--                <li class="nav-item"><a class="nav-link" href="/posts">All Posts</a></li>-->
                 <li class="nav-item"><a class="nav-link" th:href="@{/about}">About</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/contact}">Contact</a></li>
 
@@ -37,7 +36,8 @@
                     <a th:href="@{/auth/login}" class="nav-link" href="#!">Login</a></li>
 
                 <li th:unless="${isAuthenticated}" class="nav-item">
-                    <a th:href="@{/auth/register}" class="nav-link active" aria-current="page" href="#">Register</a></li>
+                    <a th:href="@{/auth/register}" class="nav-link active" aria-current="page" href="#">Register</a>
+                </li>
 
                 <li th:if="${isAuthenticated}" class="nav-item">
                     <a th:href="@{/auth/logout}" class="nav-link" href="#!">Logout</a></li>
