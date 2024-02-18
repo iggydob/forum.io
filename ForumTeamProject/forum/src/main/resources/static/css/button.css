@@ -1,0 +1,152 @@
+/* Root variables */
+:root {
+    --u: 1vmin; /* Adjust the base size */
+    --clr: #777;
+    /*--bg: #444857;*/
+    --bg: transparent; /* Change to transparent or #fff for white */
+}
+
+/* Body styles */
+/*body {*/
+/*    margin: 0;*/
+/*    width: 100vw;*/
+/*    height: 100vh;*/
+/*    overflow: hidden;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    !*background-color: #131417;*!*/
+/*}*/
+
+/* Button styles */
+.button {
+    position: relative;
+    width: calc(var(--u) * 4); /* Adjusted width */
+    height: calc(var(--u) * 4); /* Adjusted height */
+}
+
+input {
+    display: none;
+}
+
+label span #likeCount {
+    margin-left: 0.5rem; /* Adjusted margin between heart icon and counter */
+    font-size: 0.8rem; /* Adjusted font size for the counter */
+    color: white; /* Set counter color to white */
+}
+
+label {
+    background: var(--bg);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: calc(var(--u) * 1); /* Adjusted border radius */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+label:before {
+    /*content: "49";*/
+    position: absolute;
+    min-width: 50%;
+    left: 25%;
+    text-align: center;
+    top: 0;
+    bottom: 0;
+    background: var(--bg);
+    border-radius: calc(var(--u) * 1); /* Adjusted border radius */
+    font-size: calc(var(--u) * 1.2); /* Adjusted font size */
+    font-family: Arial, Helvetica, serif;
+    padding: calc(var(--u) * 0.3); /* Adjusted padding */
+    box-sizing: border-box;
+    /*color: var(--clr);*/
+    color: white; /* Change color to white */
+    line-height: calc(var(--u) * 2.25);
+    z-index: -1;
+    transition: all 0.5s ease 0s;
+    animation: counter-bot 1s ease 0s;
+}
+
+input:checked + label:before {
+    /*content: "50";*/
+    color: #fff;
+    background: #ff3c41;
+    bottom: inherit;
+    transition: all 0.5s ease 0s;
+    animation: counter-top 1s ease 0s;
+}
+
+@keyframes counter-top {
+    70% { top: calc(var(--u) * -2); } /* Adjusted animation */
+}
+
+@keyframes counter-bot {
+    70% { top: inherit; bottom: calc(var(--u) * -2); } /* Adjusted animation */
+}
+
+label:after {
+    content: "";
+    width: calc(var(--u) * 6); /* Adjusted width */
+    height: calc(var(--u) * 6); /* Adjusted height */
+    position: absolute;
+    border-radius: 100%;
+    box-sizing: border-box;
+    z-index: -2;
+    animation: disc-gray 1s ease 0s, spin-gray 0.65s ease-in-out 0.25s;
+    transform: rotate(0deg);
+    --pos: 95%;
+    background: radial-gradient(circle at 50% 50%, #fff0 0 62%, var(--bg) 63% 65%, #fff0 66% 100%);
+}
+
+@keyframes spin-gray {
+    100% { transform: rotate(-360deg); }
+}
+
+@keyframes spin-red {
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes disc-gray {
+    70% { width: calc(var(--u) * 12); height: calc(var(--u) * 12); } /* Adjusted animation */
+}
+
+input:checked + label:after {
+    --bg: #ff3c41;
+    --pos: 5%;
+    animation: disc-red 1s ease 0s, spin-red 0.65s ease-in-out 0.25s;
+}
+
+label span {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: dislike 0.5s ease 0s;
+}
+
+label span:before {
+    content: "\2665"; /* Unicode for heart symbol */
+    position: absolute;
+    font-size: calc(var(--u) * 3); /* Adjusted font size */
+    color: var(--clr); /* Adjusted heart color */
+    top: 50%; /* Centering the heart vertically */
+    left: 50%; /* Centering the heart horizontally */
+    transform: translate(-50%, -50%);
+}
+
+input:checked + label span {
+    --clr: #ff3c41;
+    animation: like 0.5s ease 0s;
+}
+
+@keyframes like {
+    75% { transform: scale(1.25); }
+}
+@keyframes dislike {
+    75% { transform: scale(0.75); }
+}
+
+.button:hover label span:before {
+    color: #9d4958;
+}

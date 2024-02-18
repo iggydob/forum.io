@@ -25,13 +25,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.*;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-
-import static javax.swing.SortOrder.DESCENDING;
 
 @Controller
 @RequestMapping("/posts")
@@ -100,6 +97,32 @@ public class PostMvcController {
         model.addAttribute("posts", posts);
         model.addAttribute("postCount", postService.getPostCount());
         return "HomePageView";
+    }
+
+    @GetMapping("/userPosts")
+    public String showAllUserPosts(@ModelAttribute("filterOptions") PostFilterDto filterDto, Model model, HttpSession session) {
+        PostFilterOptions filterOptions = new PostFilterOptions(
+                filterDto.getTitle(),
+                filterDto.getPostAuthor(),
+                filterDto.getSortPostBy(),
+                filterDto.getSortOrder());
+        User user;
+
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+
+        List<Post> posts = postService.getByUserId(filterOptions, user.getUserId());
+        if (populateIsAuthenticated(session)) {
+            String currentUsername = (String) session.getAttribute("currentUser");
+            model.addAttribute("currentUser", userService.getByUsername(currentUsername));
+        }
+        model.addAttribute("filterOptions", filterDto);
+        model.addAttribute("posts", posts);
+        model.addAttribute("postCount", postService.getPostCount());
+        return "UserPostsView";
     }
 
     @PostMapping("/submitComment")
@@ -216,7 +239,6 @@ public class PostMvcController {
             model.addAttribute("post", updatedPost);
             int likesCount = likePostService.getByPostId(postId).size();
             model.addAttribute("likesCount", likesCount);
-            //model.addAttribute("likes", postService.getLikes(id));
             return "redirect:/posts/" + postId;
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -338,6 +360,57 @@ public class PostMvcController {
             Post post = postMapper.fromDto(id, postDto);
             postService.update(post, user);
             return "redirect:/posts";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+
+    }
+
+    @GetMapping("/{postId}/update/{commentId}")
+    public String showUpdateCommentView(@PathVariable int commentId, @PathVariable int postId, HttpSession session, Model model) {
+        try {
+            authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+        try {
+            Comment comment = commentService.getById(commentId);
+            CommentDTO commentDTO = commentMapper.toDto(comment);
+            model.addAttribute("commentId", commentId);
+            model.addAttribute("comment", commentDTO);
+            return "CommentUpdateView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+
+    @PostMapping("/{postId}/update/{commentId}")
+    public String updateComment(@PathVariable int commentId,
+                             @PathVariable int postId,
+                             @Valid @ModelAttribute("comment") CommentDTO commentDTO,
+                             BindingResult bindingResult,
+                             Model model,
+                             HttpSession session) {
+        User user;
+
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+            session.setAttribute("isAdmin", user.getAdminStatus());
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+        if (bindingResult.hasErrors()) {
+            return "CommentUpdateView";
+        }
+
+        try {
+            Comment comment = commentMapper.fromDto(commentDTO, commentId);
+            commentService.update(user, comment);
+            return "redirect:/posts/" + postId;
         } catch (UnauthorizedOperationException e) {
             model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
