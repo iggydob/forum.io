@@ -130,16 +130,20 @@
 
                                                             </div>
 
-                                                            <div th:if="${session.isAdmin} or ${singleComment.creator.getUsername() == session.currentUser}"
-                                                                 style="display: flex; justify-content: flex-end;"
-                                                                 href="#!">
-                                                                <a href="#"
-                                                                   th:href="@{__${requestURI}__/delete/__${singleComment.id}__}"
-                                                                   class="btn btn-primary">Delete</a>
-                                                                <h3>|</h3>
-                                                                <a href="#"
-                                                                   th:href="@{__${requestURI}__/update/__${singleComment.id}__}"
-                                                                   class="btn btn-primary">Update</a>
+                                                            <div style="display: flex; justify-content: flex-end;">
+
+                                                                <div style="margin-right: 10px;" th:if="${singleComment.creator.getUsername() == session.currentUser}">
+                                                                    <a href="#" th:href="@{__${requestURI}__/update/__${singleComment.id}__}" class="btn btn-primary">Edit</a>
+                                                                </div>
+
+                                                                <div th:if="${session.isAdmin}" style="margin-right: 10px;">
+                                                                    <h3>|</h3>
+                                                                </div>
+
+                                                                <div th:if="${session.isAdmin} or ${post.creator.getUsername() == session.currentUser}">
+                                                                    <a href="#" th:href="@{__${requestURI}__/delete/__${singleComment.id}__}" class="btn btn-primary">Delete</a>
+                                                                </div>
+
                                                             </div>
 
                                                             <p class="content-around-l"
