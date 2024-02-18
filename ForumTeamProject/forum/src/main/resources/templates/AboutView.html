@@ -1,6 +1,49 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"><div th:insert="~{fragments/PageFrame :: head('About')}"></div>
+<link rel="stylesheet" type="text/css" href="/css/contact.css">
+
 <body>
 <div th:replace="~{fragments/PageFrame :: navbar}"></div>
+<header class="py-5 bg-light border-bottom mb-4">
+    <div class="container">
+        <div class="text-center my-5">
+            <h1 class="fw-bolder">IN THIS FORUM YOU CAN!</h1>
+        </div>
+    </div>
+</header>
+
+<div class="row">
+    <div class="column">
+        <div class="card">
+            <img src="/assets/create-post.png" alt="Post-Icon" style="max-width:100%">
+            <div class="container">
+                <h2>Create posts or browse posts!</h2>
+                <p><a href="/posts/new" class="button">Try yourself!</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="card">
+            <img src="/assets/comment.png" alt="commnet-icon" style="max-width:100%">
+            <div class="container">
+                <h2>Comment what you want!</h2>
+                <p><a href="/posts" class="button" >Try yourself!</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="column">
+        <div class="card">
+            <img src="/assets/like.png" alt="John" style="width:100%">
+            <div class="container">
+                <h2>Like post or comments!</h2>
+                <p><a href="/posts" class="button">Try yourself!</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>
