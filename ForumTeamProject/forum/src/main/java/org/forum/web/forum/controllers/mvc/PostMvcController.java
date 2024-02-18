@@ -156,7 +156,7 @@ public class PostMvcController {
         } catch (UnauthorizedOperationException e) {
             model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
-            return "ErrorView";
+            return "BannedView";
         }
     }
 
@@ -319,6 +319,8 @@ public class PostMvcController {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
+        }catch (UnauthorizedOperationException e){
+            return "BannedView";
         }
     }
 
