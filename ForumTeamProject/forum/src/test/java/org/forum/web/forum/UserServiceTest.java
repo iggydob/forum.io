@@ -18,6 +18,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.forum.web.forum.Helpers.*;
 import static org.mockito.Mockito.when;
 
@@ -179,6 +182,224 @@ public class UserServiceTest {
         Assertions.assertEquals("0987654321", userToUpdate.getPhoneNumber().getPhoneNumber());
         Mockito.verify(mockPhoneNumberService, Mockito.times(0)).update(Mockito.any(PhoneNumber.class));
     }
+
+    @Test
+    public void changePassword_Should_UpdatePassword_When_UserDetailsAndPasswordAreNotNull() {
+        // Arrange
+        int id = 1;
+        User userDetails = new User();
+        userDetails.setPassword("newPassword");
+
+        User requester = new User();
+        requester.setUserId(id);
+
+        User userToUpdate = new User();
+        userToUpdate.setPassword("oldPassword");
+
+        Mockito.when(mockRepository.getById(id)).thenReturn(userToUpdate);
+
+        // Act
+        service.changePassword(id, userDetails, requester);
+
+        // Assert
+        Assertions.assertEquals("newPassword", userToUpdate.getPassword());
+        Mockito.verify(mockRepository, Mockito.times(1)).update(userToUpdate);
+    }
+
+    @Test
+    public void changeAdminStatus_Should_UpdateAdminStatusAndDeletePhoneNumber_When_UserDetailsAndRequesterAreNotNull() {
+        // Arrange
+        int id = 1;
+        User userDetails = new User();
+        userDetails.setAdminStatus(true);
+
+        User requester = new User();
+        requester.setUserId(id);
+        requester.setAdminStatus(true);
+
+        PhoneNumber phoneNumber = new PhoneNumber();
+        phoneNumber.setPhoneNumber("1234567890");
+
+        User userToUpdate = new User();
+        userToUpdate.setAdminStatus(false);
+        userToUpdate.setPhoneNumber(phoneNumber);
+
+        Mockito.when(mockRepository.getById(id)).thenReturn(userToUpdate);
+
+        // Act
+        service.changeAdminStatus(id, userDetails, requester);
+
+        // Assert
+        Assertions.assertTrue(userToUpdate.getAdminStatus());
+        Mockito.verify(mockRepository, Mockito.times(1)).update(userToUpdate);
+        Mockito.verify(mockPhoneNumberService, Mockito.times(1)).delete(phoneNumber);
+    }
+
+    @Test
+    public void changeBanStatus_Should_UpdateBanStatus_When_UserDetailsAndRequesterAreNotNull() {
+        // Arrange
+        int id = 1;
+        User userDetails = new User();
+        userDetails.setBanStatus(true);
+
+        User requester = new User();
+        requester.setUserId(id);
+        requester.setAdminStatus(true);
+
+        User userToUpdate = new User();
+        userToUpdate.setBanStatus(false);
+
+        Mockito.when(mockRepository.getById(id)).thenReturn(userToUpdate);
+
+        // Act
+        service.changeBanStatus(id, userDetails, requester);
+
+        // Assert
+        Assertions.assertTrue(userToUpdate.getBanStatus());
+        Mockito.verify(mockRepository, Mockito.times(1)).update(userToUpdate);
+    }
+
+    @Test
+    public void getByUsername_Should_ReturnUser_When_UsernameExists() {
+        // Arrange
+        String username = "testUser";
+        User expectedUser = new User();
+        expectedUser.setUsername(username);
+
+        Mockito.when(mockRepository.getByUsername(username)).thenReturn(expectedUser);
+
+        // Act
+        User result = service.getByUsername(username);
+
+        // Assert
+        Assertions.assertEquals(expectedUser, result);
+        Mockito.verify(mockRepository, Mockito.times(1)).getByUsername(username);
+    }
+
+    @Test
+    public void getAll_Should_ReturnAllUsers() {
+        // Arrange
+        List<User> expectedUsers = Arrays.asList(new User(), new User(), new User());
+
+        Mockito.when(mockRepository.getAll()).thenReturn(expectedUsers);
+
+        // Act
+        List<User> result = service.getAll();
+
+        // Assert
+        Assertions.assertEquals(expectedUsers, result);
+        Mockito.verify(mockRepository, Mockito.times(1)).getAll();
+    }
+
+    @Test
+    public void updateFirstName_Should_UpdateFirstName_When_FirstNameIsNotNull() {
+        // Arrange
+        User userDetails = new User();
+        userDetails.setFirstName("NewFirstName");
+
+        User userToUpdate = new User();
+        userToUpdate.setFirstName("OldFirstName");
+
+        // Act
+        UserServiceImpl.updateFirstName(userDetails, userToUpdate);
+
+        // Assert
+        Assertions.assertEquals("NewFirstName", userToUpdate.getFirstName());
+    }
+
+    @Test
+    public void updateLastName_Should_UpdateLastName_When_LastNameIsNotNull() {
+        // Arrange
+        User userDetails = new User();
+        userDetails.setLastName("NewLastName");
+
+        User userToUpdate = new User();
+        userToUpdate.setLastName("OldLastName");
+
+        // Act
+        UserServiceImpl.updateLastName(userDetails, userToUpdate);
+
+        // Assert
+        Assertions.assertEquals("NewLastName", userToUpdate.getLastName());
+    }
+
+    @Test
+    public void update_Should_UpdateUserDetails_When_UserDetailsAndRequesterAreNotNull() {
+        // Arrange
+        int id = 1;
+        User userDetails = new User();
+        userDetails.setFirstName("NewFirstName");
+        userDetails.setLastName("NewLastName");
+        userDetails.setEmail("newEmail@example.com");
+        userDetails.setPhotoUrl("newPhotoUrl");
+
+        User requester = new User();
+        requester.setUserId(id);
+        requester.setAdminStatus(true);
+
+        User userToUpdate = new User();
+        userToUpdate.setFirstName("OldFirstName");
+        userToUpdate.setLastName("OldLastName");
+        userToUpdate.setEmail("oldEmail@example.com");
+        userToUpdate.setPhotoUrl("oldPhotoUrl");
+
+        Mockito.when(mockRepository.getById(id)).thenReturn(userToUpdate);
+        Mockito.when(mockRepository.getByEmail(userDetails.getEmail()))
+                .thenThrow(new EntityNotFoundException("User", "e-mail", userDetails.getEmail()));
+
+        // Act
+        service.update(id, userDetails, requester);
+
+        // Assert
+        Assertions.assertEquals(userDetails.getFirstName(), userToUpdate.getFirstName());
+        Assertions.assertEquals(userDetails.getLastName(), userToUpdate.getLastName());
+        Assertions.assertEquals(userDetails.getEmail(), userToUpdate.getEmail());
+        Assertions.assertEquals(userDetails.getPhotoUrl(), userToUpdate.getPhotoUrl());
+        Mockito.verify(mockRepository, Mockito.times(1)).update(userToUpdate);
+    }
+
+    @Test
+    public void changeAdminStatusMvc_Should_UpdateAdminStatusAndDeletePhoneNumber_When_RequesterIsAdmin() {
+        // Arrange
+        int id = 1;
+        boolean status = true;
+        User requester = new User();
+        requester.setAdminStatus(true);
+
+        User userToUpdate = new User();
+        PhoneNumber phoneNumber = new PhoneNumber();
+        phoneNumber.setPhoneNumber("1234567890");
+        userToUpdate.setPhoneNumber(phoneNumber);
+
+        Mockito.when(mockRepository.getById(id)).thenReturn(userToUpdate);
+
+        // Act
+        service.changeAdminStatusMvc(id, status, requester);
+
+        // Assert
+        Assertions.assertEquals(status, userToUpdate.getAdminStatus());
+        Mockito.verify(mockRepository, Mockito.times(1)).update(userToUpdate);
+        Mockito.verify(mockPhoneNumberService, Mockito.times(1)).delete(phoneNumber);
+    }
+
+    @Test
+    public void changeBanStatusMvc_Should_UpdateBanStatus_When_RequesterIsAdmin() {
+        // Arrange
+        int id = 1;
+        boolean status = true;
+        User requester = new User();
+        requester.setAdminStatus(true);
+
+        User userToUpdate = new User();
+        userToUpdate.setBanStatus(!status);
+
+        Mockito.when(mockRepository.getById(id)).thenReturn(userToUpdate);
+
+        // Act
+        service.changeBanStatusMvc(id, status, requester);
+
+        // Assert
+        Assertions.assertEquals(status, userToUpdate.getBanStatus());
+        Mockito.verify(mockRepository, Mockito.times(1)).update(userToUpdate);
+    }
 }
-
-

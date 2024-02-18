@@ -150,7 +150,7 @@ public class UserServiceImpl implements UserService {
         userRepository.update(userToUpdate);
     }
 
-    private static void updateFirstName(User userDetails, User userToUpdate) {
+    public static void updateFirstName(User userDetails, User userToUpdate) {
         if (userDetails.getFirstName() != null) {
             userToUpdate.setFirstName(userDetails.getFirstName());
         }
@@ -204,19 +204,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private static void checkAdminRole(User requester) {
+    public static void checkAdminRole(User requester) {
         if (!requester.getAdminStatus()) {
             throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
         }
     }
 
-    private static void checkSourceUser(int targetUserId, User requester) {
+    public static void checkSourceUser(int targetUserId, User requester) {
         if (requester.getUserId() != targetUserId) {
             throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
         }
     }
 
-    private static void checkAccessPermissions(int targetUserId, User requester) {
+    public static void checkAccessPermissions(int targetUserId, User requester) {
         if (!requester.getAdminStatus() && requester.getUserId() != targetUserId) {
             throw new AuthorizationException(AUTHORIZATION_ERROR_MSG);
         }
