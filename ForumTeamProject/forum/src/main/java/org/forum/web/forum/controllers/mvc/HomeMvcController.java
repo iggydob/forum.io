@@ -46,13 +46,15 @@ public class HomeMvcController {
 
     //show home page with all post
     @ModelAttribute("allTags")
-    public List<Tag>allTags(){
+    public List<Tag> allTags() {
         return tagService.getAll();
     }
+
     @ModelAttribute("allUsers")
-    public List<User>allUsers(){
+    public List<User> allUsers() {
         return userService.getAll();
     }
+
     @GetMapping
     public String showHomePage(@ModelAttribute("filterOptions") PostFilterDto filterDto, Model model, HttpSession session) {
         PostFilterOptions filterOptions = new PostFilterOptions(
@@ -74,5 +76,15 @@ public class HomeMvcController {
         model.addAttribute("posts", posts);
         model.addAttribute("postCount", postService.getPostCount());
         return "HomePageView";
+    }
+
+    @GetMapping("about")
+    public String showAboutView() {
+        return "AboutView";
+    }
+
+    @GetMapping("contact")
+    public String showContactView() {
+        return "ContactView";
     }
 }
