@@ -192,37 +192,37 @@ public class PostMvcController {
         }
     }
 
-    @PostMapping("/dislike/{commentId}")
-    public String dislikeComment(Model model,
-                                 HttpSession session,
-                                 @PathVariable int commentId) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetCurrentUser(session);
-        } catch (AuthorizationException e) {
-            return "redirect:/auth/login";
-        }
-
-        if (populateIsAuthenticated(session)) {
-            String currentUsername = (String) session.getAttribute("currentUser");
-            model.addAttribute("currentUser", userService.getByUsername(currentUsername));
-        }
-
-        int postId = (int) session.getAttribute("sessionPostId");
-
-        try {
-            commentService.dislikeComment(commentId, user);
-            model.addAttribute("comment", commentService.getById(commentId));
-            return "redirect:/posts/" + postId;
-        } catch (EntityNotFoundException e) {
-            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
-            model.addAttribute("error", e.getMessage());
-            return "ErrorView";
-        } catch (EntityDuplicateException e) {
-            model.addAttribute("duplicateError", e.getMessage());
-            return "redirect:/posts/" + postId;
-        }
-    }
+//    @PostMapping("/dislike/{commentId}")
+//    public String dislikeComment(Model model,
+//                                 HttpSession session,
+//                                 @PathVariable int commentId) {
+//        User user;
+//        try {
+//            user = authenticationHelper.tryGetCurrentUser(session);
+//        } catch (AuthorizationException e) {
+//            return "redirect:/auth/login";
+//        }
+//
+//        if (populateIsAuthenticated(session)) {
+//            String currentUsername = (String) session.getAttribute("currentUser");
+//            model.addAttribute("currentUser", userService.getByUsername(currentUsername));
+//        }
+//
+//        int postId = (int) session.getAttribute("sessionPostId");
+//
+//        try {
+//            commentService.dislikeComment(commentId, user);
+//            model.addAttribute("comment", commentService.getById(commentId));
+//            return "redirect:/posts/" + postId;
+//        } catch (EntityNotFoundException e) {
+//            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+//            model.addAttribute("error", e.getMessage());
+//            return "ErrorView";
+//        } catch (EntityDuplicateException e) {
+//            model.addAttribute("duplicateError", e.getMessage());
+//            return "redirect:/posts/" + postId;
+//        }
+//    }
 
 
     @PostMapping("/like")

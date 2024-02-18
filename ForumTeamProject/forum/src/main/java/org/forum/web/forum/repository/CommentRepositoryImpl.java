@@ -101,19 +101,19 @@ public class CommentRepositoryImpl implements CommentRepository {
         }
     }
 
-    @Override
-    public long commentDislikesCount(int commentId) {
-        try (Session session = sessionFactory.openSession()) {
-            Long likeCount = session.createQuery(
-                            "SELECT COUNT(lc) FROM Like lc WHERE lc.comment.id = :id AND lc.isLiked = false AND lc.isDeleted = false",
-                            Long.class
-                    )
-                    .setParameter("id", commentId)
-                    .uniqueResult();
-
-            return likeCount != null ? likeCount : 0;
-        }
-    }
+//    @Override
+//    public long commentDislikesCount(int commentId) {
+//        try (Session session = sessionFactory.openSession()) {
+//            Long likeCount = session.createQuery(
+//                            "SELECT COUNT(lc) FROM Like lc WHERE lc.comment.id = :id AND lc.isLiked = false AND lc.isDeleted = false",
+//                            Long.class
+//                    )
+//                    .setParameter("id", commentId)
+//                    .uniqueResult();
+//
+//            return likeCount != null ? likeCount : 0;
+//        }
+//    }
 
 
 }

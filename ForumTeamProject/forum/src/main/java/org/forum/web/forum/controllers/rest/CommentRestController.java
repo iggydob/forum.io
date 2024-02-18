@@ -52,17 +52,10 @@ public class CommentRestController {
         }
     }
 
-    @GetMapping("/count/{id}/{reactionType}")
-    public long getCommentLikeCount(@PathVariable int id, @PathVariable String reactionType) {
+    @GetMapping("/likesCount/{id}")
+    public long getCommentLikeCount(@PathVariable int id) {
         try {
-            switch (reactionType) {
-                case "likes":
-                    return service.commentLikesCount(id);
-                case "dislikes":
-                    return service.commentDislikesCount(id);
-                default:
-                    throw new EntityNotFoundException(OPERATION_NOT_FOUND);
-            }
+            return service.commentLikesCount(id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -70,7 +63,7 @@ public class CommentRestController {
 
 
     @GetMapping("/post/{postId}")
-    public List<Comment> getPostComments(@PathVariable int postId,@RequestHeader(name = "Credentials") String credentials) {
+    public List<Comment> getPostComments(@PathVariable int postId, @RequestHeader(name = "Credentials") String credentials) {
         try {
             User user = authenticationHelper.tryGetUser(credentials);
             return service.getPostComments(postId);
@@ -111,6 +104,7 @@ public class CommentRestController {
 
     @DeleteMapping("/{id}")
     public void deleteComment(@RequestHeader(name = "Credentials") String credentials, @PathVariable int id) {
+
         try {
             User user = authenticationHelper.tryGetUser(credentials);
             service.delete(user, id);
@@ -121,24 +115,12 @@ public class CommentRestController {
         }
     }
 
-    @PostMapping("/{reactionType}/{commentId}")
-    public void likeComment(@RequestHeader(name = "Credentials") String credentials, @PathVariable String reactionType,
+    @PostMapping("/like/{commentId}")
+    public void likeComment(@RequestHeader(name = "Credentials") String credentials,
                             @PathVariable int commentId) {
         try {
             User user = authenticationHelper.tryGetUser(credentials);
-            switch (reactionType) {
-                case "like":
-                    service.likeComment(commentId, user);
-                    return;
-                case "dislike":
-                    service.dislikeComment(commentId, user);
-                    return;
-                case "delete":
-                    service.deleteReaction(commentId, user);
-                    return;
-                default:
-                    throw new EntityNotFoundException(OPERATION_NOT_FOUND);
-            }
+            service.likeComment(commentId, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {

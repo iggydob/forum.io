@@ -40,21 +40,8 @@ public class Comment {
     @JsonManagedReference
     private Set<Like> likedList = new HashSet<>();
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
-    private Set<Like> dislikedList = new HashSet<>();
-
     public Comment() {
     }
-
-    public Set<Like> getDislikedList() {
-        return dislikedList;
-    }
-
-    public void setDislikedList(Set<Like> dislikedList) {
-        this.dislikedList = dislikedList;
-    }
-
     public Set<Like> getLikedList() {
         return likedList;
     }

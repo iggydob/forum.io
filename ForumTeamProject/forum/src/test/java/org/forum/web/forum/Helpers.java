@@ -22,6 +22,28 @@ public class Helpers {
         return mockPost;
     }
 
+    public static Comment createMockComment() {
+        var mockComment = new Comment();
+        Set<Like> likes = new HashSet<>();
+
+        mockComment.setId(1);
+        mockComment.setCreator(createMockUser());
+        mockComment.setPost(createMockPost());
+        mockComment.setContent("This is a mock content for comment creation.");
+        mockComment.setCreationDate(new Timestamp(2024, 2, 18, 18, 18, 18, 18));
+
+        return mockComment;
+    }
+
+    public static Like createMockLikeComment() {
+        var mockLikeComment = new Like();
+        mockLikeComment.setId(1);
+        mockLikeComment.setUser(createMockUser());
+        mockLikeComment.setComment(createMockComment());
+
+        return mockLikeComment;
+    }
+
     public static User createMockUser() {
         var mockUser = new User();
         mockUser.setUserId(1);
@@ -63,6 +85,12 @@ public class Helpers {
         var mockPostList = new ArrayList<Post>();
         mockPostList.add(createMockPost());
         return mockPostList;
+    }
+
+    public static List<Comment> createMockCommentList() {
+        var mockCommentList = new ArrayList<Comment>();
+        mockCommentList.add(createMockComment());
+        return mockCommentList;
     }
 
     public static User createMockBanUser() {
