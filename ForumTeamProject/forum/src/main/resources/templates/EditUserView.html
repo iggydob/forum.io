@@ -44,7 +44,7 @@
                 error placeholder</label>
                 <br/>
 
-                <div th:if="${currentUser.adminStatus}">
+                <div th:if="${session.isAdmin}">
                     <label th:text="#{user.label.phone-number}">Last Name</label>
                     <br/>
                     <input type="text" th:field="*{phoneNumber.phoneNumber}"/>

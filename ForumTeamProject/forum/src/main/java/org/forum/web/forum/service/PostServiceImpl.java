@@ -28,7 +28,7 @@ public class PostServiceImpl implements PostService {
     private final AuthorizationHelper authorizationHelper;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, LikePostService likePostService, TagService tagService,AuthorizationHelper authenticationHelper) {
+    public PostServiceImpl(PostRepository postRepository, LikePostService likePostService, TagService tagService, AuthorizationHelper authenticationHelper) {
         this.postRepository = postRepository;
         this.likePostService = likePostService;
         this.tagService = tagService;
@@ -113,7 +113,6 @@ public class PostServiceImpl implements PostService {
         authorizationHelper.checkIfBanned(user);
         authorizationHelper.checkAuthor(user, post);
         postRepository.update(post);
-
     }
     //Hard delete
 //    @Override
@@ -129,7 +128,7 @@ public class PostServiceImpl implements PostService {
 
     //soft delete
     @Override
-    public void delete (User user, int id){
+    public void delete(User user, int id) {
         Post post = postRepository.getById(id);
 //        try {
 //            authorizationHelper.checkAdmin(user);

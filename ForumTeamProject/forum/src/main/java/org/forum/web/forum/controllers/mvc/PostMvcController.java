@@ -359,7 +359,7 @@ public class PostMvcController {
         try {
             Post post = postMapper.fromDto(id, postDto);
             postService.update(post, user);
-            return "redirect:/posts";
+            return "redirect:/posts/" + id;
         } catch (UnauthorizedOperationException e) {
             model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
             model.addAttribute("error", e.getMessage());

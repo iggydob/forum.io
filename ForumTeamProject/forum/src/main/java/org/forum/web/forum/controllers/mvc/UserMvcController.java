@@ -12,6 +12,7 @@ import org.forum.web.forum.models.Dtos.UserFilterDto;
 import org.forum.web.forum.models.PhoneNumber;
 import org.forum.web.forum.models.User;
 import org.forum.web.forum.models.filters.UserFilterOptions;
+import org.forum.web.forum.service.contracts.PhoneNumberService;
 import org.forum.web.forum.service.contracts.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -28,11 +29,13 @@ public class UserMvcController {
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
     private final UserMapper userMapper;
+    private final PhoneNumberService phoneNumberService;
 
-    public UserMvcController(UserService userService, AuthenticationHelper authenticationHelper, UserMapper userMapper) {
+    public UserMvcController(UserService userService, AuthenticationHelper authenticationHelper, UserMapper userMapper, PhoneNumberService phoneNumberService) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.userMapper = userMapper;
+        this.phoneNumberService = phoneNumberService;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -45,21 +48,22 @@ public class UserMvcController {
                                Model model,
                                HttpSession session) {
 
-        User requester;
+        User currentUser;
         try {
-            requester = authenticationHelper.tryGetCurrentUser(session);
+            currentUser = authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
 
         try {
-            User currentUser = authenticationHelper.tryGetCurrentUser(session);
+//            User currentUser = authenticationHelper.tryGetCurrentUser(session);
             UserDto userDetails = userMapper.userToDto(currentUser);
             model.addAttribute("currentUser", userDetails);
-            model.addAttribute("requester", requester);
+            model.addAttribute("requester", currentUser);
             PhoneNumber phoneNumber = new PhoneNumber();
+            session.setAttribute("isAdmin",currentUser.getAdminStatus());
             if (currentUser.getAdminStatus()) {
-                model.addAttribute("currentPhoneNumber", phoneNumber);
+                session.setAttribute("currentPhoneNumber", phoneNumber);
             }
             model.addAttribute("currentPhoneNumber", phoneNumber);
 
@@ -95,7 +99,7 @@ public class UserMvcController {
             User userToUpdate = userMapper.dtoUserUpdate(userDto);
             userService.update(requester.getUserId(), userToUpdate, requester);
             userService.changePassword(requester.getUserId(), userToUpdate, requester);
-            return "redirect:/posts";
+            return "redirect:/";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("email", "email_error", "E-mail already exists!");
             return "EditUserView";
@@ -198,6 +202,7 @@ public class UserMvcController {
 
         model.addAttribute("currentUser", userService.getByUsername(currentUser.getUsername()));
         userService.changeAdminStatusMvc(userId, false, currentUser);
+
 
         return "redirect:/users/admin";
     }

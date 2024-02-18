@@ -120,6 +120,11 @@ public class UserServiceImpl implements UserService {
         checkAdminRole(requester);
         User userToUpdate = userRepository.getById(id);
         userToUpdate.setAdminStatus(status);
+
+        if (userToUpdate.getPhoneNumber() != null) {
+            phoneNumberService.delete(userToUpdate.getPhoneNumber());
+        }
+
         userRepository.update(userToUpdate);
     }
 

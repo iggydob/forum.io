@@ -36,13 +36,13 @@
                       style="display: flex; align-items: center; justify-content: space-between;">
 
 
-                <!--                    <button type="submit"-->
-<!--                            style="border: none; background: none; padding: 0; font: inherit; cursor: pointer;">-->
-<!--                        <a href="#" style="text-decoration: none;">-->
-<!--                            <i class="fas fa-thumbs-up fa-xs"></i>-->
-<!--                            <span class="small">👍 Like</span>-->
-<!--                        </a>-->
-<!--                    </button>-->
+                    <!--                    <button type="submit"-->
+                    <!--                            style="border: none; background: none; padding: 0; font: inherit; cursor: pointer;">-->
+                    <!--                        <a href="#" style="text-decoration: none;">-->
+                    <!--                            <i class="fas fa-thumbs-up fa-xs"></i>-->
+                    <!--                            <span class="small">👍 Like</span>-->
+                    <!--                        </a>-->
+                    <!--                    </button>-->
 
                     <div class="button">
                         <input type="checkbox" id="liked" name="like" onclick="toggleLike()">
@@ -50,17 +50,21 @@
                             <i class="fas fa-thumbs-up fa-xs"></i>
                             <span id="likeCount" th:text="${post.getLikedByUser().size()}"></span>
                         </label>
-<!--                        <label for="liked"><span id="likeCount" th:text="${post.getLikedByUser().size()}"></span></label>-->
+                        <!--                        <label for="liked"><span id="likeCount" th:text="${post.getLikedByUser().size()}"></span></label>-->
                         <link rel="stylesheet" type="text/css" href="/css/button.css">
                     </div>
-
-                    <div th:if="${session.isAdmin} or ${post.creator.getUsername() == session.currentUser}"
+                    <div th:if="${post.creator.getUsername() == session.currentUser}"
                          style="display: flex; justify-content: flex-end;" href="#!">
                         <a href="#" th:href="@{__${requestURI}__/update}" class="btn btn-primary">Edit</a>
-                        <h3>|</h3>
-                        <a href="#" th:href="@{__${requestURI}__/delete}" class="btn btn-primary">Delete</a>
-                    </div>
 
+                        <span th:if="${session.isAdmin} or ${post.creator.getUsername() == session.currentUser}"
+                              style="display: flex; justify-content: flex-end;" href="#!">
+                            <h3>|</h3>
+                        <a href="#" th:href="@{__${requestURI}__/delete}" class="btn btn-primary">Delete</a>
+
+
+                    </span>
+                    </div>
 
                 </form>
                 <br>
@@ -172,7 +176,7 @@
                 'Content-Type': 'application/json',
                 // Add any additional headers if needed
             },
-            body: JSON.stringify({ /* Add any request payload if needed */ }),
+            body: JSON.stringify({ /* Add any request payload if needed */}),
         })
             .then(response => {
                 if (!response.ok) {
