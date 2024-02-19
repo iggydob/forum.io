@@ -1,6 +1,40 @@
 # Forum_Management_System
 ## Description
 Internet forum about self improvements and motivation powered by Spring Framework and MySQL. This web application enables inter alia: adding posts and comments, as well as browsing, editing or deleting some of them. As well, providing oprportunity to moderators to have an overview and manage all users, posts and comments.  
+## Features
+- Users before Login can see basic functionality of the forum, post activities:
+  ![image](https://github.com/GrishaDaradjanovv/Forum_Management_System/assets/94899409/0747a343-2dce-4364-820a-d441c5afa944)
+- User can login:
+  ![image](https://github.com/GrishaDaradjanovv/Forum_Management_System/assets/94899409/e201a334-f6cf-46b0-9630-f4f07fed61bd)
+- User can register
+![image](https://github.com/GrishaDaradjanovv/Forum_Management_System/assets/94899409/514c3f01-0c93-4958-8d07-8d218d712b2e)
+- Users can browse through the existing posts with key words and / or to filter / sort 
+- Each user can browse every posts, to like / dislike as well to leave a comment. The Comments as well can be Liked if not the author: 
+- If the user is the author of the post / comment, the content or title can be edited as well it can be deleted:
+- Users can Create Posts: 
+- Admins / Moderators can ultilize the Admin Panel to promote users and to ban users:
+![image](https://github.com/GrishaDaradjanovv/Forum_Management_System/assets/94899409/6644a251-2776-4c67-8bf6-428efccf92e3)
+- Admins can Delete Posts / Comments
+
+
+
+## Getting Started
+- Clone the repository
+  - git clone https://github.com/GrishaDaradjanovv/Forum_Management_System.git
+- Connect to MariaDB
+- Create a MariaDB database named 'forum-system' 
+- Update application.properties with your information
+    - database.url=jdbc:mariadb://localhost:3306/forum_system (check the availability of the port)
+    - database.username= your username
+    - database.password= your password 
+- Populate the tables in your DB
+  - Go to ../db/create.sql and run
+- (Optionally) Populate data in the db: 
+  - Go to ../db/insert-data.sql and run
+- Run all dependencies
+   - Go to ../build.gradle 
+- Run the application and check out the website at http://localhost:8080
+  
 ## Technologies
 - Java:
   - Spring Framework:
@@ -29,8 +63,6 @@ Internet forum about self improvements and motivation powered by Spring Framewor
 - CSS:
   - Materialize
 
-## Features
-- 
 ## Software tools
 - IntelliJ IDEA 2017.2.4
 - Gradle 3.5.1
