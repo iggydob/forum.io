@@ -59,18 +59,6 @@
             </form>
         </div>
     </div>
-
-
-    <div class="card mb-4">
-        <div class="card-header">Profile picture preview</div>
-        <div class="card-body">
-            <div class="flex-shrink-0">
-                <img class="rounded-profile"
-                     th:src="${currentUser.photoUrl != null ? (currentUser.photoUrl.startsWith('http') ? currentUser.photoUrl : '@{/}' + currentUser.photoUrl) : '@{/assets/users/defaultUser.png}'}"
-                     style="max-height: 428px;"/>
-            </div>
-        </div>
-    </div>
 </div>
 <br/>
 <div th:replace="~{fragments/PageFrame :: footer}"></div>
