@@ -100,7 +100,7 @@ public class PostMvcController {
         model.addAttribute("filterOptions", filterDto);
         model.addAttribute("posts", posts);
         model.addAttribute("postCount", postService.getPostCount());
-        return "HomePageView";
+        return "index";
     }
 
     @GetMapping("/userPosts")
